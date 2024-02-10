@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Box from "$lib/canvas/box.svelte";
 	import Canvas from "$lib/canvas/canvas.svelte";
-	import type { Position, Size } from "$lib/types";
+	import type { Position } from "$lib/types";
 
   let size = { width: 50, height: 50 };
 
