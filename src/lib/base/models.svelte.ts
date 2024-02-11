@@ -99,7 +99,7 @@ export class LayerContext {
 			model: layerModel,
 			draw: layerDraw
 		});
-		$effect.pre(() => {
+		$effect(() => {
 			this.size;
 			this.canvas;
 			this.setNeedsRender();

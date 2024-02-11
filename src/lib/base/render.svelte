@@ -28,7 +28,7 @@
 	parent.registerRender(render);
 	setRenderContext(render);
 
-	$effect.pre(() => {
+	$effect(() => {
 		return () => {
 			parent.unregisterRender(render!);
 		};

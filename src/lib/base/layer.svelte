@@ -17,7 +17,7 @@
 	setLayerContext(layer);
 	setRenderContext(layer.render);
 
-	$effect.pre(() => {
+	$effect(() => {
 		return () => {
 			stage.unregisterLayer(layer!);
 		};
