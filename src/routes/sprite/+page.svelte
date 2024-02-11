@@ -40,9 +40,9 @@
 		flex-direction: column;
 		gap: 15px;
 		> .stage {
-			:global(> .stage) {
-				// outline: 1px solid red;
-			}
+			// :global(> .stage) {
+			//   outline: 1px solid red;
+			// }
 		}
 	}
 </style>
