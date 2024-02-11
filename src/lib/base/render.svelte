@@ -11,7 +11,7 @@
 
 	let { name, position, model, draw, children } = $props<{
 		name?: string;
-		position: Position;
+		position?: Position;
 		model: T;
 		draw: DrawFunction<T>;
 		children?: Snippet;

@@ -8,7 +8,7 @@ const RENDER_CONTEXT = 'render';
 export type DrawFunction<T> = (model: T, ctx: CanvasRenderingContext2D) => void;
 export type DrawFunctionGetter<T> = () => DrawFunction<T>;
 export type ModelFunction<T> = () => T;
-export type PositionFunction = () => Position;
+export type PositionFunction = () => Position | undefined;
 
 export type RenderContextOptions<T> = {
 	layer: LayerContext;
@@ -73,7 +73,7 @@ export class RenderContext<T = any> {
 		const { model, draw, position } = this;
 		ctx.save();
 		{
-			ctx.translate(position.x, position.y);
+			ctx.translate(position?.x ?? 0, position?.y ?? 0);
 			draw(model, ctx);
 
 			const renders = this.renders.toSorted((a, b) => a.index - b.index);
@@ -131,11 +131,34 @@ export class LayerContext {
 			this.isRendering = false;
 		});
 	}
+
+	convertToLayerPosition(e: MouseEvent): Position {
+		const clientRect = this.canvas?.getBoundingClientRect();
+		if (!clientRect) {
+			throw new Error('no canvas');
+		}
+		const x = e.clientX - clientRect.left;
+		const y = e.clientY - clientRect.top;
+		return { x, y };
+	}
 }
+
+export type StageContextOptions = {
+	size?: () => Size | undefined;
+};
 
 export class StageContext {
 	layers = $state<LayerContext[]>([]);
 	size = $state<Size>({ width: 0, height: 0 });
+
+	constructor(options: StageContextOptions) {
+		$effect(() => {
+			const size = options.size?.();
+			if (size) {
+				this.size = size;
+			}
+		});
+	}
 
 	registerLayer(layer: LayerContext) {
 		this.layers.push(layer);
