@@ -20,12 +20,13 @@ export type RenderContextOptions<T> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class RenderContext<T = any> {
   options: RenderContextOptions<T>;
-  element?: HTMLElement;
+  element = $state<HTMLElement>();
   renders = $state<RenderContext[]>([]);
 
   constructor(options: RenderContextOptions<T>) {
     this.options = options;
     $effect(() => {
+      this.element;
       this.position;
       this.model;
       this.draw;
@@ -100,7 +101,7 @@ export class LayerContext {
     });
     $effect.pre(() => {
       this.size;
-      console.log('size');
+      this.canvas;
       this.setNeedsRender();
     });
   }
@@ -120,7 +121,7 @@ export class LayerContext {
     this.isRendering = true;
     requestAnimationFrame(() => {
       const { size, canvas } = this;
-      if(canvas) {
+      if(size.width > 0 && size.height > 0 && canvas) {
         const ctx = canvas.getContext('2d')!;
         ctx.clearRect(0, 0, size.width, size.height);
         this.render.render(ctx);

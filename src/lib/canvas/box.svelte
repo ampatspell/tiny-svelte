@@ -14,7 +14,6 @@
     ctx.fillStyle = fill;
     ctx.fillRect(0, 0, size.width, size.height);
   }
-
 </script>
 
 <Render name="box {fill}" position={position} model={{ size, fill }} {draw}>
