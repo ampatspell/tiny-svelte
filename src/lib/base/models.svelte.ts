@@ -1,9 +1,9 @@
 import type { Position, Size } from '$lib/types';
 import { getContext, setContext } from 'svelte';
 
-const STAGE_CONTEXT = 'stage';
-const LAYER_CONTEXT = 'layer';
-const RENDER_CONTEXT = 'render';
+const STAGE_CONTEXT = 'base:stage';
+const LAYER_CONTEXT = 'base:layer';
+const RENDER_CONTEXT = 'base:render';
 
 export type DrawFunction<T> = (model: T, ctx: CanvasRenderingContext2D) => void;
 export type DrawFunctionGetter<T> = () => DrawFunction<T>;
@@ -81,6 +81,25 @@ export class RenderContext<T = any> {
 		}
 		ctx.restore();
 	}
+
+	clientPositionToRenderPosition(client: Position): Position {
+		const { position, parent } = this;
+		if(position) {
+			client = {
+				x: client.x - position.x,
+				y: client.y - position.y
+			};
+		}
+		if(parent) {
+			return parent.clientPositionToRenderPosition(client);
+		}
+		return this.layer.clientPositionToLayerPosition(client);
+	}
+
+	eventToRenderPosition(e: MouseEvent): Position {
+		return this.clientPositionToRenderPosition({ x: e.clientX, y: e.clientY });
+	}
+
 }
 
 const layerModel = () => null;
@@ -132,14 +151,18 @@ export class LayerContext {
 		});
 	}
 
-	convertToLayerPosition(e: MouseEvent): Position {
+	clientPositionToLayerPosition(position: Position): Position {
 		const clientRect = this.canvas?.getBoundingClientRect();
 		if (!clientRect) {
 			throw new Error('no canvas');
 		}
-		const x = e.clientX - clientRect.left;
-		const y = e.clientY - clientRect.top;
+		const x = position.x - clientRect.left;
+		const y = position.y- clientRect.top;
 		return { x, y };
+	}
+
+	eventToLayerPosition(e: MouseEvent): Position {
+		return this.clientPositionToLayerPosition({ x: e.clientX, y: e.clientY });
 	}
 }
 

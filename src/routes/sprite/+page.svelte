@@ -3,7 +3,6 @@
 	import Stage from '$lib/base/stage.svelte';
 	import Layer from '$lib/base/layer.svelte';
 	import Group from '$lib/base/group.svelte';
-	import Box from '$lib/base/box.svelte';
 
 	let pixel = $state(32);
 	let size = $state({ width: 9, height: 9 });

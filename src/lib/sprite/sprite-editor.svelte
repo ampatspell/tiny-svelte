@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getLayerContext } from '$lib/base/models.svelte';
+	import { RenderContext } from '$lib/base/models.svelte';
 	import Render from '$lib/base/render.svelte';
 	import type { Position, Size } from '$lib/types';
 	import { drawGrid } from '$lib/utils/canvas';
@@ -45,10 +45,10 @@
 		}
 	};
 
-	let layer = getLayerContext();
+	let render = $state<RenderContext>();
 
 	let toPixel = (e: MouseEvent) => {
-		let point = layer.convertToLayerPosition(e);
+		let point = render!.eventToRenderPosition(e);
 		let px = Math.floor(point.x / pixel);
 		let py = Math.floor(point.y / pixel);
 		if (px >= 0 && px < size.width && py >= 0 && py < size.height) {
@@ -89,4 +89,4 @@
 
 <svelte:window on:mousemove={onmousemove} on:mousedown={onmousedown} on:mouseup={onmouseup} />
 
-<Render {position} {model} {draw} />
+<Render onCreated={(ctx) => render = ctx} {position} {model} {draw} />
