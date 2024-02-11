@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Position, Size } from "$lib/types";
-	import { getCanvasContext } from "./context.svelte";
+	import Render from "./render.svelte";
 
   let { position, size, fill } = $props<{
     position: Position;
@@ -8,18 +8,12 @@
     fill: string;
   }>();
 
-  let context = getCanvasContext();
+  let draw = ({ size, fill }: { size: Size, fill: string }, ctx: CanvasRenderingContext2D) => {
+    console.log('draw', fill);
+    ctx.fillStyle = fill;
+    ctx.fillRect(0, 0, size.width, size.height);
+  }
 
-  $effect(() => {
-    console.log('box', position, size, fill);
-    let ctx = context.canvas?.getContext('2d');
-    if(ctx) {
-      ctx.save();
-      {
-        ctx.fillStyle = fill;
-        ctx.fillRect(position.x, position.y, size.width, size.height);
-      }
-      ctx.restore();
-    }
-  });
 </script>
+
+<Render name="box {fill}" position={position} model={{ size, fill }} {draw} />
