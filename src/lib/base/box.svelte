@@ -4,7 +4,7 @@
 	import Render from './render.svelte';
 
 	let { position, size, fill, children } = $props<{
-		position: Position;
+		position?: Position;
 		size: Size;
 		fill: string;
 		children?: Snippet;

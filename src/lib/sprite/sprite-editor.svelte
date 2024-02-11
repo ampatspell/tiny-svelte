@@ -5,7 +5,8 @@
 	import { drawGrid } from '$lib/utils/canvas';
 	import { fromIndex, toIndex } from '$lib/utils/pixel';
 
-	let { pixel, size, data, onUpdated } = $props<{
+	let { position, pixel, size, data, onUpdated } = $props<{
+		position?: Position;
 		pixel: number;
 		size: Size;
 		data: number[];
@@ -88,4 +89,4 @@
 
 <svelte:window on:mousemove={onmousemove} on:mousedown={onmousedown} on:mouseup={onmouseup} />
 
-<Render position={{ x: 0, y: 0 }} {model} {draw} />
+<Render {position} {model} {draw} />
