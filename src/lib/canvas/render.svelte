@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-	import { RenderContext, getRenderContext, setRenderContext, type RenderContextDrawFunction } from "./models.svelte";
+	import { RenderContext, getRenderContext, setRenderContext, type DrawFunction } from "./models.svelte";
 
 	import type { Position } from "$lib/types";
 	import type { Snippet } from "svelte";
@@ -14,20 +14,18 @@
     name?: string,
     position: Position,
     model: T,
-    draw: RenderContextDrawFunction<T>,
+    draw: DrawFunction<T>,
     children?: Snippet
   }>();
 
   let parent = getRenderContext();
-  let render = $state<RenderContext>(new RenderContext({
+  let render = new RenderContext({
     layer: parent.layer,
     parent: parent,
     position: () => position,
-    draw: {
-      model: () => model,
-      draw: () => draw
-    }
-  }));
+    model: () => model,
+    draw: () => draw,
+  });
   parent.registerRender(render);
   setRenderContext(render);
 
@@ -36,7 +34,6 @@
       parent.unregisterRender(render!);
     }
   });
-
 </script>
 
 <div class={["render", name].filter(Boolean).join(' ')} bind:this={render.element}>

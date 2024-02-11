@@ -10,13 +10,12 @@
   }>();
 
   let stage = getStageContext();
-  let layer = $state<LayerContext>();
+  let layer = new LayerContext(stage);
+  stage.registerLayer(layer);
+  setLayerContext(layer);
+  setRenderContext(layer.render);
 
   $effect.pre(() => {
-    layer = new LayerContext(stage);
-    stage.registerLayer(layer);
-    setLayerContext(layer);
-    setRenderContext(layer.render);
     return () => {
       stage.unregisterLayer(layer!);
     };
@@ -28,7 +27,6 @@
       if(canvas) {
         canvas.width = size.width;
         canvas.height = size.height;
-        layer.setNeedsRender();
       }
     }
   });

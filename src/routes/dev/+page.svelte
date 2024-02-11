@@ -42,7 +42,7 @@
       <Layer>
         {#each boxes as box}
           {#if box.enabled}
-            <Box position={box} {size} fill={box.fill} />
+            <Box position={box} {size} fill={box.fill}/>
           {/if}
         {/each}
       </Layer>

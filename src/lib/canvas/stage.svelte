@@ -8,13 +8,9 @@
     onStage?: (stage: StageContext) => void;
   }>();
 
-  let stage = $state<StageContext>();
-
-  $effect.pre(() => {
-    stage = new StageContext();
-    setStageContext(stage);
-    onStage?.(stage);
-  });
+  let stage = new StageContext();
+  setStageContext(stage);
+  onStage?.(stage);
 
   let style = $derived(objectToStyle(sizeToStyleObject(stage!.size)));
 </script>

@@ -5,70 +5,25 @@ const STAGE_CONTEXT = 'stage';
 const LAYER_CONTEXT = 'layer';
 const RENDER_CONTEXT = 'render';
 
-export class LayerContext {
-  stage: StageContext;
-  render: RenderContext;
+export type DrawFunction<T> = (model: T, ctx: CanvasRenderingContext2D) => void;
+export type ModelFunction<T> = () => T;
+export type PositionFunction = () => Position;
 
-  constructor(stage: StageContext) {
-    this.stage = stage;
-    this.render = new RenderContext({
-      layer: this,
-      position: () => ({ x: 0, y: 0 }),
-      draw: {
-        model: () => null,
-        draw: () => () => null,
-      }
-    });
-  }
-
-  get canvas() {
-    return this.render.element! as HTMLCanvasElement;
-  }
-
-  get size() {
-    return this.stage.size;
-  }
-
-  isRendering = false;
-
-  setNeedsRender() {
-    if(this.isRendering) {
-      return;
-    }
-    this.isRendering = true;
-    requestAnimationFrame(() => {
-      const { size, canvas } = this;
-      const ctx = canvas.getContext('2d')!;
-      ctx.clearRect(0, 0, size.width, size.height);
-      this.render.render(ctx);
-      this.isRendering = false;
-    });
-  }
-
-}
-
-export type RenderContextDrawFunction<T> = (model: T, ctx: CanvasRenderingContext2D) => void;
-export type RenderContextModelFunction<T> = () => T;
-
-export type RenderContextDraw<T> = {
-  model: RenderContextModelFunction<T>;
-  draw: () => RenderContextDrawFunction<T>;
-};
-
-export type RenderContextOptions = {
+export type RenderContextOptions<T> = {
   layer: LayerContext;
-  parent?: RenderContext;
-  position: () => Position;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  draw: RenderContextDraw<any>;
+  parent?: RenderContext<unknown>;
+  position: PositionFunction;
+  model: ModelFunction<T>;
+  draw: () => DrawFunction<T>;
 };
 
-export class RenderContext {
-  options: RenderContextOptions;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class RenderContext<T = any> {
+  options: RenderContextOptions<T>;
   element?: HTMLElement;
   renders = $state<RenderContext[]>([]);
 
-  constructor(options: RenderContextOptions) {
+  constructor(options: RenderContextOptions<T>) {
     this.options = options;
     $effect(() => {
       this.position;
@@ -97,11 +52,11 @@ export class RenderContext {
   }
 
   get model() {
-    return this.options.draw.model();
+    return this.options.model();
   }
 
   get draw() {
-    return this.options.draw.draw();
+    return this.options.draw();
   }
 
   registerRender(render: RenderContext) {
@@ -127,6 +82,55 @@ export class RenderContext {
 
 }
 
+const layerModel = () => null;
+const layerDraw = () => () => null;
+
+export class LayerContext {
+  stage: StageContext;
+  render: RenderContext<null>;
+  isRendering = false;
+
+  constructor(stage: StageContext) {
+    this.stage = stage;
+    this.render = new RenderContext({
+      layer: this,
+      position: () => ({ x: 0, y: 0 }),
+      model: layerModel,
+      draw: layerDraw,
+    });
+    $effect.pre(() => {
+      this.size;
+      console.log('size');
+      this.setNeedsRender();
+    });
+  }
+
+  get canvas() {
+    return this.render.element as HTMLCanvasElement | undefined;
+  }
+
+  get size() {
+    return this.stage.size;
+  }
+
+  setNeedsRender() {
+    if(this.isRendering) {
+      return;
+    }
+    this.isRendering = true;
+    requestAnimationFrame(() => {
+      const { size, canvas } = this;
+      if(canvas) {
+        const ctx = canvas.getContext('2d')!;
+        ctx.clearRect(0, 0, size.width, size.height);
+        this.render.render(ctx);
+      }
+      this.isRendering = false;
+    });
+  }
+
+}
+
 export class StageContext {
   layers = $state<LayerContext[]>([]);
   size = $state<Size>({ width: 0, height: 0 });
@@ -138,16 +142,6 @@ export class StageContext {
   unregisterLayer(layer: LayerContext) {
     this.layers = this.layers.filter(arg => arg !== layer);
   }
-
-  onMouseMove(cb: (e: MouseEvent) => void) {
-    $effect.pre(() => {
-      window.addEventListener('mousemove', cb);
-      return () => {
-        window.removeEventListener('mousemove', cb);
-      }
-    });
-  }
-
 }
 
 export const setLayerContext = (context: LayerContext) => {
@@ -162,8 +156,8 @@ export const setRenderContext = (context: RenderContext) => {
   setContext(RENDER_CONTEXT, context);
 }
 
-export const getRenderContext = () => {
-  return getContext(RENDER_CONTEXT) as RenderContext;
+export const getRenderContext = <T>() => {
+  return getContext(RENDER_CONTEXT) as RenderContext<T>;
 }
 
 export const setStageContext = (context: StageContext) => {
