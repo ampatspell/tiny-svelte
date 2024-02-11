@@ -6,6 +6,7 @@ const LAYER_CONTEXT = 'layer';
 const RENDER_CONTEXT = 'render';
 
 export type DrawFunction<T> = (model: T, ctx: CanvasRenderingContext2D) => void;
+export type DrawFunctionGetter<T> = () => DrawFunction<T>;
 export type ModelFunction<T> = () => T;
 export type PositionFunction = () => Position;
 
@@ -14,7 +15,7 @@ export type RenderContextOptions<T> = {
   parent?: RenderContext<unknown>;
   position: PositionFunction;
   model: ModelFunction<T>;
-  draw: () => DrawFunction<T>;
+  draw: DrawFunctionGetter<T>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

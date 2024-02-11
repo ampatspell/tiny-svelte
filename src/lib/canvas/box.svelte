@@ -16,7 +16,7 @@
   }
 </script>
 
-<Render name="box {fill}" position={position} model={{ size, fill }} {draw}>
+<Render name="box" position={position} model={{ size, fill }} {draw}>
   {#if children}
     {@render children()}
   {/if}

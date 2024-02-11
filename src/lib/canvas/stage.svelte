@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { type Snippet } from "svelte";
 	import { StageContext, setStageContext } from "./models.svelte";
-	import { objectToStyle, sizeToStyleObject } from "./style.svelte";
+	import { objectToStyle, sizeToStyleObject } from "../style.svelte";
 
   let { children, onStage } = $props<{
     children?: Snippet;

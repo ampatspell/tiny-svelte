@@ -1,4 +1,6 @@
 <script lang="ts" generics="T">
+	import { classes } from "$lib/classes";
+
 	import { RenderContext, getRenderContext, setRenderContext, type DrawFunction } from "./models.svelte";
 
 	import type { Position } from "$lib/types";
@@ -36,7 +38,7 @@
   });
 </script>
 
-<div class={["render", name].filter(Boolean).join(' ')} bind:this={render.element}>
+<div class={classes('render', name)} bind:this={render.element}>
   {#if children}
     {@render children()}
   {/if}

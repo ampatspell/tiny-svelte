@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from "svelte";
 	import { LayerContext, getStageContext, setLayerContext, setRenderContext } from "./models.svelte";
-	import { objectToStyle, sizeToStyleObject } from "./style.svelte";
+	import { objectToStyle, sizeToStyleObject } from "../style.svelte";
 
   let {
     children
