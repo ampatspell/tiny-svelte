@@ -84,13 +84,13 @@ export class RenderContext<T = any> {
 
 	clientPositionToRenderPosition(client: Position): Position {
 		const { position, parent } = this;
-		if(position) {
+		if (position) {
 			client = {
 				x: client.x - position.x,
 				y: client.y - position.y
 			};
 		}
-		if(parent) {
+		if (parent) {
 			return parent.clientPositionToRenderPosition(client);
 		}
 		return this.layer.clientPositionToLayerPosition(client);
@@ -99,7 +99,6 @@ export class RenderContext<T = any> {
 	eventToRenderPosition(e: MouseEvent): Position {
 		return this.clientPositionToRenderPosition({ x: e.clientX, y: e.clientY });
 	}
-
 }
 
 const layerModel = () => null;
@@ -157,7 +156,7 @@ export class LayerContext {
 			throw new Error('no canvas');
 		}
 		const x = position.x - clientRect.left;
-		const y = position.y- clientRect.top;
+		const y = position.y - clientRect.top;
 		return { x, y };
 	}
 

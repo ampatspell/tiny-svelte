@@ -1,11 +1,11 @@
 <script lang="ts">
-	import Box from "$lib/simple/box.svelte";
-	import type { StageContext } from "$lib/simple/context.svelte";
-	import Each from "$lib/simple/each.svelte";
-	import Layer from "$lib/simple/layer.svelte";
-	import Stage from "$lib/simple/stage.svelte";
-	import type { Position, Size } from "$lib/types";
-	import { resize } from "$lib/utils/use-resize.svelte";
+	import Box from '$lib/simple/box.svelte';
+	import type { StageContext } from '$lib/simple/context.svelte';
+	import Each from '$lib/simple/each.svelte';
+	import Layer from '$lib/simple/layer.svelte';
+	import Stage from '$lib/simple/stage.svelte';
+	import type { Position, Size } from '$lib/types';
+	import { resize } from '$lib/utils/use-resize.svelte';
 
 	let size = { width: 50, height: 50 };
 
@@ -35,7 +35,7 @@
 	let onResize = (size: Size) => (stage!.size = size);
 
 	let showLayer = $state(true);
-	let toggleShowLayer = () => showLayer = !showLayer;
+	let toggleShowLayer = () => (showLayer = !showLayer);
 </script>
 
 <div class="page">
@@ -45,7 +45,7 @@
 				<Layer>
 					<Each name="boxes" models={boxes}>
 						{#snippet item(box)}
-							<Box name="box" position={box} size={size} fill={box.fill}/>
+							<Box name="box" position={box} {size} fill={box.fill} />
 						{/snippet}
 					</Each>
 				</Layer>

@@ -1,27 +1,31 @@
 <script lang="ts">
-	import type { Snippet } from "svelte";
-	import { LayerContext, getStageContext, setLayerContext, setRenderContext } from "./context.svelte";
+	import type { Snippet } from 'svelte';
+	import {
+		LayerContext,
+		getStageContext,
+		setLayerContext,
+		setRenderContext
+	} from './context.svelte';
 
-  let { children } = $props<{
-    name?: string;
-    children?: Snippet
-  }>();
+	let { children } = $props<{
+		name?: string;
+		children?: Snippet;
+	}>();
 
-  let stage = getStageContext();
-  let layer = new LayerContext({
-    stage,
-    model: () => null,
-    draw: () => () => {}
-  });
-  setLayerContext(layer);
-  setRenderContext(layer);
-
+	let stage = getStageContext();
+	let layer = new LayerContext({
+		stage,
+		model: () => null,
+		draw: () => () => {}
+	});
+	setLayerContext(layer);
+	setRenderContext(layer);
 </script>
 
 <canvas class="layer" bind:this={layer.element} />
 
 {#if children}
-  {@render children()}
+	{@render children()}
 {/if}
 
 <style lang="scss">

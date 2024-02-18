@@ -89,4 +89,4 @@
 
 <svelte:window on:mousemove={onmousemove} on:mousedown={onmousedown} on:mouseup={onmouseup} />
 
-<Render onCreated={(ctx) => render = ctx} {position} {model} {draw} />
+<Render onCreated={(ctx) => (render = ctx)} {position} {model} {draw} />

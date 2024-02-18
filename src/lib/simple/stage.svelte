@@ -17,20 +17,20 @@
 		children?: Snippet;
 	}>();
 
-  let stage = new StageContext();
-  setStageContext(stage);
-  onCreated?.(stage);
+	let stage = new StageContext();
+	setStageContext(stage);
+	onCreated?.(stage);
 
-  $effect(() => {
-    stage.size = size;
-  });
+	$effect(() => {
+		stage.size = size;
+	});
 
 	let style = $derived.call(() => {
-    let size = stage.size;
-    if(size) {
-      return objectToStyle(sizeToStyleObject(size))
-    }
-  });
+		let size = stage.size;
+		if (size) {
+			return objectToStyle(sizeToStyleObject(size));
+		}
+	});
 </script>
 
 <div class={classes('stage', className)} {style}>

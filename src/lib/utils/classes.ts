@@ -10,10 +10,10 @@ export const classes = (...args: Classes[]) => {
 				arr.push(arg);
 			}
 		}
-	}
+	};
 	args.forEach((arg) => {
-		if(Array.isArray(arg)) {
-			arg.forEach(arg => {
+		if (Array.isArray(arg)) {
+			arg.forEach((arg) => {
 				onArg(arg);
 			});
 		} else {
