@@ -6,7 +6,6 @@
 	import Stage from '$lib/base/stage.svelte';
 	import type { Point, Size } from '$lib/types';
 	import { resize } from '$lib/utils/use-resize.svelte';
-	import SpriteEditor from '$lib/sprite/sprite-editor.svelte';
 
 	let size = { width: 50, height: 50 };
 

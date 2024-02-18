@@ -25,7 +25,7 @@
 		stage.size = size;
 	});
 
-	let style = $derived.call(() => {
+	let style = $derived.by(() => {
 		let size = stage.size;
 		if (size) {
 			return objectToStyle(sizeToStyleObject(size));

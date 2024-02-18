@@ -154,7 +154,7 @@ export class LayerContext extends RenderContext<void> {
 		});
 		$effect(() => {
 			const { children } = this;
-			if(children) {
+			if (children) {
 				const observer = new MutationObserver(() => this.setNeedsRender());
 				observer.observe(children, { childList: true, subtree: true });
 				return () => observer.disconnect();

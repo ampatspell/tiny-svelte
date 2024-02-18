@@ -12,7 +12,7 @@
 		data = next;
 	};
 
-	let large = $derived.call(() => {
+	let large = $derived.by(() => {
 		return {
 			width: size.width * pixel * 2,
 			height: size.height * pixel + 1
@@ -40,9 +40,9 @@
 		flex-direction: column;
 		gap: 15px;
 		> .stage {
-			// :global(> .stage) {
-			//   outline: 1px solid red;
-			// }
+			:global(> .stage) {
+				// outline: 1px solid fade-out(red, 0.9);
+			}
 		}
 	}
 </style>
