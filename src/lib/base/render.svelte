@@ -4,9 +4,7 @@
 		RenderContext,
 		getRenderContext,
 		setRenderContext,
-		type DrawFunction,
-		getLayerContext,
-		getStageContext
+		type DrawFunction
 	} from './models.svelte';
 	import type { Position } from '$lib/types';
 	import type { Snippet } from 'svelte';

@@ -30,7 +30,7 @@
 		boxes[0].fill = boxes[0].fill === 'red' ? 'orange' : 'red';
 	};
 
-	let stage = $state<any>();
+	let stage = $state<StageContext>();
 	let onCreated = (context: StageContext) => (stage = context);
 	let onResize = (size: Size) => (stage!.size = size);
 
@@ -45,7 +45,7 @@
 				<Layer>
 					<Each name="boxes" models={boxes}>
 						{#snippet item(box)}
-							<Box name="box" position={box} {size} fill={box.fill} />
+							<Box position={box} {size} fill={box.fill} />
 						{/snippet}
 					</Each>
 				</Layer>

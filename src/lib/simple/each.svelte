@@ -1,7 +1,6 @@
 <script lang="ts" generics="T">
 	import {
 		EachContext,
-		RenderContext,
 		getRenderContext,
 		getStageContext,
 		setRenderContext
