@@ -1,7 +1,7 @@
 <script lang="ts">
+	import Group from '$lib/simple/group.svelte';
 	import Box from '$lib/simple/box.svelte';
 	import type { StageContext } from '$lib/simple/context.svelte';
-	import Each from '$lib/simple/each.svelte';
 	import Layer from '$lib/simple/layer.svelte';
 	import Stage from '$lib/simple/stage.svelte';
 	import type { Position, Size } from '$lib/types';
@@ -10,9 +10,9 @@
 	let size = { width: 50, height: 50 };
 
 	let boxes = $state<(Position & { fill: string; enabled: boolean })[]>([
-		{ x: 10, y: 10, fill: 'red', enabled: true },
-		{ x: 20, y: 20, fill: 'green', enabled: true },
-		{ x: 30, y: 30, fill: 'blue', enabled: true }
+		{ x: 0, y: 0, fill: 'red', enabled: true },
+		{ x: 10, y: 10, fill: 'green', enabled: true },
+		{ x: 20, y: 20, fill: 'blue', enabled: true }
 	]);
 
 	let reverse = () => {
@@ -36,6 +36,12 @@
 
 	let showLayer = $state(true);
 	let toggleShowLayer = () => (showLayer = !showLayer);
+
+	let placement = $state<'top' | 'bottom'>('top');
+	let togglePlacement = () => {
+		placement = placement === 'top' ? 'bottom' : 'top';
+		console.log(placement);
+	};
 </script>
 
 <div class="page">
@@ -43,17 +49,26 @@
 		<Stage {onCreated}>
 			{#if showLayer}
 				<Layer>
-					<Each name="boxes" models={boxes}>
-						{#snippet item(box)}
+					<Group position={{ x: 20, y: 20 }}>
+						{#if placement === 'top'}
+							<Box size={{ width: 200, height: 100 }} fill="orange" />
+						{/if}
+
+						{#each boxes as box}
 							<Box position={box} {size} fill={box.fill} />
-						{/snippet}
-					</Each>
+						{/each}
+
+						{#if placement === 'bottom'}
+							<Box size={{ width: 200, height: 100 }} fill="orange" />
+						{/if}
+					</Group>
 				</Layer>
 			{/if}
 		</Stage>
 	</div>
 	<div class="row">
 		<button class="dark-button" onclick={toggleShowLayer}>Toggle show layer</button>
+		<button class="dark-button" onclick={togglePlacement}>Toggle placement</button>
 	</div>
 	<div class="row">
 		<button class="dark-button" onclick={reverse}>Reverse</button>

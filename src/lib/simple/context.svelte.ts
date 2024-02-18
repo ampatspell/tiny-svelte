@@ -39,6 +39,8 @@ export class RenderContext<T = any> {
 		$effect(() => {
 			this.model;
 			this.draw;
+			this.position;
+			this.element;
 			this.setNeedsRender();
 			return () => {
 				this.setNeedsRender();
@@ -55,7 +57,10 @@ export class RenderContext<T = any> {
 
 	get index() {
 		const { element } = this;
-		return [...element!.parentElement!.children].indexOf(element!);
+		if (!element) {
+			return 0;
+		}
+		return [...element.parentElement!.children].indexOf(element!);
 	}
 
 	get sortedChildren() {
@@ -162,34 +167,3 @@ export const setLayerContext = (context: LayerContext) => {
 export const getLayerContext = () => {
 	return getContext(LAYER) as LayerContext;
 };
-
-export class EachContext<I> extends RenderContext<I[]> {
-	prev: I[] = [];
-
-	constructor(options: RenderContextOptions<I[]>) {
-		super(options);
-		$effect(() => {
-			const { prev } = this;
-			if (!prev) {
-				return;
-			}
-			const curr = [...this.model];
-			if (!this.orderEquals(prev, curr)) {
-				this.setNeedsRender();
-			}
-			this.prev = curr;
-		});
-	}
-
-	orderEquals(a: I[], b: I[]) {
-		if (a.length !== b.length) {
-			return false;
-		}
-		for (let i = 0; i < a.length; i++) {
-			if (a[i] !== b[i]) {
-				return false;
-			}
-		}
-		return true;
-	}
-}
