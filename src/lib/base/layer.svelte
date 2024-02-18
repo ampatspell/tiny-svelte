@@ -5,38 +5,45 @@
 		getStageContext,
 		setLayerContext,
 		setRenderContext
-	} from './models.svelte';
+	} from './context.svelte';
 
 	let { children } = $props<{
+		name?: string;
 		children?: Snippet;
 	}>();
 
 	let stage = getStageContext();
-	let layer = new LayerContext(stage);
-	stage.registerLayer(layer);
-	setLayerContext(layer);
-	setRenderContext(layer.render);
-
-	$effect(() => {
-		return () => {
-			stage.unregisterLayer(layer!);
-		};
+	let layer = new LayerContext({
+		stage,
+		model: () => null,
+		draw: () => () => {}
 	});
+	setLayerContext(layer);
+	setRenderContext(layer);
 </script>
 
-<canvas bind:this={layer!.render.element} class="layer">
-	{#if children}
-		{@render children()}
-	{/if}
-</canvas>
+<div class="layer">
+	<canvas class="canvas" bind:this={layer.element} />
+	<div class="children" bind:this={layer.children}>
+		{#if children}
+			{@render children()}
+		{/if}
+	</div>
+</div>
 
 <style lang="scss">
 	.layer {
-		background: transparent;
-		position: absolute;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
+		display: contents;
+		> .canvas {
+			background: transparent;
+			position: absolute;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+		}
+		> .children {
+			display: none;
+		}
 	}
 </style>

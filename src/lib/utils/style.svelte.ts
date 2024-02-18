@@ -1,4 +1,4 @@
-import type { Nullable, Position, Size } from '$lib/types';
+import type { Nullable, Point, Size } from '$lib/types';
 
 type StyleObject = { [key: string]: Nullable<string> };
 
@@ -10,7 +10,7 @@ export const sizeToStyleObject = (size: Size): StyleObject => {
 	};
 };
 
-export const positionToStyleObject = (position: Position): StyleObject => {
+export const positionToStyleObject = (position: Point): StyleObject => {
 	const { x, y } = position;
 	return {
 		top: `${y}px`,

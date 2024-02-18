@@ -1,43 +1,39 @@
 <script lang="ts" generics="T">
-	import { classes } from '$lib/utils/classes';
 	import {
 		RenderContext,
 		getRenderContext,
+		getStageContext,
 		setRenderContext,
-		type DrawFunction
-	} from './models.svelte';
-	import type { Position } from '$lib/types';
+
+		type RenderContextDrawFunction
+
+	} from './context.svelte';
+	import type {  Point } from '$lib/types';
 	import type { Snippet } from 'svelte';
 
 	let { name, position, model, draw, children, onCreated } = $props<{
-		name?: string;
-		position?: Position;
+		name: string;
+		position?: Point;
 		model: T;
-		draw: DrawFunction<T>;
+		draw: RenderContextDrawFunction<T>;
 		children?: Snippet;
-		onCreated?: (render: RenderContext) => void;
+		onCreated?: (context: RenderContext<T>) => void;
 	}>();
 
+	let stage = getStageContext();
 	let parent = getRenderContext();
-	let render = new RenderContext({
-		layer: parent.layer,
-		parent: parent,
+	let context = new RenderContext<T>({
+		stage,
+		parent,
 		position: () => position,
 		model: () => model,
 		draw: () => draw
 	});
-	parent.registerRender(render);
-	setRenderContext(render);
-	onCreated?.(render);
-
-	$effect(() => {
-		return () => {
-			parent.unregisterRender(render!);
-		};
-	});
+	setRenderContext(context);
+	onCreated?.(context);
 </script>
 
-<div class={classes('render', name)} bind:this={render.element}>
+<div data-node={name} bind:this={context.element}>
 	{#if children}
 		{@render children()}
 	{/if}

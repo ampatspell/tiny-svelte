@@ -1,29 +1,36 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
-	import { StageContext, setStageContext } from './models.svelte';
 	import { objectToStyle, sizeToStyleObject } from '../utils/style.svelte';
-	import { classes } from '$lib/utils/classes';
+	import { classes, type Classes } from '$lib/utils/classes';
 	import type { Size } from '$lib/types';
+	import { StageContext, setStageContext } from './context.svelte';
 
 	let {
 		class: className,
 		size,
-		children,
-		onStage
+		onCreated,
+		children
 	} = $props<{
-		class?: string;
+		class?: Classes;
 		size?: Size;
+		onCreated?: (stage: StageContext) => void;
 		children?: Snippet;
-		onStage?: (stage: StageContext) => void;
 	}>();
 
-	let stage = new StageContext({
-		size: () => size
-	});
+	let stage = new StageContext();
 	setStageContext(stage);
-	onStage?.(stage);
+	onCreated?.(stage);
 
-	let style = $derived(objectToStyle(sizeToStyleObject(stage!.size)));
+	$effect(() => {
+		stage.size = size;
+	});
+
+	let style = $derived.call(() => {
+		let size = stage.size;
+		if (size) {
+			return objectToStyle(sizeToStyleObject(size));
+		}
+	});
 </script>
 
 <div class={classes('stage', className)} {style}>

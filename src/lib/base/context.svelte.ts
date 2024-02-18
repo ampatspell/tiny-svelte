@@ -1,4 +1,4 @@
-import type { DrawFunction, Position, Size } from '$lib/types';
+import type { Nullable, Point, Size } from '$lib/types';
 import { getContext, setContext } from 'svelte';
 
 const STAGE = 'canvas:stage';
@@ -17,24 +17,28 @@ export const getStageContext = () => {
 	return getContext(STAGE) as StageContext;
 };
 
+export type RenderContextDrawFunction<T> = (ctx: CanvasRenderingContext2D, model: T) => void;
+export type RenderContextModelGetter<T> = () => T;
+export type RenderContextPositionGetter = () => Nullable<Point>;
+
 export type RenderContextOptions<T> = {
 	stage: StageContext;
 	parent?: RenderContext;
-	position?: () => Position | undefined;
-	model: () => T;
-	draw: () => DrawFunction<T>;
+	position?: RenderContextPositionGetter;
+	model: RenderContextModelGetter<T>;
+	draw: () => RenderContextDrawFunction<T>;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export class RenderContext<T = any> {
 	options: RenderContextOptions<T>;
 	element = $state<HTMLElement>();
-	children: RenderContext[] = [];
+	renders: RenderContext[] = [];
 
 	constructor(options: RenderContextOptions<T>) {
 		this.options = options;
 		$effect(() => {
-			return this.parent?.registerChild(this);
+			return this.parent?.registerRender(this);
 		});
 		$effect(() => {
 			this.model;
@@ -48,10 +52,10 @@ export class RenderContext<T = any> {
 		});
 	}
 
-	registerChild(context: RenderContext) {
-		this.children.push(context);
+	registerRender(context: RenderContext) {
+		this.renders.push(context);
 		return () => {
-			this.children = this.children.filter((child) => child !== context);
+			this.renders = this.renders.filter((child) => child !== context);
 		};
 	}
 
@@ -64,7 +68,7 @@ export class RenderContext<T = any> {
 	}
 
 	get sortedChildren() {
-		return this.children.toSorted((a, b) => {
+		return this.renders.toSorted((a, b) => {
 			return a.index - b.index;
 		});
 	}
@@ -77,7 +81,7 @@ export class RenderContext<T = any> {
 		return this.options.draw();
 	}
 
-	get position(): Position {
+	get position(): Point {
 		return this.options.position?.() ?? { x: 0, y: 0 };
 	}
 
@@ -103,6 +107,24 @@ export class RenderContext<T = any> {
 		}
 		ctx.restore();
 	}
+
+	clientPositionToRenderPosition(client: Point): Point {
+		const { position, parent } = this;
+		if (position) {
+			client = {
+				x: client.x - position.x,
+				y: client.y - position.y
+			};
+		}
+		if (parent) {
+			return parent.clientPositionToRenderPosition(client);
+		}
+		return client;
+	}
+
+	eventToRenderPosition(e: MouseEvent): Point {
+		return this.clientPositionToRenderPosition({ x: e.clientX, y: e.clientY });
+	}
 }
 
 export const setRenderContext = (context: RenderContext) => {
@@ -115,6 +137,7 @@ export const getRenderContext = () => {
 
 export class LayerContext extends RenderContext<void> {
 	frame?: number;
+	children = $state<HTMLDivElement>();
 
 	constructor(options: RenderContextOptions<void>) {
 		super(options);
@@ -127,6 +150,14 @@ export class LayerContext extends RenderContext<void> {
 				if (canvas.width !== size.width || canvas.height !== size.height) {
 					this.setNeedsRender();
 				}
+			}
+		});
+		$effect(() => {
+			const { children } = this;
+			if(children) {
+				const observer = new MutationObserver(() => this.setNeedsRender());
+				observer.observe(children, { childList: true, subtree: true });
+				return () => observer.disconnect();
 			}
 		});
 	}
@@ -157,6 +188,16 @@ export class LayerContext extends RenderContext<void> {
 		const ctx = canvas.getContext('2d')!;
 		ctx.clearRect(0, 0, size.width, size.height);
 		this.render(ctx);
+	}
+
+	clientPositionToRenderPosition(position: Point): Point {
+		const clientRect = this.canvas?.getBoundingClientRect();
+		if (!clientRect) {
+			throw new Error('no canvas');
+		}
+		const x = position.x - clientRect.left;
+		const y = position.y - clientRect.top;
+		return { x, y };
 	}
 }
 

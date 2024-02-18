@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { RenderContext } from '$lib/simple/context.svelte';
-	import Render from '$lib/simple/render.svelte';
-	import type { Position, Size } from '$lib/types';
+	import type { RenderContext } from '$lib/base/context.svelte';
+	import Render from '$lib/base/render.svelte';
+	import type { Point, Size } from '$lib/types';
 	import { drawGrid } from '$lib/utils/canvas';
 	import { fromIndex, toIndex } from '$lib/utils/pixel';
 
 	let { position, pixel, size, data, onUpdated } = $props<{
-		position?: Position;
+		position?: Point;
 		pixel: number;
 		size: Size;
 		data: number[];
@@ -16,15 +16,15 @@
 	type Model = {
 		pixel: number;
 		size: Size;
-		hover?: Position;
+		hover?: Point;
 		data: number[];
 	};
 
-	let hover = $state<Position>();
+	let hover = $state<Point>();
 	let model = $derived<Model>({ pixel, size, hover, data });
 
-	let draw = ({ pixel, size, hover, data }: Model, ctx: CanvasRenderingContext2D) => {
-		let drawPixel = (position: Position, fillStyle: string) => {
+	let draw = (ctx: CanvasRenderingContext2D) => {
+		let drawPixel = (position: Point, fillStyle: string) => {
 			ctx.fillStyle = fillStyle;
 			ctx.fillRect(position.x * pixel, position.y * pixel, pixel, pixel);
 		};
@@ -58,7 +58,7 @@
 
 	let drawing = $state<{ color: number }>();
 
-	let update = (pixel: Position) => {
+	let update = (pixel: Point) => {
 		let index = toIndex(pixel, size);
 		let next = [...data];
 		next[index] = drawing!.color;
@@ -89,4 +89,4 @@
 
 <svelte:window on:mousemove={onmousemove} on:mousedown={onmousedown} on:mouseup={onmouseup} />
 
-<Render onCreated={(ctx) => (render = ctx)} {position} {model} {draw} />
+<Render name="sprite-editor" onCreated={(ctx) => (render = ctx)} {position} {model} {draw} />

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Position } from '$lib/types';
+	import type { Point } from '$lib/types';
 	import type { Snippet } from 'svelte';
 	import Render from './render.svelte';
 
 	let { position, children } = $props<{
-		position?: Position;
+		position?: Point;
 		children?: Snippet;
 	}>();
 

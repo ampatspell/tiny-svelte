@@ -1,15 +1,16 @@
 <script lang="ts">
-	import Group from '$lib/simple/group.svelte';
-	import Box from '$lib/simple/box.svelte';
-	import type { StageContext } from '$lib/simple/context.svelte';
-	import Layer from '$lib/simple/layer.svelte';
-	import Stage from '$lib/simple/stage.svelte';
-	import type { Position, Size } from '$lib/types';
+	import Group from '$lib/base/group.svelte';
+	import Box from '$lib/base/box.svelte';
+	import type { StageContext } from '$lib/base/context.svelte';
+	import Layer from '$lib/base/layer.svelte';
+	import Stage from '$lib/base/stage.svelte';
+	import type { Point, Size } from '$lib/types';
 	import { resize } from '$lib/utils/use-resize.svelte';
+	import SpriteEditor from '$lib/sprite/sprite-editor.svelte';
 
 	let size = { width: 50, height: 50 };
 
-	let boxes = $state<(Position & { fill: string; enabled: boolean })[]>([
+	let boxes = $state<(Point & { fill: string; enabled: boolean })[]>([
 		{ x: 0, y: 0, fill: 'red', enabled: true },
 		{ x: 10, y: 10, fill: 'green', enabled: true },
 		{ x: 20, y: 20, fill: 'blue', enabled: true }
@@ -54,7 +55,7 @@
 							<Box size={{ width: 200, height: 100 }} fill="orange" />
 						{/if}
 
-						{#each boxes as box}
+						{#each boxes as box (box)}
 							<Box position={box} {size} fill={box.fill} />
 						{/each}
 
