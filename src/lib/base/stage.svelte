@@ -3,7 +3,7 @@
 	import { objectToStyle, sizeToStyleObject } from '../utils/style.svelte';
 	import { classes, type Classes } from '$lib/utils/classes';
 	import type { Size } from '$lib/types';
-	import { StageContext, setStageContext } from './context.svelte';
+	import { StageContext, setStageContext } from './contexts/stage.svelte';
 
 	let {
 		class: className,

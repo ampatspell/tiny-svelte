@@ -1,11 +1,11 @@
 <script lang="ts" generics="T">
+	import { getStageContext } from './contexts/stage.svelte';
 	import {
-		RenderContext,
 		getRenderContext,
-		getStageContext,
+		RenderContext,
 		setRenderContext,
 		type RenderContextDrawFunction
-	} from './context.svelte';
+	} from './contexts/render.svelte';
 	import type { Point } from '$lib/types';
 	import type { Snippet } from 'svelte';
 

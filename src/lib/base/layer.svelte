@@ -1,11 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import {
-		LayerContext,
-		getStageContext,
-		setLayerContext,
-		setRenderContext
-	} from './context.svelte';
+	import { getStageContext } from './contexts/stage.svelte';
+	import { LayerContext, setLayerContext } from './contexts/layer.svelte';
+	import { setRenderContext } from './contexts/render.svelte';
 
 	let { children } = $props<{
 		name?: string;
