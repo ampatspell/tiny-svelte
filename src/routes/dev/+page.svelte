@@ -1,56 +1,69 @@
 <script lang="ts">
+	import Box from "$lib/simple/box.svelte";
 	import type { StageContext } from "$lib/simple/context.svelte";
+	import Each from "$lib/simple/each.svelte";
 	import Layer from "$lib/simple/layer.svelte";
 	import Stage from "$lib/simple/stage.svelte";
-	import type { Size } from "$lib/types";
+	import type { Position, Size } from "$lib/types";
 	import { resize } from "$lib/utils/use-resize.svelte";
 
+	let size = { width: 50, height: 50 };
 
-	// let size = { width: 50, height: 50 };
+	let boxes = $state<(Position & { fill: string; enabled: boolean })[]>([
+		{ x: 10, y: 10, fill: 'red', enabled: true },
+		{ x: 20, y: 20, fill: 'green', enabled: true },
+		{ x: 30, y: 30, fill: 'blue', enabled: true }
+	]);
 
-	// let boxes = $state<(Position & { fill: string; enabled: boolean })[]>([
-	// 	{ x: 10, y: 10, fill: 'red', enabled: true },
-	// 	{ x: 20, y: 20, fill: 'green', enabled: true },
-	// 	{ x: 30, y: 30, fill: 'blue', enabled: true }
-	// ]);
+	let reverse = () => {
+		boxes.reverse();
+	};
 
-	// let reverse = () => {
-	// 	boxes.reverse();
-	// };
+	let move = () => {
+		let mid = boxes[1];
+		let end = boxes[2];
+		boxes[2] = mid;
+		boxes[1] = end;
+	};
 
-	// let move = () => {
-	// 	let mid = boxes[1];
-	// 	let end = boxes[2];
-	// 	boxes[2] = mid;
-	// 	boxes[1] = end;
-	// };
-
-	// let touch = () => {
-	// 	boxes[0].fill = boxes[0].fill === 'red' ? 'orange' : 'red';
-	// };
+	let touch = () => {
+		boxes[0].fill = boxes[0].fill === 'red' ? 'orange' : 'red';
+	};
 
 	let stage = $state<any>();
 	let onCreated = (context: StageContext) => (stage = context);
 	let onResize = (size: Size) => (stage!.size = size);
+
+	let showLayer = $state(true);
+	let toggleShowLayer = () => showLayer = !showLayer;
 </script>
 
 <div class="page">
 	<div class="container" use:resize={{ onResize }}>
 		<Stage {onCreated}>
-			<Layer>
-				<Box position={{ x: 0, y: 0 }} size={{ width: 50, height: 50 }} fill="red"/>
-			</Layer>
+			{#if showLayer}
+				<Layer>
+					<Each name="boxes" models={boxes}>
+						{#snippet item(box)}
+							<Box name="box" position={box} size={size} fill={box.fill}/>
+						{/snippet}
+					</Each>
+				</Layer>
+			{/if}
 		</Stage>
 	</div>
 	<div class="row">
-		<!-- <button class="dark-button" onclick={reverse}>Reverse</button>
-		<button class="dark-button" onclick={move}>Move</button>
-		<button class="dark-button" onclick={touch}>Thing</button> -->
+		<button class="dark-button" onclick={toggleShowLayer}>Toggle show layer</button>
 	</div>
 	<div class="row">
-		<!-- {#each boxes as box}
+		<button class="dark-button" onclick={reverse}>Reverse</button>
+		<button class="dark-button" onclick={move}>Move</button>
+		<button class="dark-button" onclick={touch}>Thing</button>
+	</div>
+	<div class="row">
+		{#each boxes as box}
 			<button onclick={() => (box.enabled = !box.enabled)}>[{box.fill} {box.enabled}]</button>&nbsp;
-		{/each} -->
+		{/each}
 	</div>
 </div>
 

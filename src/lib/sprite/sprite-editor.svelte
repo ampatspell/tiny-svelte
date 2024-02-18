@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { RenderContext } from '$lib/base/models.svelte';
-	import Render from '$lib/base/render.svelte';
+	import type { RenderContext } from '$lib/simple/context.svelte';
+	import Render from '$lib/simple/render.svelte';
 	import type { Position, Size } from '$lib/types';
 	import { drawGrid } from '$lib/utils/canvas';
 	import { fromIndex, toIndex } from '$lib/utils/pixel';
