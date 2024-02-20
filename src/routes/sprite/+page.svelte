@@ -4,12 +4,14 @@
 	import Layer from '$lib/base/layer.svelte';
 	import Group from '$lib/base/group.svelte';
 
+	let { data: root } = $props();
+
+	let data = $derived(root.sprite.data.pixels);
+	let size = $derived(root.sprite.data.size);
 	let pixel = $state(32);
-	let size = $state({ width: 9, height: 9 });
-	let data = $state(new Array(size.width * size.height).fill(0));
 
 	let onUpdated = (next: number[]) => {
-		data = next;
+		root.sprite.data.pixels = next;
 	};
 
 	let large = $derived.by(() => {
