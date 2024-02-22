@@ -8,3 +8,5 @@ export type SpriteData = {
   size: Size;
   pixels: number[];
 }
+
+export type SpriteIndex = Pick<SpriteData, 'name'>;
