@@ -1,5 +1,6 @@
 {
-  "name": "Default",
+  "type": "sprite",
+  "identifier": "default",
   "size": {
     "width": 8,
     "height": 8

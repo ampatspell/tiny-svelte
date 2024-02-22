@@ -1,19 +1,21 @@
 import type { Handle } from "@sveltejs/kit";
 import { Collection } from "./collection";
-import type { SpriteData, SpriteIndex } from "$lib/types";
 import { dirname } from "./utils";
 import path from "path";
+import type { AssetData, AssetIndex } from "$lib/types";
 
 export class Collections {
-  sprites: Collection<SpriteData, SpriteIndex>;
+  assets: Collection<AssetData, AssetIndex>;
 
   constructor() {
     const base = path.join(dirname(import.meta.url), 'collections');
-    this.sprites = new Collection({
+    this.assets = new Collection({
       base,
-      name: 'sprites',
-      index: (data: SpriteData) => ({
-        name: data.name
+      name: 'assets',
+      index: ({ parent, type, identifier }: AssetData) => ({
+        parent,
+        type,
+        identifier
       }),
     });
   }
