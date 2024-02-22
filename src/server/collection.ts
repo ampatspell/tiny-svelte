@@ -66,6 +66,11 @@ export type CollectionIndexData<I extends object> = {
   [id: string]: I;
 }
 
+export type CollectionIndexDocument<I extends object> = {
+  id: string;
+  data: I;
+};
+
 export class CollectionIndex<T extends object, I extends object> {
   collection: Collection<T, I>;
 
@@ -111,16 +116,16 @@ export class CollectionIndex<T extends object, I extends object> {
 
 export class Collection<T extends object, I extends object> {
   options: CollectionOptions<T, I>;
-  index: CollectionIndex<T, I>;
+  #index: CollectionIndex<T, I>;
 
   constructor(options: CollectionOptions<T, I>) {
     this.options = options;
-    this.index = new CollectionIndex<T, I>(this);
+    this.#index = new CollectionIndex<T, I>(this);
   }
 
   async prepare(): Promise<void> {
     await fs.mkdir(this.path, { recursive: true });
-    await this.index.prepare();
+    await this.#index.prepare();
   }
 
   get path() {
@@ -154,14 +159,19 @@ export class Collection<T extends object, I extends object> {
   async set(id: string, data: T) {
     this.validateId(id);
     await write(this.pathForId(id), data, async () => {
-      await this.index.set(id, data);
+      await this.#index.set(id, data);
     });
   }
 
   async delete(id: string) {
     this.validateId(id);
-    await this.index.delete(id);
+    await this.#index.delete(id);
     await del(this.pathForId(id));
+  }
+
+  async index(): Promise<CollectionIndexDocument<I>[]> {
+    const object = await this.#index.read(false);
+    return Object.keys(object).map((id) => ({ id, data: object[id] }));
   }
 
 }

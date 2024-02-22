@@ -1,9 +1,9 @@
 <div class="page">
 	<div class="row">
-		Hello
+		Editor
 	</div>
 	<div class="row">
-		<a href="/editor">Editor</a>
+		<a href="/editor/assets">Assets</a>
 	</div>
 </div>
 

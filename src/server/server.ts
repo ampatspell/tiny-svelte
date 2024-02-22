@@ -1,6 +1,6 @@
 import type { Handle } from "@sveltejs/kit";
 import { Collection } from "./collection";
-import { dirname } from "./utils";
+import { dirname, once } from "./utils";
 import path from "path";
 import type { AssetData, AssetIndex } from "$lib/types";
 
@@ -19,6 +19,10 @@ export class Collections {
       }),
     });
   }
+
+  async prepare() {
+    await this.assets.prepare();
+  }
 }
 
 export class Server {
@@ -27,9 +31,19 @@ export class Server {
   constructor() {
     this.collections = new Collections();
   }
+
+  async prepare() {
+    await this.collections.prepare();
+  }
 }
 
-export const server: Handle = ({ event, resolve }) => {
-  event.locals.server = new Server();
+const createServer = async () => {
+  const server = new Server();
+  await once('create-server', () => server.prepare());
+  return server;
+}
+
+export const server: Handle = async ({ event, resolve }) => {
+  event.locals.server = await createServer();
   return resolve(event);
 };
