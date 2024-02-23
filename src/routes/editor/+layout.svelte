@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Sidebar from '$lib/layout/sidebar.svelte';
+	import Sidebar from './layout/sidebar/sidebar.svelte';
 </script>
 
 <div class="layout">

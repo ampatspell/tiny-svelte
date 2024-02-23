@@ -1,16 +1,13 @@
 <script lang="ts">
-	import type { EmptyObject } from '$lib/types';
-	import type { ComponentType, SvelteComponent } from 'svelte';
+	import type { Item } from './model';
 
-	let { icon, route, isCurrent } = $props<{
-		icon: ComponentType<SvelteComponent<EmptyObject>>;
-		route: string;
-		isCurrent: boolean;
+	let { item } = $props<{
+		item: Item;
 	}>();
 </script>
 
-<a class="item" class:current={isCurrent} href={route}>
-	<svelte:component this={icon} />
+<a class="item" class:current={item.isCurrent} href={item.route}>
+	<svelte:component this={item.icon} />
 </a>
 
 <style lang="scss">
