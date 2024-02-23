@@ -1,11 +1,16 @@
 <script lang="ts">
-	import Sidebar from './layout/sidebar/sidebar.svelte';
+	import Sidebar from '$lib/editor/layout/sidebar/sidebar.svelte';
+	import type { Snippet } from 'svelte';
+
+	let { children } = $props<{
+		children: Snippet;
+	}>();
 </script>
 
 <div class="layout">
 	<Sidebar />
 	<div class="content">
-		<slot />
+		{@render children()}
 	</div>
 </div>
 
@@ -16,6 +21,8 @@
 		flex-direction: row;
 		> .content {
 			flex: 1;
+			display: flex;
+			flex-direction: column;
 		}
 	}
 </style>

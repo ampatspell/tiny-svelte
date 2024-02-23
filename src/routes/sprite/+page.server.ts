@@ -7,6 +7,18 @@ export const load: ServerLoad = async (event) => {
 		locals: { server }
 	} = event;
 
+	for (let i = 0; i < 50; i++) {
+		await server.collections.assets.set(`sprite-${i}`, {
+			type: 'sprite',
+			identifier: `sprite ${i}`,
+			size: {
+				width: 8,
+				height: 8
+			},
+			pixels: Array(8 * 8).fill(0)
+		});
+	}
+
 	await server.collections.assets.set('default', {
 		type: 'sprite',
 		identifier: 'default',

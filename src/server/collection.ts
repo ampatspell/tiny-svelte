@@ -140,7 +140,7 @@ export class Collection<T extends object, I extends object> {
 
 	validateId(id: string): void {
 		assert(id, 'id is required');
-		assert(id.match(/^[0-9a-zA-Z]{1,32}$/), `id '${id}' must be 0-9, a-z, A-Z, 1 to 32 chars`);
+		assert(id.match(/^[0-9a-zA-Z-]{1,32}$/), `id '${id}' must be 0-9, a-z, A-Z, 1 to 32 chars`);
 	}
 
 	async read(id: string, optional: true): Promise<T | undefined>;

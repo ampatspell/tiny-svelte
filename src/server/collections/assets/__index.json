@@ -2,5 +2,205 @@
 	"default": {
 		"type": "sprite",
 		"identifier": "default"
+	},
+	"sprite-0": {
+		"type": "sprite",
+		"identifier": "sprite 0"
+	},
+	"sprite-1": {
+		"type": "sprite",
+		"identifier": "sprite 1"
+	},
+	"sprite-2": {
+		"type": "sprite",
+		"identifier": "sprite 2"
+	},
+	"sprite-3": {
+		"type": "sprite",
+		"identifier": "sprite 3"
+	},
+	"sprite-4": {
+		"type": "sprite",
+		"identifier": "sprite 4"
+	},
+	"sprite-5": {
+		"type": "sprite",
+		"identifier": "sprite 5"
+	},
+	"sprite-6": {
+		"type": "sprite",
+		"identifier": "sprite 6"
+	},
+	"sprite-7": {
+		"type": "sprite",
+		"identifier": "sprite 7"
+	},
+	"sprite-8": {
+		"type": "sprite",
+		"identifier": "sprite 8"
+	},
+	"sprite-9": {
+		"type": "sprite",
+		"identifier": "sprite 9"
+	},
+	"sprite-10": {
+		"type": "sprite",
+		"identifier": "sprite 10"
+	},
+	"sprite-11": {
+		"type": "sprite",
+		"identifier": "sprite 11"
+	},
+	"sprite-12": {
+		"type": "sprite",
+		"identifier": "sprite 12"
+	},
+	"sprite-13": {
+		"type": "sprite",
+		"identifier": "sprite 13"
+	},
+	"sprite-14": {
+		"type": "sprite",
+		"identifier": "sprite 14"
+	},
+	"sprite-15": {
+		"type": "sprite",
+		"identifier": "sprite 15"
+	},
+	"sprite-16": {
+		"type": "sprite",
+		"identifier": "sprite 16"
+	},
+	"sprite-17": {
+		"type": "sprite",
+		"identifier": "sprite 17"
+	},
+	"sprite-18": {
+		"type": "sprite",
+		"identifier": "sprite 18"
+	},
+	"sprite-19": {
+		"type": "sprite",
+		"identifier": "sprite 19"
+	},
+	"sprite-20": {
+		"type": "sprite",
+		"identifier": "sprite 20"
+	},
+	"sprite-21": {
+		"type": "sprite",
+		"identifier": "sprite 21"
+	},
+	"sprite-22": {
+		"type": "sprite",
+		"identifier": "sprite 22"
+	},
+	"sprite-23": {
+		"type": "sprite",
+		"identifier": "sprite 23"
+	},
+	"sprite-24": {
+		"type": "sprite",
+		"identifier": "sprite 24"
+	},
+	"sprite-25": {
+		"type": "sprite",
+		"identifier": "sprite 25"
+	},
+	"sprite-26": {
+		"type": "sprite",
+		"identifier": "sprite 26"
+	},
+	"sprite-27": {
+		"type": "sprite",
+		"identifier": "sprite 27"
+	},
+	"sprite-28": {
+		"type": "sprite",
+		"identifier": "sprite 28"
+	},
+	"sprite-29": {
+		"type": "sprite",
+		"identifier": "sprite 29"
+	},
+	"sprite-30": {
+		"type": "sprite",
+		"identifier": "sprite 30"
+	},
+	"sprite-31": {
+		"type": "sprite",
+		"identifier": "sprite 31"
+	},
+	"sprite-32": {
+		"type": "sprite",
+		"identifier": "sprite 32"
+	},
+	"sprite-33": {
+		"type": "sprite",
+		"identifier": "sprite 33"
+	},
+	"sprite-34": {
+		"type": "sprite",
+		"identifier": "sprite 34"
+	},
+	"sprite-35": {
+		"type": "sprite",
+		"identifier": "sprite 35"
+	},
+	"sprite-36": {
+		"type": "sprite",
+		"identifier": "sprite 36"
+	},
+	"sprite-37": {
+		"type": "sprite",
+		"identifier": "sprite 37"
+	},
+	"sprite-38": {
+		"type": "sprite",
+		"identifier": "sprite 38"
+	},
+	"sprite-39": {
+		"type": "sprite",
+		"identifier": "sprite 39"
+	},
+	"sprite-40": {
+		"type": "sprite",
+		"identifier": "sprite 40"
+	},
+	"sprite-41": {
+		"type": "sprite",
+		"identifier": "sprite 41"
+	},
+	"sprite-42": {
+		"type": "sprite",
+		"identifier": "sprite 42"
+	},
+	"sprite-43": {
+		"type": "sprite",
+		"identifier": "sprite 43"
+	},
+	"sprite-44": {
+		"type": "sprite",
+		"identifier": "sprite 44"
+	},
+	"sprite-45": {
+		"type": "sprite",
+		"identifier": "sprite 45"
+	},
+	"sprite-46": {
+		"type": "sprite",
+		"identifier": "sprite 46"
+	},
+	"sprite-47": {
+		"type": "sprite",
+		"identifier": "sprite 47"
+	},
+	"sprite-48": {
+		"type": "sprite",
+		"identifier": "sprite 48"
+	},
+	"sprite-49": {
+		"type": "sprite",
+		"identifier": "sprite 49"
 	}
 }

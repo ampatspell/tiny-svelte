@@ -1,17 +1,5 @@
 <script lang="ts">
-	let { data } = $props();
-	console.log(data);
+	import Placeholder from '$lib/editor/placeholder.svelte';
 </script>
 
-<div class="page">
-	<div class="row">Assets</div>
-</div>
-
-<style lang="scss">
-	.page {
-		padding: 15px;
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-	}
-</style>
+<Placeholder label="Select asset on the right" />
