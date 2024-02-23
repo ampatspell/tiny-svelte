@@ -6,7 +6,7 @@
 	let asset = $derived(data.asset!);
 
 	let destroy = async () => {
-		await fetch(`/api/assets/${asset.id}`, { method: 'DELETE' });
+		await fetch('?/delete', { method: 'POST', body: new FormData() });
 		invalidateAll();
 	};
 </script>
