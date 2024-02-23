@@ -1,15 +1,18 @@
+<script>
+	import Editor from '$lib/icons/mingcute-department-line.svelte';
+</script>
+
 <div class="page">
 	<div class="row">
-		Hello
-	</div>
-	<div class="row">
-		<a href="/editor">Editor</a>
+		<a href="/editor">
+			<Editor />
+		</a>
 	</div>
 </div>
 
 <style lang="scss">
 	.page {
-		padding: 15px;
+		padding: 5px;
 		display: flex;
 		flex-direction: column;
 		gap: 5px;

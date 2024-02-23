@@ -1,6 +1,6 @@
 {
-  "default": {
-    "type": "sprite",
-    "identifier": "default"
-  }
+	"default": {
+		"type": "sprite",
+		"identifier": "default"
+	}
 }
