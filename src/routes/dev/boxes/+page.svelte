@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Group from '$lib/base/group.svelte';
 	import Box from '$lib/base/box.svelte';
-	import type { StageContext } from '$lib/base/context.svelte';
 	import Layer from '$lib/base/layer.svelte';
 	import Stage from '$lib/base/stage.svelte';
 	import type { Point, Size } from '$lib/types';
 	import { resize } from '$lib/utils/use-resize.svelte';
+	import type { StageContext } from '$lib/base/contexts/stage.svelte';
 
 	let size = { width: 50, height: 50 };
 
