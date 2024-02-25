@@ -2,9 +2,9 @@
 	import { goto } from '$app/navigation';
 	import Button from '$lib/editor/button.svelte';
 	import Placeholder from '$lib/editor/placeholder.svelte';
-	import { useTRPC } from '$lib/trpc/client.svelte';
+	import { createTRPC } from '$lib/trpc/client.svelte';
 
-	const trpc = useTRPC();
+	const trpc = createTRPC();
 
 	const create = async () => {
 		let res = await trpc.assets.create.query({

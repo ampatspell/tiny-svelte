@@ -2,15 +2,15 @@
 	import { goto } from '$app/navigation';
 	import { createLayout } from '$lib/editor/asset/layout.svelte.js';
 	import Button from '$lib/editor/button.svelte';
-	import { useTRPC } from '$lib/trpc/client.svelte';
+	import { createTRPC } from '$lib/trpc/client.svelte.js';
 
 	let { data } = $props();
 	let asset = $derived(data.asset);
 
-	let trpc = useTRPC();
+	let trpc = createTRPC();
 
 	let destroy = async () => {
-		await trpc.assets.delete.query({ id: data.asset.id });
+		await trpc.assets.destroy.query({ id: data.asset.id });
 		goto('/editor/assets');
 	};
 
@@ -18,7 +18,7 @@
 
 	let save = async () => {
 		await layout.save?.();
-		goto(`/editor/assets/${asset.id}`);
+		goto(`/editor/assets/${asset.id}`, { invalidateAll: true });
 	};
 </script>
 

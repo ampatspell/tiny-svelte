@@ -24,4 +24,4 @@ $effect.root(() =>
 	})
 );
 
-export const useTRPC = () => createClient(init);
+export const createTRPC = () => createClient(init);

@@ -1,3 +1,4 @@
+import type { CollectionIndexDocument } from '$server/collection';
 import { z } from 'zod';
 
 export type Nullable<T> = T | null | undefined;
@@ -53,5 +54,7 @@ export type AssetIndex = {
 	identifier: AssetData['identifier'];
 	type: AssetData['type'];
 };
+
+export type AssetIndexDocument = CollectionIndexDocument<AssetIndex>;
 
 export const IdSchema = z.object({ id: z.string().trim().min(0) });

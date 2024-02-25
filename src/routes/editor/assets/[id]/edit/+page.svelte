@@ -8,7 +8,7 @@
 	let save = $state<() => Promise<void>>();
 
 	getLayout().onEditing(async () => {
-		save?.();
+		await save?.();
 	});
 </script>
 
