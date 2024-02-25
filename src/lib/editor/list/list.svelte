@@ -1,17 +1,18 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
-	let { children } = $props<{
+	let { route, children } = $props<{
 		children?: Snippet;
+		route: string;
 	}>();
 </script>
 
 <div class="list">
-	<div class="content">
+	<a class="content" href={route}>
 		{#if children}
 			{@render children()}
 		{/if}
-	</div>
+	</a>
 </div>
 
 <style lang="scss">
@@ -29,6 +30,7 @@
 			overflow-x: hidden;
 			display: flex;
 			flex-direction: column;
+			text-decoration: none;
 		}
 	}
 </style>

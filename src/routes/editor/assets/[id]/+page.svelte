@@ -24,5 +24,8 @@
 <style lang="scss">
 	.page {
 		padding: 15px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
 	}
 </style>

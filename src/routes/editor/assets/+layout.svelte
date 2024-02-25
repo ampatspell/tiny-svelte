@@ -7,7 +7,7 @@
 
 <div class="layout">
 	<div class="list">
-		<List>
+		<List route="/editor/assets">
 			{#each data.index as asset (asset)}
 				<Asset {asset} route="/editor/assets/{asset.id}" isSelected={asset.id === data.id} />
 			{/each}

@@ -1,5 +1,17 @@
 {
-	"1c7b603017da4b6b": {
+	"321cc61e6c424018": {
+		"type": "sprite",
+		"identifier": "hello"
+	},
+	"2276a9b603bf425c": {
+		"type": "sprite",
+		"identifier": "hello"
+	},
+	"39bf4e6018cd4405": {
+		"type": "sprite",
+		"identifier": "hello"
+	},
+	"488f3e8c691943ec": {
 		"type": "sprite",
 		"identifier": "hello"
 	}
