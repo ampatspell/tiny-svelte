@@ -8,7 +8,7 @@
 <div class="layout">
 	<div class="list">
 		<List route="/editor/assets">
-			{#each data.index.all as asset (asset)}
+			{#each data.assets.all as asset (asset)}
 				<Asset {asset} route="/editor/assets/{asset.id}" isSelected={asset.isSelected} />
 			{/each}
 		</List>

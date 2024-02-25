@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { createTrpc } fromcreateTrpctrpc/client.svelte';
 	import Button from '$lib/editor/button.svelte';
+	import { createTRPC } from '$lib/trpc/client.svelte';
 
-	let rpc = createTrpc();
+	let rpc = createTRPC();
 
 	let greeting = $state();
-createTrpcoad = async () => {
-		greeting = await rpc.assets.query({ name: 'hello' });
+	let load = async () => {
+		greeting = await rpc.assets.get.query({ id: 'default' });
 	};
 </script>
 
