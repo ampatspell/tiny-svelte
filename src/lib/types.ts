@@ -53,3 +53,5 @@ export type AssetIndex = {
 	identifier: AssetData['identifier'];
 	type: AssetData['type'];
 };
+
+export const IdSchema = z.object({ id: z.string().trim().min(0) });

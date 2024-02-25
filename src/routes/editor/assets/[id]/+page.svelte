@@ -1,24 +1,12 @@
 <script lang="ts">
-	import Button from '$lib/editor/button.svelte';
-	import { useTRPC } from '$lib/trpc/client.svelte.js';
-	import { goto } from '$app/navigation';
+	import Details from '$lib/editor/asset/details.svelte';
 
 	let { data } = $props();
 	let asset = $derived(data.asset);
-	let trpc = useTRPC();
-
-	let destroy = async () => {
-		await trpc.assets.delete.query({ id: data.asset.id });
-		goto('/editor/assets');
-	};
 </script>
 
 <div class="page">
-	<div class="type">{asset.data.type}</div>
-	<div class="identifier">{asset.data.identifier}</div>
-	<div class="actions">
-		<Button value="Delete" onClick={destroy} />
-	</div>
+	<Details {asset} />
 </div>
 
 <style lang="scss">
