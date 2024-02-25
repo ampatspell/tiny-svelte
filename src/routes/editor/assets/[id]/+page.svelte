@@ -1,13 +1,15 @@
 <script lang="ts">
 	import Button from '$lib/editor/button.svelte';
-	import { invalidateAll } from '$app/navigation';
+	import { useTRPC } from '$lib/trpc/client.svelte.js';
+	import { goto } from '$app/navigation';
 
 	let { data } = $props();
-	let asset = $derived(data.asset!);
+	let asset = $derived(data.asset);
+	let trpc = useTRPC();
 
 	let destroy = async () => {
-		await fetch('?/delete', { method: 'POST', body: new FormData() });
-		invalidateAll();
+		await trpc.assets.delete.query({ id: data.asset.id });
+		goto('/editor/assets');
 	};
 </script>
 

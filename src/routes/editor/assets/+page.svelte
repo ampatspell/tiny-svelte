@@ -1,20 +1,22 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import Button from '$lib/editor/button.svelte';
 	import Placeholder from '$lib/editor/placeholder.svelte';
 	import { useTRPC } from '$lib/trpc/client.svelte';
 
-	const rpc = useTRPC();
+	const trpc = useTRPC();
 
 	const create = async () => {
-		await rpc.assets.create.query({
+		let res = await trpc.assets.create.query({
 			type: 'sprite',
-			identifier: 'first',
+			identifier: 'hello',
 			size: {
 				width: 8,
 				height: 8
 			},
-			pixels: Array(8 * 8).fill(0)
+			pixels: new Array(8 * 8).fill(0)
 		});
+		goto(`/editor/assets/${res.id}`);
 	};
 </script>
 

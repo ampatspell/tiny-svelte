@@ -49,7 +49,7 @@ export const AssetDataSchema = z.discriminatedUnion('type', [
 export type AssetData = z.infer<typeof AssetDataSchema>;
 
 export type AssetIndex = {
-	parent: AssetData['parent'];
+	parent?: AssetData['parent'];
 	identifier: AssetData['identifier'];
 	type: AssetData['type'];
 };

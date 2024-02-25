@@ -1,6 +1,7 @@
-export const actions = {
-	delete: async (event) => {
-		const id = event.params.id;
-		await event.locals.server.collections.assets.delete(id);
-	}
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async ({ params, locals }) => {
+	return {
+		asset: await locals.server.collections.assets.get(params.id)
+	};
 };
