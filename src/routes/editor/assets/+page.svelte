@@ -15,7 +15,7 @@
 			},
 			pixels: Array(8 * 8).fill(0)
 		});
-	}
+	};
 </script>
 
 <Placeholder label="Select asset on the right">

@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export type Nullable<T> = T | null | undefined;
 export type EmptyObject = Record<string, never>;
 
 export const SizeSchema = z.object({
 	width: z.number(),
-	height: z.number(),
+	height: z.number()
 });
 
 export type Size = z.infer<typeof SizeSchema>;
@@ -25,21 +25,26 @@ export const AssetDataBaseSchema = z.object({
 export const SpriteAssetDataSchema = AssetDataBaseSchema.extend({
 	type: z.literal('sprite'),
 	size: SizeSchema,
-	pixels: z.array(z.number()),
+	pixels: z.array(z.number())
 });
 
 export type SpriteAssetData = z.infer<typeof SpriteAssetDataSchema>;
 
 export const LoopAssetDataSchema = AssetDataBaseSchema.extend({
 	type: z.literal('loop'),
-	sprites: z.array(z.object({
-		id: z.string()
-	})),
+	sprites: z.array(
+		z.object({
+			id: z.string()
+		})
+	)
 });
 
 export type LoopAssetData = z.infer<typeof LoopAssetDataSchema>;
 
-export const AssetDataSchema = z.discriminatedUnion('type', [ SpriteAssetDataSchema, LoopAssetDataSchema ]);
+export const AssetDataSchema = z.discriminatedUnion('type', [
+	SpriteAssetDataSchema,
+	LoopAssetDataSchema
+]);
 
 export type AssetData = z.infer<typeof AssetDataSchema>;
 
