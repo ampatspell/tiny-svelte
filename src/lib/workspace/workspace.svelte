@@ -27,7 +27,7 @@
 
 <style lang="scss">
 	.workspace {
-		background: rgba(255, 0, 0, 0.02);
+		background: fade-out(#000, 0.97);
 		overflow: hidden;
 	}
 </style>
