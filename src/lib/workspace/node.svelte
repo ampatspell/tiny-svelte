@@ -58,6 +58,7 @@
 		if (!dragging) {
 			return;
 		}
+		e.preventDefault();
 
 		let client = mouseClientPositionToPoint(e);
 		let delta = dividePoint(subtractPoints(client, dragging.window), dragging.pixel);
@@ -90,11 +91,15 @@
 		position: absolute;
 		> .header {
 			position: absolute;
-			top: -9px;
+			top: -10px;
 			left: 0;
 			user-select: none;
+			max-width: 100%;
 			> .name {
 				font-size: 10px;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				overflow: hidden;
 			}
 		}
 		> .content {

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '$lib/editor/button.svelte';
 	import type { Point } from '$lib/types';
 	import { WorkspaceContext } from '$lib/workspace/model.svelte';
 	import Node from '$lib/workspace/node.svelte';
@@ -8,6 +9,14 @@
 
 	let positionOne = $state<Point>({ x: 1, y: 1 });
 	let positionTwo = $state<Point>({ x: 10, y: 10 });
+
+	let size = $derived.by(() => {
+		let px = workspace?.pixel;
+		if (!px) {
+			return;
+		}
+		return [`width: ${20 * px}px`, `height: ${10 * px}px`].join('; ');
+	});
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -20,17 +29,24 @@
 <div class="page">
 	<Workspace class="workspace" onCreated={(context) => (workspace = context)}>
 		<Node name="Box #1" position={positionOne} onPosition={(next) => (positionOne = next)}>
-			<div class="box one"></div>
+			<div class="box one" style={size}></div>
 		</Node>
 		<Node name="Box #2" position={positionTwo} onPosition={(next) => (positionTwo = next)}>
-			<div class="box two"></div>
+			<div class="box two" style={size}></div>
 		</Node>
 	</Workspace>
 
 	<div class="sidebar">
 		{@render KeyValue('Size', `${workspace?.size.width} x ${workspace?.size.height}px`)}
 		{@render KeyValue('Position', `${workspace?.position.x}, ${workspace?.position.y}`)}
-		{@render KeyValue('Pixel', `${workspace?.pixel}`)}
+		<div class="row">
+			<div class="title">Pixel ({workspace?.pixel}px)</div>
+			<div class="value">
+				{#each [1, 2, 4, 8, 16] as value}
+					<Button value={value.toString()} onClick={() => workspace!.pixel = value} />
+				{/each}
+			</div>
+		</div>
 		{@render KeyValue('Box', `${positionOne.x}, ${positionOne.y}`)}
 	</div>
 </div>
@@ -60,11 +76,14 @@
 		> .title {
 			font-weight: 600;
 		}
+		> .value {
+			display: flex;
+			flex-direction: row;
+			gap: 1px;
+		}
 	}
 
 	.box {
-		width: 20px * 8;
-		height: 10px * 8;
 		&.one {
 			background: fade-out(red, 0.9);
 		}

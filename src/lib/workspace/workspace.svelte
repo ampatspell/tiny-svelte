@@ -97,6 +97,7 @@
 <style lang="scss">
 	.workspace {
 		background: fade-out(#000, 0.97);
+		position: relative;
 		overflow: hidden;
 	}
 </style>
