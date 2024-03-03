@@ -6,7 +6,8 @@
 
 	let workspace = $state<WorkspaceContext>();
 
-	let position = $state<Point>({ x: 1, y: 1 });
+	let positionOne = $state<Point>({ x: 1, y: 1 });
+	let positionTwo = $state<Point>({ x: 10, y: 10 });
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -18,8 +19,11 @@
 
 <div class="page">
 	<Workspace class="workspace" onCreated={(context) => (workspace = context)}>
-		<Node {position} onPosition={(next) => (position = next)}>
-			<div class="box"></div>
+		<Node position={positionOne} onPosition={(next) => (positionOne = next)}>
+			<div class="box one"></div>
+		</Node>
+		<Node position={positionTwo} onPosition={(next) => (positionTwo = next)}>
+			<div class="box two"></div>
 		</Node>
 	</Workspace>
 
@@ -27,7 +31,7 @@
 		{@render KeyValue('Size', `${workspace?.size.width} x ${workspace?.size.height}px`)}
 		{@render KeyValue('Position', `${workspace?.position.x}, ${workspace?.position.y}`)}
 		{@render KeyValue('Pixel', `${workspace?.pixel}`)}
-		{@render KeyValue('Box', `${position.x}, ${position.y}`)}
+		{@render KeyValue('Box', `${positionOne.x}, ${positionOne.y}`)}
 	</div>
 </div>
 
@@ -61,6 +65,11 @@
 	.box {
 		width: 200px;
 		height: 100px;
-		background: #333;
+		&.one {
+			background: fade-out(red, 0.9);
+		}
+		&.two {
+			background: fade-out(green, 0.9);
+		}
 	}
 </style>

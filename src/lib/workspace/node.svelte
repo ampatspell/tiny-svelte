@@ -69,13 +69,14 @@
 	};
 </script>
 
-<svelte:window onmousedown={onMouseDown} onmouseup={onMouseUp} onmousemove={onMouseMove} />
+<svelte:window onmouseup={onMouseUp} onmousemove={onMouseMove} />
 
 <!-- svelte-ignore a11y-mouse-events-have-key-events a11y-no-static-element-interactions -->
 <div
 	class="node"
 	class:over={isOver}
 	style:translate
+	onmousedown={onMouseDown}
 	onmouseover={onMouseOver}
 	onmouseout={onMouseOut}
 >
@@ -85,10 +86,10 @@
 <style lang="scss">
 	.node {
 		position: absolute;
-		border: 1px solid rgba(255, 0, 0, 0.1);
+		border: 1px solid fade-out(#000, 0.85);
 		transition: 0.15s ease-in-out border-color;
 		&.over {
-			border-color: rgba(255, 0, 0, 0.4);
+			border-color: fade-out(#ef476f, 0.5);
 		}
 	}
 </style>
