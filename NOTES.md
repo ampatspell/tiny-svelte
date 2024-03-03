@@ -12,4 +12,4 @@ collections
         default
     foo-1 (sprite)
     foo-2 (sprite)
-````
+```
