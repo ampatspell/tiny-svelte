@@ -19,4 +19,4 @@ export const subtractPoints = (a: Point, b: Point): Point => calcPoints(a, b, (a
 
 export const multiplyPoint = (a: Point, value: number): Point => calcPoint(a, (a) => a * value);
 export const dividePoint = (a: Point, value: number): Point => calcPoint(a, (a) => a / value);
-export const floorPoint = (point: Point): Point => calcPoint(point, (value) => Math.floor(value));
+export const roundPoint = (point: Point): Point => calcPoint(point, (value) => Math.round(value));

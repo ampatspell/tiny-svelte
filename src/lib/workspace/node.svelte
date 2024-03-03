@@ -6,7 +6,7 @@
 		addPoints,
 		dividePoint,
 		multiplyPoint,
-		floorPoint,
+		roundPoint,
 		subtractPoints
 	} from '$lib/utils/math';
 	import { mouseClientPositionToPoint } from '$lib/utils/event';
@@ -60,7 +60,7 @@
 
 		let client = mouseClientPositionToPoint(e);
 		let delta = dividePoint(subtractPoints(client, dragging.window), dragging.pixel);
-		let point = floorPoint(addPoints(dragging.node, delta));
+		let point = roundPoint(addPoints(dragging.node, delta));
 		onPosition(point);
 	};
 </script>
