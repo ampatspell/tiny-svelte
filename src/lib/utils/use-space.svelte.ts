@@ -14,14 +14,14 @@ export const space = (node: HTMLElement, properties: SpaceProperties) => {
 	};
 
 	window.addEventListener('keydown', keyDown);
-	window.addEventListener('keyUp', keyUp);
+	window.addEventListener('keyup', keyUp);
 	window.addEventListener('focus', keyUp);
 
 	return {
 		update: (next: SpaceProperties) => (properties = next),
 		destroy: () => {
 			window.removeEventListener('keydown', keyDown);
-			window.removeEventListener('keyUp', keyUp);
+			window.removeEventListener('keyup', keyUp);
 			window.removeEventListener('focus', keyUp);
 		}
 	};
