@@ -9,6 +9,7 @@
 		floorPoint,
 		subtractPoints
 	} from '$lib/utils/math';
+	import { mouseClientPositionToPoint } from '$lib/utils/event';
 
 	let { position, onPosition, children } = $props<{
 		position: Point;
@@ -33,11 +34,6 @@
 		pixel: number;
 	}>();
 
-	let clientToPoint = (e: MouseEvent): Point => ({
-		x: e.clientX,
-		y: e.clientY
-	});
-
 	let onMouseDown = (e: MouseEvent) => {
 		if (e.button !== 0 || !isOver) {
 			return;
@@ -45,7 +41,7 @@
 
 		dragging = {
 			node: { x: position.x, y: position.y },
-			window: clientToPoint(e),
+			window: mouseClientPositionToPoint(e),
 			pixel: context.pixel
 		};
 	};
@@ -62,7 +58,7 @@
 			return;
 		}
 
-		let client = clientToPoint(e);
+		let client = mouseClientPositionToPoint(e);
 		let delta = dividePoint(subtractPoints(client, dragging.window), dragging.pixel);
 		let point = floorPoint(addPoints(dragging.node, delta));
 		onPosition(point);
