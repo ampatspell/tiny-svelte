@@ -11,7 +11,8 @@
 	} from '$lib/utils/math';
 	import { mouseClientPositionToPoint } from '$lib/utils/event';
 
-	let { position, onPosition, children } = $props<{
+	let { name, position, onPosition, children } = $props<{
+		name: string;
 		position: Point;
 		onPosition: (position: Point) => void;
 		children: Snippet;
@@ -76,16 +77,34 @@
 	onmouseover={onMouseOver}
 	onmouseout={onMouseOut}
 >
-	{@render children()}
+	<div class="header">
+		<div class="name">{name}</div>
+	</div>
+	<div class="content">
+		{@render children()}
+	</div>
 </div>
 
 <style lang="scss">
 	.node {
 		position: absolute;
-		border: 1px solid fade-out(#000, 0.85);
-		transition: 0.15s ease-in-out border-color;
+		> .header {
+			position: absolute;
+			top: -9px;
+			left: 0;
+			user-select: none;
+			> .name {
+				font-size: 10px;
+			}
+		}
+		> .content {
+			border: 1px solid fade-out(#000, 0.85);
+			transition: 0.15s ease-in-out border-color;
+		}
 		&.over {
-			border-color: fade-out(#ef476f, 0.5);
+			> .content {
+				border-color: fade-out(#ef476f, 0.5);
+			}
 		}
 	}
 </style>

@@ -19,10 +19,10 @@
 
 <div class="page">
 	<Workspace class="workspace" onCreated={(context) => (workspace = context)}>
-		<Node position={positionOne} onPosition={(next) => (positionOne = next)}>
+		<Node name="Box #1" position={positionOne} onPosition={(next) => (positionOne = next)}>
 			<div class="box one"></div>
 		</Node>
-		<Node position={positionTwo} onPosition={(next) => (positionTwo = next)}>
+		<Node name="Box #2" position={positionTwo} onPosition={(next) => (positionTwo = next)}>
 			<div class="box two"></div>
 		</Node>
 	</Workspace>
@@ -63,8 +63,8 @@
 	}
 
 	.box {
-		width: 200px;
-		height: 100px;
+		width: 20px * 8;
+		height: 10px * 8;
 		&.one {
 			background: fade-out(red, 0.9);
 		}
