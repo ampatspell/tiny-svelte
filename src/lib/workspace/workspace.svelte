@@ -21,24 +21,21 @@
 	setWorkspaceContext(context);
 	onCreated?.(context);
 
+	let position = $derived(context.position);
+	let pixel = $derived(context.pixel);
+	let onResize = $derived(context.onResize);
 	let isDraggable = $state(false);
-
-	let onSpace = (space: boolean) => {
-		isDraggable = space;
-	};
-
-	let onPosition = (position: Point) => {
-		context.position = position;
-	};
+	let onSpace = (space: boolean) => (isDraggable = space);
+	let onPosition = (position: Point) => (context.position = position);
 </script>
 
 <div
 	class={classes('workspace', _class)}
-	use:resize={{ onResize: context.onResize }}
+	use:resize={{ onResize }}
 	use:draggable={{
 		isDraggable,
-		position: context.position,
-		pixel: context.pixel,
+		position,
+		pixel,
 		onPosition
 	}}
 	use:space={{ onSpace }}

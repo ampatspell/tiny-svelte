@@ -1,6 +1,6 @@
 import type { Point } from '$lib/types';
 import { mouseClientPositionToPoint } from './event';
-import { addPoints, dividePoint, roundPoint, subtractPoints } from './math';
+import { addPoints, dividePoint, pointEquals, roundPoint, subtractPoints } from './math';
 
 export type DraggableParameters = {
 	isDraggable: boolean;
@@ -27,6 +27,8 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 			return;
 		}
 
+		e.stopPropagation();
+
 		dragging = {
 			position: parameters.position,
 			window: mouseClientPositionToPoint(e),
@@ -34,10 +36,11 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 		};
 	};
 
-	const mouseUp = () => {
+	const mouseUp = (e: MouseEvent) => {
 		if (!dragging) {
 			return;
 		}
+		e.stopPropagation();
 		dragging = undefined;
 	};
 
@@ -45,10 +48,20 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 		if (!dragging) {
 			return;
 		}
+		e.stopPropagation();
 		const client = mouseClientPositionToPoint(e);
 		const delta = dividePoint(subtractPoints(client, dragging.window), dragging.pixel);
 		const point = roundPoint(addPoints(dragging.position, delta));
-		parameters.onPosition(point);
+		if (!pointEquals(parameters.position, point)) {
+			parameters.onPosition(point);
+		}
+	};
+
+	const blur = () => {
+		if (!dragging) {
+			return;
+		}
+		dragging = undefined;
 	};
 
 	node.addEventListener('mousedown', mouseDown);
@@ -57,6 +70,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 
 	window.addEventListener('mouseup', mouseUp);
 	window.addEventListener('mousemove', mouseMove);
+	window.addEventListener('blur', blur);
 
 	return {
 		update: (next: DraggableParameters) => (parameters = next),
@@ -67,6 +81,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 
 			window.removeEventListener('mouseup', mouseUp);
 			window.removeEventListener('mousemove', mouseMove);
+			window.removeEventListener('blur', blur);
 		}
 	};
 };

@@ -1,22 +1,16 @@
 <script lang="ts">
 	import Button from '$lib/editor/button.svelte';
-	import type { Point } from '$lib/types';
 	import { WorkspaceContext } from '$lib/workspace/model.svelte';
 	import Node from '$lib/workspace/node.svelte';
 	import Workspace from '$lib/workspace/workspace.svelte';
+	import Box from './box.svelte';
 
 	let workspace = $state<WorkspaceContext>();
 
-	let positionOne = $state<Point>({ x: 1, y: 1 });
-	let positionTwo = $state<Point>({ x: 10, y: 10 });
-
-	let size = $derived.by(() => {
-		let px = workspace?.pixel;
-		if (!px) {
-			return;
-		}
-		return [`width: ${20 * px}px`, `height: ${10 * px}px`].join('; ');
-	});
+	let boxes = $state([
+		{ position: { x: 1, y: 1 }, size: { width: 20, height: 10 }, color: 'red' },
+		{ position: { x: 30, y: 10 }, size: { width: 20, height: 10 }, color: 'green' }
+	]);
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -28,12 +22,11 @@
 
 <div class="page">
 	<Workspace class="workspace" onCreated={(context) => (workspace = context)}>
-		<Node name="Box #1" position={positionOne} onPosition={(next) => (positionOne = next)}>
-			<div class="box one" style={size}></div>
-		</Node>
-		<Node name="Box #2" position={positionTwo} onPosition={(next) => (positionTwo = next)}>
-			<div class="box two" style={size}></div>
-		</Node>
+		{#each boxes as box (box)}
+			<Node name="Box #1" position={box.position} onPosition={(next) => (box.position = next)}>
+				<Box size={box.size} color={box.color} />
+			</Node>
+		{/each}
 	</Workspace>
 
 	<div class="sidebar">
@@ -47,7 +40,12 @@
 				{/each}
 			</div>
 		</div>
-		{@render KeyValue('Box', `${positionOne.x}, ${positionOne.y}`)}
+		{#each boxes as box (box)}
+			{@render KeyValue(
+				`Box "${box.color}"`,
+				`${box.position.x},${box.position.y} / ${box.size.width}x${box.size.height}`
+			)}
+		{/each}
 	</div>
 </div>
 
@@ -80,15 +78,6 @@
 			display: flex;
 			flex-direction: row;
 			gap: 1px;
-		}
-	}
-
-	.box {
-		&.one {
-			background: fade-out(red, 0.9);
-		}
-		&.two {
-			background: fade-out(green, 0.9);
 		}
 	}
 </style>
