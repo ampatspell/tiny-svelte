@@ -2,7 +2,7 @@
 	import { classes, type Classes } from '$lib/utils/classes';
 	import type { Horizontal, Vertical } from './model.svelte';
 	import { draggable } from '$lib/utils/use-draggable.svelte';
-	import type { Point } from '$lib/types';
+	import type { Point, Size } from '$lib/types';
 
 	let {
 		horizontal,
@@ -19,13 +19,13 @@
 		vertical: Vertical;
 		pixel: number;
 		step: number;
-		onResize: (delta: Point) => void;
+		onResize: (delta: Size) => void;
 	}>();
 
-	let position = $state<Point>({ x: 0, y: 0 });
+	let position = { x: 0, y: 0 };
+
 	let onPosition = (next: Point) => {
-		position = next;
-		onResize({ x: next.x, y: next.y });
+		onResize({ width: next.x, height: next.y });
 	};
 </script>
 

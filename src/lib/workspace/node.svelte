@@ -1,16 +1,17 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { getWorkspaceContext } from './model.svelte';
+	import { getWorkspaceContext, type OnResizeFn } from './model.svelte';
 	import type { Point } from '$lib/types';
 	import { addPoints, multiplyPoint } from '$lib/utils/math';
 	import { draggable } from '$lib/utils/use-draggable.svelte';
 	import { space } from '$lib/utils/use-space.svelte';
 	import Resizable from './resizable.svelte';
 
-	let { name, position, onPosition, children } = $props<{
+	let { name, position, onPosition, onResize, children } = $props<{
 		name: string;
 		position: Point;
 		onPosition: (position: Point) => void;
+		onResize: OnResizeFn;
 		children: Snippet;
 	}>();
 
@@ -44,7 +45,7 @@
 	<div class="header">
 		<div class="name">{name}</div>
 	</div>
-	<Resizable {pixel} {step} class="content">
+	<Resizable {pixel} {step} {onResize} class="content">
 		{@render children()}
 	</Resizable>
 </div>

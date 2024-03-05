@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { Horizontal, PinModel, Vertical, type PinOnResize } from './model.svelte';
+	import { Horizontal, PinModel, Vertical, type OnResizeFn } from './model.svelte';
 	import Pin from './pin.svelte';
 
 	let { pixel, step, onResize } = $props<{
 		pixel: number;
 		step: number;
-		onResize: PinOnResize;
+		onResize: OnResizeFn;
 	}>();
 
 	let pins = [

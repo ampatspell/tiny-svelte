@@ -1,16 +1,24 @@
 <script lang="ts">
 	import Button from '$lib/editor/button.svelte';
-	import { WorkspaceContext } from '$lib/workspace/model.svelte';
+	import type { Point, Size } from '$lib/types';
+	import { WorkspaceContext, type OnResizeEvent } from '$lib/workspace/model.svelte';
 	import Node from '$lib/workspace/node.svelte';
 	import Workspace from '$lib/workspace/workspace.svelte';
 	import Box from './box.svelte';
+	import { addSizes } from '$lib/utils/math';
 
 	let workspace = $state<WorkspaceContext>();
+
+	type Box = { position: Point; size: Size; color: string };
 
 	let boxes = $state([
 		{ position: { x: 1, y: 1 }, size: { width: 20, height: 10 }, color: 'red' },
 		{ position: { x: 30, y: 10 }, size: { width: 20, height: 10 }, color: 'green' }
 	]);
+
+	let onResize = (box: Box, event: OnResizeEvent) => {
+		box.size = event.size;
+	};
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -23,7 +31,12 @@
 <div class="page">
 	<Workspace class="workspace" onCreated={(context) => (workspace = context)}>
 		{#each boxes as box (box)}
-			<Node name="Box #1" position={box.position} onPosition={(next) => (box.position = next)}>
+			<Node
+				name="Box #1"
+				position={box.position}
+				onPosition={(next) => (box.position = next)}
+				onResize={(event) => onResize(box, event)}
+			>
 				<Box size={box.size} color={box.color} />
 			</Node>
 		{/each}

@@ -33,21 +33,23 @@ export enum Vertical {
 	Bottom = 'bottom'
 }
 
-export type PinOnResize = (vertical: Vertical, horizontal: Horizontal, point: Point) => void;
+export type OnResizeEvent = { vertical: Vertical; horizontal: Horizontal; size: Size };
+export type OnResizeFn = (event: OnResizeEvent) => void;
 
 export class PinModel {
 	vertical: Vertical;
 	horizontal: Horizontal;
-	_onResize: PinOnResize;
+	_onResize: OnResizeFn;
 
-	constructor(vertical: Vertical, horizontal: Horizontal, onResize: PinOnResize) {
+	constructor(vertical: Vertical, horizontal: Horizontal, onResize: OnResizeFn) {
 		this.vertical = vertical;
 		this.horizontal = horizontal;
 		this._onResize = onResize;
 	}
 
 	@action
-	onResize(point: Point) {
-		this._onResize(this.vertical, this.horizontal, point);
+	onResize(size: Size) {
+		const { vertical, horizontal } = this;
+		this._onResize({ vertical, horizontal, size });
 	}
 }

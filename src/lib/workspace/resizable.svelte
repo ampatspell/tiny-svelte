@@ -2,24 +2,21 @@
 	import { classes, type Classes } from '$lib/utils/classes';
 	import type { Snippet } from 'svelte';
 	import Pins from './pins.svelte';
-	import type { Horizontal, Vertical } from './model.svelte';
-	import type { Point } from '$lib/types';
+	import type { OnResizeFn } from './model.svelte';
 
 	let {
 		class: _class,
-		children,
 		pixel,
-		step
+		step,
+		onResize,
+		children
 	} = $props<{
 		class: Classes;
 		pixel: number;
 		step: number;
+		onResize: OnResizeFn;
 		children?: Snippet;
 	}>();
-
-	let onResize = (vertical: Vertical, horizontal: Horizontal, point: Point) => {
-		console.log(vertical, horizontal, point);
-	};
 </script>
 
 <div class={classes('resizable', _class)}>

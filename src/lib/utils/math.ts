@@ -1,4 +1,4 @@
-import type { Point } from '$lib/types';
+import type { Point, Size } from '$lib/types';
 
 export const calcPoint = (a: Point, fn: (value: number) => number): Point => {
 	return {
@@ -19,6 +19,15 @@ export const subtractPoints = (a: Point, b: Point): Point => calcPoints(a, b, (a
 
 export const multiplyPoint = (a: Point, value: number): Point => calcPoint(a, (a) => a * value);
 export const dividePoint = (a: Point, value: number): Point => calcPoint(a, (a) => a / value);
-export const roundPoint = (point: Point): Point => calcPoint(point, (value) => Math.round(value));
+export const floorPoint = (point: Point): Point => calcPoint(point, (value) => Math.floor(value));
 
 export const pointEquals = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
+
+export const calcSizes = (a: Size, b: Size, fn: (a: number, b: number) => number): Size => {
+	return {
+		width: fn(a.width, b.width),
+		height: fn(a.height, b.height)
+	};
+};
+
+export const addSizes = (a: Size, b: Size): Size => calcSizes(a, b, (a, b) => a + b);

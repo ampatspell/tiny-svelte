@@ -1,12 +1,14 @@
 import type { Point } from '$lib/types';
 import { mouseClientPositionToPoint } from './event';
-import { addPoints, dividePoint, pointEquals, roundPoint, subtractPoints } from './math';
+import { addPoints, dividePoint, pointEquals, floorPoint, subtractPoints } from './math';
 
 export type DraggableParameters = {
 	isDraggable: boolean;
 	position: Point;
 	pixel: number;
+	onStart?: () => void;
 	onPosition: (position: Point) => void;
+	onEnd?: () => void;
 };
 
 type Dragging = {
@@ -34,6 +36,8 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 			window: mouseClientPositionToPoint(e),
 			pixel: parameters.pixel
 		};
+
+		parameters.onStart?.();
 	};
 
 	const mouseUp = (e: MouseEvent) => {
@@ -42,6 +46,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 		}
 		e.stopPropagation();
 		dragging = undefined;
+		parameters.onEnd?.();
 	};
 
 	const mouseMove = (e: MouseEvent) => {
@@ -51,7 +56,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 		e.stopPropagation();
 		const client = mouseClientPositionToPoint(e);
 		const delta = dividePoint(subtractPoints(client, dragging.window), dragging.pixel);
-		const point = roundPoint(addPoints(dragging.position, delta));
+		const point = floorPoint(addPoints(dragging.position, delta));
 		if (!pointEquals(parameters.position, point)) {
 			parameters.onPosition(point);
 		}
@@ -62,6 +67,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 			return;
 		}
 		dragging = undefined;
+		parameters.onEnd?.();
 	};
 
 	node.addEventListener('mousedown', mouseDown);
