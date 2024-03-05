@@ -3,24 +3,29 @@
 	import type { Snippet } from 'svelte';
 	import Pins from './pins.svelte';
 	import type { OnResizeFn } from './model.svelte';
+	import type { Point, Size } from '$lib/types';
 
 	let {
 		class: _class,
 		pixel,
 		step,
+		position,
+		size,
 		onResize,
 		children
 	} = $props<{
 		class: Classes;
 		pixel: number;
 		step: number;
+		position: Point;
+		size: Size;
 		onResize: OnResizeFn;
 		children?: Snippet;
 	}>();
 </script>
 
 <div class={classes('resizable', _class)}>
-	<Pins {pixel} {step} {onResize} />
+	<Pins {pixel} {step} {position} {size} {onResize} />
 	<div class="content">
 		{#if children}
 			{@render children()}

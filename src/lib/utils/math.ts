@@ -31,3 +31,4 @@ export const calcSizes = (a: Size, b: Size, fn: (a: number, b: number) => number
 };
 
 export const addSizes = (a: Size, b: Size): Size => calcSizes(a, b, (a, b) => a + b);
+export const subtractSizes = (a: Size, b: Size): Size => calcSizes(a, b, (a, b) => a - b);

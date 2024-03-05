@@ -7,16 +7,18 @@
 	import Box from './box.svelte';
 
 	let workspace = $state<WorkspaceContext>();
+	let onWorkspaceCreated = (next: WorkspaceContext) => (workspace = next);
 
 	type Box = { position: Point; size: Size; color: string };
 
 	let boxes = $state([
-		{ position: { x: 1, y: 1 }, size: { width: 20, height: 10 }, color: 'red' },
-		{ position: { x: 30, y: 10 }, size: { width: 20, height: 10 }, color: 'green' }
+		{ position: { x: 1, y: 1 }, size: { width: 8, height: 8 }, color: 'red' },
+		{ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' }
 	]);
 
-	let onResize = (box: Box, event: OnResizeEvent) => {
-		box.size = event.size;
+	let onResize = (box: Box, { position, size }: OnResizeEvent) => {
+		box.position = position;
+		box.size = size;
 	};
 </script>
 
@@ -28,12 +30,14 @@
 {/snippet}
 
 <div class="page">
-	<Workspace class="workspace" onCreated={(context) => (workspace = context)}>
+	<Workspace class="workspace" onCreated={onWorkspaceCreated}>
 		{#each boxes as box (box)}
 			<Node
 				name="Box #1"
 				position={box.position}
 				onPosition={(next) => (box.position = next)}
+				size={box.size}
+				step={1}
 				onResize={(event) => onResize(box, event)}
 			>
 				<Box size={box.size} color={box.color} />

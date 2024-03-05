@@ -1,10 +1,13 @@
 <script lang="ts">
+	import type { Point, Size } from '$lib/types';
 	import { Horizontal, PinModel, Vertical, type OnResizeFn } from './model.svelte';
 	import Pin from './pin.svelte';
 
-	let { pixel, step, onResize } = $props<{
+	let { pixel, step, position, size, onResize } = $props<{
 		pixel: number;
 		step: number;
+		position: Point;
+		size: Size;
 		onResize: OnResizeFn;
 	}>();
 
@@ -20,17 +23,19 @@
 		})
 	];
 
-	let size = $state(9);
-	let offset = $derived(size / 2);
+	let pinSize = $state(9);
+	let offset = $derived(pinSize / 2);
 </script>
 
 <div class="pins" style:--offset="{offset}px">
 	{#each pins as pin}
 		<Pin
 			class="pin"
-			{size}
+			pin={pinSize}
 			vertical={pin.vertical}
 			horizontal={pin.horizontal}
+			{position}
+			{size}
 			onResize={pin.onResize}
 			{pixel}
 			{step}
@@ -44,6 +49,7 @@
 
 		:global(> .pin) {
 			position: absolute;
+			z-index: 1;
 		}
 
 		:global(> .pin.vertical-top) {

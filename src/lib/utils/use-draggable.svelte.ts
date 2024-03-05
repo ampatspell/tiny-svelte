@@ -2,10 +2,17 @@ import type { Point } from '$lib/types';
 import { mouseClientPositionToPoint } from './event';
 import { addPoints, dividePoint, pointEquals, floorPoint, subtractPoints } from './math';
 
+export enum DraggableAxis {
+	Horizontal = 'horizontal',
+	Vertical = 'vertical',
+	Both = 'both'
+}
+
 export type DraggableParameters = {
 	isDraggable: boolean;
 	position: Point;
 	pixel: number;
+	axis?: DraggableAxis;
 	onStart?: () => void;
 	onPosition: (position: Point) => void;
 	onEnd?: () => void;
@@ -20,6 +27,8 @@ type Dragging = {
 export const draggable = (node: HTMLElement, parameters: DraggableParameters) => {
 	let dragging: Dragging | undefined;
 	let isOver = false;
+
+	const getAxis = () => parameters.axis ?? DraggableAxis.Both;
 
 	const mouseOver = () => (isOver = true);
 	const mouseOut = () => (isOver = false);
@@ -54,9 +63,25 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 			return;
 		}
 		e.stopPropagation();
+		const axis = parameters.axis ?? DraggableAxis.Both;
 		const client = mouseClientPositionToPoint(e);
 		const delta = dividePoint(subtractPoints(client, dragging.window), dragging.pixel);
-		const point = floorPoint(addPoints(dragging.position, delta));
+
+		let point = {
+			x: dragging.position.x,
+			y: dragging.position.y
+		};
+
+		if (axis === DraggableAxis.Horizontal || axis === DraggableAxis.Both) {
+			point.x += delta.x;
+		}
+
+		if (axis == DraggableAxis.Vertical || axis === DraggableAxis.Both) {
+			point.y += delta.y;
+		}
+
+		point = floorPoint(point);
+
 		if (!pointEquals(parameters.position, point)) {
 			parameters.onPosition(point);
 		}

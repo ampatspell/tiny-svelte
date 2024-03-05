@@ -1,42 +1,87 @@
 <script lang="ts">
 	import { classes, type Classes } from '$lib/utils/classes';
-	import type { Horizontal, Vertical } from './model.svelte';
-	import { draggable } from '$lib/utils/use-draggable.svelte';
+	import { Horizontal, Vertical } from './model.svelte';
+	import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
 	import type { Point, Size } from '$lib/types';
+	import { addPoints, addSizes, calcPoint, subtractPoints, subtractSizes } from '$lib/utils/math';
 
 	let {
 		horizontal,
 		vertical,
-		size,
+		pin,
 		class: _class,
 		pixel,
 		step,
+		position,
+		size,
 		onResize
 	} = $props<{
 		class?: Classes;
-		size: number;
+		pin: number;
 		horizontal: Horizontal;
 		vertical: Vertical;
 		pixel: number;
+		position: Point;
+		size: Size;
 		step: number;
-		onResize: (delta: Size) => void;
+		onResize: (position: Point, size: Size) => void;
 	}>();
 
-	let position = { x: 0, y: 0 };
+	let draggablePosition = $state<Point>({ x: 0, y: 0 });
+	let startSize: Size;
 
 	let onPosition = (next: Point) => {
-		onResize({ width: next.x, height: next.y });
+		const delta = calcPoint(next, (d) => Math.round(d / step) * step);
+		let { x, y } = position;
+
+		console.log(delta);
+
+		let width = startSize.width + delta.x;
+		let height = startSize.height + delta.y;
+
+		if (horizontal === Horizontal.Left) {
+			x += width;
+		}
+
+		onResize({ x, y }, { width, height });
 	};
+
+	let axis = $derived.by(() => {
+		if (horizontal === Horizontal.Center) {
+			return DraggableAxis.Vertical;
+		} else if (vertical === Vertical.Center) {
+			return DraggableAxis.Horizontal;
+		} else {
+			return DraggableAxis.Both;
+		}
+	});
+
+	let isResizing = $state(false);
+	let onStart = () => {
+		isResizing = true;
+		startSize = { width: size.width, height: size.height };
+		draggablePosition = { x: 0, y: 0 };
+	};
+	let onEnd = () => (isResizing = false);
 </script>
 
 <div
-	class={classes('pin', `horizontal-${horizontal}`, `vertical-${vertical}`, _class)}
-	style:--size="{size}px"
+	class={classes(
+		'pin',
+		`horizontal-${horizontal}`,
+		`vertical-${vertical}`,
+		isResizing && 'resizing',
+		_class
+	)}
+	style:--size="{pin}px"
 	use:draggable={{
 		isDraggable: true,
 		pixel,
-		position,
-		onPosition
+		position: draggablePosition,
+		onPosition,
+		onStart,
+		onEnd,
+		axis
 	}}
 ></div>
 
@@ -46,7 +91,8 @@
 		height: var(--size);
 		background: fade-out(#ef476f, 0.7);
 		border-radius: 2px;
-		&:hover {
+		&:hover,
+		&.resizing {
 			background: fade-out(#ef476f, 0.3);
 		}
 	}

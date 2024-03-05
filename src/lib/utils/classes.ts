@@ -1,4 +1,4 @@
-export type ClassesArg = string | undefined | null;
+export type ClassesArg = string | undefined | null | false;
 export type Classes = ClassesArg | ClassesArg[];
 
 export const classes = (...args: Classes[]) => {
