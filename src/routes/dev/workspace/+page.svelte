@@ -5,7 +5,6 @@
 	import Node from '$lib/workspace/node.svelte';
 	import Workspace from '$lib/workspace/workspace.svelte';
 	import Box from './box.svelte';
-	import { addSizes } from '$lib/utils/math';
 
 	let workspace = $state<WorkspaceContext>();
 
