@@ -28,7 +28,6 @@
 	}>();
 
 	let context = getWorkspaceContext();
-
 	let resizing = $state<{ position: Point; size: Size }>();
 
 	let onPosition = (next: Point) => {
@@ -73,7 +72,9 @@
 		};
 	};
 
-	const onEnd = () => (resizing = undefined);
+	const onEnd = () => {
+		resizing = undefined;
+	};
 
 	const isDraggable = $derived(context.isNodeResizable);
 </script>
@@ -84,6 +85,7 @@
 		`horizontal-${horizontal}`,
 		`vertical-${vertical}`,
 		resizing && 'resizing',
+		!isDraggable && 'hidden',
 		_class
 	)}
 	style:--size="{pin}px"
@@ -106,6 +108,10 @@
 		&:hover,
 		&.resizing {
 			background: fade-out(#ef476f, 0.3);
+		}
+		display: block;
+		&.hidden {
+			display: none;
 		}
 	}
 </style>

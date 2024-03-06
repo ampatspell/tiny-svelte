@@ -6,8 +6,9 @@
 	import { draggable } from '$lib/utils/use-draggable.svelte';
 	import Resizable from './resizable.svelte';
 
-	let { name, position, onPosition, size, step, onResize, children } = $props<{
+	let { name, description, position, onPosition, size, step, onResize, children } = $props<{
 		name: string;
+		description?: string;
 		position: Point;
 		size: Size;
 		step: number;
@@ -20,6 +21,7 @@
 	let pixel = $derived(context.pixel);
 
 	let isDraggable = $derived(context.isNodeDraggable);
+	let isResizable = $derived(context.isNodeResizable);
 
 	let translate = $derived.by(() => {
 		let point = multiplyPoint(addPoints(context.position, position), context.pixel);
@@ -29,6 +31,7 @@
 
 <div
 	class="node"
+	class:resizable={isResizable}
 	style:translate
 	use:draggable={{
 		isDraggable,
@@ -39,6 +42,9 @@
 >
 	<div class="header">
 		<div class="name">{name}</div>
+		{#if description}
+			<div class="description">{description}</div>
+		{/if}
 	</div>
 	<Resizable {pixel} {step} {position} {size} {onResize} class="content">
 		{@render children()}
@@ -50,15 +56,36 @@
 		position: absolute;
 		> .header {
 			position: absolute;
-			top: -10px;
+			top: -11px;
 			left: 0;
 			user-select: none;
+			min-width: 0;
 			max-width: 100%;
+			gap: 3px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			font-size: 11px;
+			color: fade-out(#000, 0.5);
+			> .name,
+			> .description {
+				display: inline;
+			}
 			> .name {
-				font-size: 10px;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				overflow: hidden;
+				color: #000;
+			}
+			> .description {
+				&::before {
+					content: '(';
+				}
+				&::after {
+					content: ')';
+				}
+			}
+		}
+		&.resizable {
+			> .header {
+				display: none;
 			}
 		}
 	}

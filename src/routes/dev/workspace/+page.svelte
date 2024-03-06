@@ -34,11 +34,12 @@
 	<Workspace class="workspace" onCreated={onWorkspaceCreated}>
 		{#each boxes as box (box)}
 			<Node
-				name="Box #1"
+				name="Box"
+				description="{box.size.width}x{box.size.height}, {box.color}"
 				position={box.position}
 				onPosition={(next) => (box.position = next)}
 				size={box.size}
-				step={8}
+				step={1}
 				onResize={(event) => onResize(box, event)}
 			>
 				<Box size={box.size} color={box.color} />
