@@ -38,7 +38,7 @@
 				position={box.position}
 				onPosition={(next) => (box.position = next)}
 				size={box.size}
-				step={1}
+				step={8}
 				onResize={(event) => onResize(box, event)}
 			>
 				<Box size={box.size} color={box.color} />
