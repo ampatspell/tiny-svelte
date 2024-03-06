@@ -36,6 +36,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 			return;
 		}
 
+		e.preventDefault();
 		e.stopPropagation();
 
 		dragging = {
@@ -51,6 +52,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 		if (!dragging) {
 			return;
 		}
+		e.preventDefault();
 		e.stopPropagation();
 		dragging = undefined;
 		parameters.onEnd?.();
@@ -60,6 +62,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 		if (!dragging) {
 			return;
 		}
+		e.preventDefault();
 		e.stopPropagation();
 		const axis = parameters.axis ?? DraggableAxis.Both;
 		const client = mouseClientPositionToPoint(e);

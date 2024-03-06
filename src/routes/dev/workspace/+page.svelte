@@ -1,5 +1,8 @@
 <script lang="ts">
+	import Layer from '$lib/base/layer.svelte';
+	import Stage from '$lib/base/stage.svelte';
 	import Button from '$lib/editor/button.svelte';
+	import SpriteEditor from '$lib/sprite/sprite-editor.svelte';
 	import type { Point, Size } from '$lib/types';
 	import { WorkspaceContext, type OnResizeEvent } from '$lib/workspace/model.svelte';
 	import Node from '$lib/workspace/node.svelte';
@@ -19,19 +22,44 @@
 	let selected = $state<Box>();
 
 	let onResize = (box: Box, { horizontal, vertical, position, size }: OnResizeEvent) => {
-		console.log(horizontal, vertical, position, size);
+		// console.log(horizontal, vertical, position, size);
 		box.position = position;
 		box.size = size;
 	};
 
 	let onWorkspaceClick = () => {
-		console.log('onWorkspaceClick');
+		// console.log('onWorkspaceClick');
 		selected = undefined;
 	};
 
 	let onBoxClick = (box: Box) => {
-		console.log('onBoxClick');
+		// console.log('onBoxClick');
 		selected = box;
+	};
+
+	let sprite = $state<{
+		position: Point;
+		size: Size;
+		pixel: number;
+		data: number[];
+	}>({
+		position: { x: 20, y: 20 },
+		size: { width: 8, height: 8 },
+		pixel: 8,
+		data: Array(8 * 8).fill(0)
+	});
+
+	let spriteStageSize = $derived.by(() => {
+		let size = sprite.size;
+		let pixel = workspace!.pixel * sprite.pixel;
+		return {
+			width: size.width * pixel,
+			height: size.height * pixel
+		};
+	});
+
+	let onSpriteUpdated = (data: number[]) => {
+		sprite.data = data;
 	};
 </script>
 
@@ -52,11 +80,36 @@
 				onPosition={(next) => (box.position = next)}
 				size={box.size}
 				step={1}
+				isDraggable={true}
 				isResizable={box === selected}
 				onResize={(event) => onResize(box, event)}
 				onClick={() => onBoxClick(box)}
 			>
 				<Box size={box.size} color={box.color} />
+			</Node>
+
+			<Node
+				name="Sprite"
+				description="–"
+				position={sprite.position}
+				onPosition={(next) => (sprite.position = next)}
+				size={sprite.size}
+				step={sprite.pixel}
+				isDraggable={false}
+				isResizable={false}
+				onResize={(event) => {}}
+				onClick={() => {}}
+			>
+				<Stage class="stage" size={spriteStageSize}>
+					<Layer>
+						<SpriteEditor
+							pixel={workspace!.pixel * sprite.pixel}
+							size={sprite.size}
+							data={sprite.data}
+							onUpdated={onSpriteUpdated}
+						/>
+					</Layer>
+				</Stage>
 			</Node>
 		{/each}
 	</Workspace>

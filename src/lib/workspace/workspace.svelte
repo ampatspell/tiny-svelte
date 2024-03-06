@@ -6,7 +6,6 @@
 	import type { Snippet } from 'svelte';
 	import { setWorkspaceContext, WorkspaceContext } from './model.svelte';
 	import type { Point } from '$lib/types';
-	import { stopPropagation } from '$lib/utils/event';
 
 	let {
 		class: _class,
@@ -44,7 +43,7 @@
 		onPosition
 	}}
 	use:space={{ onSpace }}
-	onclick={stopPropagation(() => onClick())}
+	onmousedown={() => onClick()}
 >
 	{#if children}
 		{@render children()}

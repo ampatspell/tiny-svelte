@@ -15,6 +15,7 @@
 		size,
 		step,
 		onResize,
+		isDraggable: _isDraggable,
 		isResizable: _isResizable,
 		onClick,
 		children
@@ -25,6 +26,7 @@
 		size: Size;
 		step: number;
 		onPosition: (position: Point) => void;
+		isDraggable: boolean;
 		isResizable: boolean;
 		onResize: OnResizeFn;
 		onClick: () => void;
@@ -34,7 +36,7 @@
 	let context = getWorkspaceContext();
 	let pixel = $derived(context.pixel);
 
-	let isDraggable = $derived(context.isNodeDraggable);
+	let isDraggable = $derived(_isDraggable && context.isNodeDraggable);
 	let isResizable = $derived(_isResizable && context.isNodeResizable);
 
 	let translate = $derived.by(() => {
@@ -52,9 +54,9 @@
 		isDraggable,
 		pixel,
 		position,
-		onPosition
+		onPosition,
+		onStart: onClick
 	}}
-	onclick={stopPropagation(() => onClick())}
 >
 	<div class="header">
 		<div class="name">{name}</div>
