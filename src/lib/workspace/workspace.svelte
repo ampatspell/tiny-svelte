@@ -6,14 +6,17 @@
 	import type { Snippet } from 'svelte';
 	import { setWorkspaceContext, WorkspaceContext } from './model.svelte';
 	import type { Point } from '$lib/types';
+	import { stopPropagation } from '$lib/utils/event';
 
 	let {
 		class: _class,
 		onCreated,
+		onClick,
 		children
 	} = $props<{
 		class?: Classes;
 		onCreated?: (context: WorkspaceContext) => void;
+		onClick: () => void;
 		children?: Snippet;
 	}>();
 
@@ -30,6 +33,7 @@
 	let onPosition = (position: Point) => (context.position = position);
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
 <div
 	class={classes('workspace', _class)}
 	use:resize={{ onResize }}
@@ -40,6 +44,7 @@
 		onPosition
 	}}
 	use:space={{ onSpace }}
+	onclick={stopPropagation(() => onClick())}
 >
 	{#if children}
 		{@render children()}

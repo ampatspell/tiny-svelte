@@ -16,10 +16,22 @@
 		{ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' }
 	]);
 
+	let selected = $state<Box>();
+
 	let onResize = (box: Box, { horizontal, vertical, position, size }: OnResizeEvent) => {
 		console.log(horizontal, vertical, position, size);
 		box.position = position;
 		box.size = size;
+	};
+
+	let onWorkspaceClick = () => {
+		console.log('onWorkspaceClick');
+		selected = undefined;
+	};
+
+	let onBoxClick = (box: Box) => {
+		console.log('onBoxClick');
+		selected = box;
 	};
 </script>
 
@@ -31,7 +43,7 @@
 {/snippet}
 
 <div class="page">
-	<Workspace class="workspace" onCreated={onWorkspaceCreated}>
+	<Workspace class="workspace" onCreated={onWorkspaceCreated} onClick={onWorkspaceClick}>
 		{#each boxes as box (box)}
 			<Node
 				name="Box"
@@ -40,7 +52,9 @@
 				onPosition={(next) => (box.position = next)}
 				size={box.size}
 				step={1}
+				isResizable={box === selected}
 				onResize={(event) => onResize(box, event)}
+				onClick={() => onBoxClick(box)}
 			>
 				<Box size={box.size} color={box.color} />
 			</Node>
@@ -50,6 +64,7 @@
 	<div class="sidebar">
 		{@render KeyValue('Size', `${workspace?.size.width} x ${workspace?.size.height}px`)}
 		{@render KeyValue('Position', `${workspace?.position.x}, ${workspace?.position.y}`)}
+
 		<div class="row">
 			<div class="title">Pixel ({workspace?.pixel}px)</div>
 			<div class="value">
@@ -58,6 +73,9 @@
 				{/each}
 			</div>
 		</div>
+
+		{@render KeyValue('Selected', `${selected?.color ?? 'No selection'}`)}
+
 		{#each boxes as box (box)}
 			{@render KeyValue(
 				`Box "${box.color}"`,

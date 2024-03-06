@@ -11,6 +11,7 @@
 		step,
 		position,
 		size,
+		isResizable,
 		onResize,
 		children
 	} = $props<{
@@ -19,13 +20,14 @@
 		step: number;
 		position: Point;
 		size: Size;
+		isResizable: boolean;
 		onResize: OnResizeFn;
 		children?: Snippet;
 	}>();
 </script>
 
 <div class={classes('resizable', _class)}>
-	<Pins {pixel} {step} {position} {size} {onResize} />
+	<Pins {pixel} {step} {position} {size} {onResize} {isResizable} />
 	<div class="content">
 		{#if children}
 			{@render children()}

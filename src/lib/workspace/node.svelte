@@ -5,15 +5,29 @@
 	import { addPoints, multiplyPoint } from '$lib/utils/math';
 	import { draggable } from '$lib/utils/use-draggable.svelte';
 	import Resizable from './resizable.svelte';
+	import { stopPropagation } from '$lib/utils/event';
 
-	let { name, description, position, onPosition, size, step, onResize, children } = $props<{
+	let {
+		name,
+		description,
+		position,
+		onPosition,
+		size,
+		step,
+		onResize,
+		isResizable: _isResizable,
+		onClick,
+		children
+	} = $props<{
 		name: string;
 		description?: string;
 		position: Point;
 		size: Size;
 		step: number;
 		onPosition: (position: Point) => void;
+		isResizable: boolean;
 		onResize: OnResizeFn;
+		onClick: () => void;
 		children: Snippet;
 	}>();
 
@@ -21,7 +35,7 @@
 	let pixel = $derived(context.pixel);
 
 	let isDraggable = $derived(context.isNodeDraggable);
-	let isResizable = $derived(context.isNodeResizable);
+	let isResizable = $derived(_isResizable && context.isNodeResizable);
 
 	let translate = $derived.by(() => {
 		let point = multiplyPoint(addPoints(context.position, position), context.pixel);
@@ -29,6 +43,7 @@
 	});
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
 <div
 	class="node"
 	class:resizable={isResizable}
@@ -39,6 +54,7 @@
 		position,
 		onPosition
 	}}
+	onclick={stopPropagation(() => onClick())}
 >
 	<div class="header">
 		<div class="name">{name}</div>
@@ -46,7 +62,7 @@
 			<div class="description">{description}</div>
 		{/if}
 	</div>
-	<Resizable {pixel} {step} {position} {size} {onResize} class="content">
+	<Resizable {pixel} {step} {position} {size} {isResizable} {onResize} class="content">
 		{@render children()}
 	</Resizable>
 </div>

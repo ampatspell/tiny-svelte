@@ -3,11 +3,12 @@
 	import { Horizontal, Vertical, type OnResizeFn } from './model.svelte';
 	import Pin from './pin.svelte';
 
-	let { pixel, step, position, size, onResize } = $props<{
+	let { pixel, step, position, size, isResizable, onResize } = $props<{
 		pixel: number;
 		step: number;
 		position: Point;
 		size: Size;
+		isResizable: boolean;
 		onResize: OnResizeFn;
 	}>();
 
@@ -39,7 +40,7 @@
 	let offset = $derived(pinSize / 2);
 </script>
 
-<div class="pins" style:--offset="{offset}px">
+<div class="pins" class:resizable={isResizable} style:--offset="{offset}px">
 	{#each pins as pin}
 		<Pin
 			class="pin"
@@ -86,6 +87,11 @@
 
 		:global(> .pin.horizontal-right) {
 			right: var(--o);
+		}
+
+		display: none;
+		&.resizable {
+			display: block;
 		}
 	}
 </style>
