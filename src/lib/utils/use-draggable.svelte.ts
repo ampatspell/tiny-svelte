@@ -1,6 +1,6 @@
 import type { Point } from '$lib/types';
 import { mouseClientPositionToPoint } from './event';
-import { addPoints, dividePoint, pointEquals, floorPoint, subtractPoints } from './math';
+import { dividePoint, floorPoint, subtractPoints } from './math';
 
 export enum DraggableAxis {
 	Horizontal = 'horizontal',
@@ -10,7 +10,7 @@ export enum DraggableAxis {
 
 export type DraggableParameters = {
 	isDraggable: boolean;
-	position: Point;
+	position?: Point;
 	pixel: number;
 	axis?: DraggableAxis;
 	onStart?: () => void;
@@ -28,8 +28,6 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 	let dragging: Dragging | undefined;
 	let isOver = false;
 
-	const getAxis = () => parameters.axis ?? DraggableAxis.Both;
-
 	const mouseOver = () => (isOver = true);
 	const mouseOut = () => (isOver = false);
 
@@ -41,7 +39,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 		e.stopPropagation();
 
 		dragging = {
-			position: parameters.position,
+			position: parameters.position ?? { x: 0, y: 0 },
 			window: mouseClientPositionToPoint(e),
 			pixel: parameters.pixel
 		};
@@ -82,9 +80,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 
 		point = floorPoint(point);
 
-		if (!pointEquals(parameters.position, point)) {
-			parameters.onPosition(point);
-		}
+		parameters.onPosition(point);
 	};
 
 	const blur = () => {

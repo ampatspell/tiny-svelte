@@ -4,7 +4,6 @@
 	import type { Point, Size } from '$lib/types';
 	import { addPoints, multiplyPoint } from '$lib/utils/math';
 	import { draggable } from '$lib/utils/use-draggable.svelte';
-	import { space } from '$lib/utils/use-space.svelte';
 	import Resizable from './resizable.svelte';
 
 	let { name, position, onPosition, size, step, onResize, children } = $props<{
@@ -20,16 +19,12 @@
 	let context = getWorkspaceContext();
 	let pixel = $derived(context.pixel);
 
+	let isDraggable = $derived(context.isNodeDraggable);
+
 	let translate = $derived.by(() => {
 		let point = multiplyPoint(addPoints(context.position, position), context.pixel);
 		return `${point.x}px ${point.y}px`;
 	});
-
-	// TODO: disabled
-	let isDraggable = $state(false);
-	let onSpace = (space: boolean) => {
-		isDraggable = !space;
-	};
 </script>
 
 <div
@@ -41,7 +36,6 @@
 		position,
 		onPosition
 	}}
-	use:space={{ onSpace }}
 >
 	<div class="header">
 		<div class="name">{name}</div>

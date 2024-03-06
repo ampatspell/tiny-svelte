@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { classes, type Classes } from '$lib/utils/classes';
-	import { Horizontal, Vertical } from './model.svelte';
+	import { getWorkspaceContext, Horizontal, Vertical } from './model.svelte';
 	import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
 	import type { Point, Size } from '$lib/types';
-	import { addPoints, addSizes, calcPoint, subtractPoints, subtractSizes } from '$lib/utils/math';
+	import { calcPoint } from '$lib/utils/math';
 
 	let {
 		horizontal,
@@ -27,26 +27,36 @@
 		onResize: (position: Point, size: Size) => void;
 	}>();
 
-	let draggablePosition = $state<Point>({ x: 0, y: 0 });
-	let startSize: Size;
+	let context = getWorkspaceContext();
+
+	let resizing = $state<{ position: Point; size: Size }>();
 
 	let onPosition = (next: Point) => {
 		const delta = calcPoint(next, (d) => Math.round(d / step) * step);
-		let { x, y } = position;
 
-		console.log(delta);
+		let {
+			position: { x, y },
+			size: { width, height }
+		} = resizing!;
 
-		let width = startSize.width + delta.x;
-		let height = startSize.height + delta.y;
+		if (horizontal == Horizontal.Right) {
+			width += delta.x;
+		} else if (horizontal === Horizontal.Left) {
+			x += delta.x;
+			width -= delta.x;
+		}
 
-		if (horizontal === Horizontal.Left) {
-			x += width;
+		if (vertical === Vertical.Top) {
+			y += delta.y;
+			height -= delta.y;
+		} else if (vertical === Vertical.Bottom) {
+			height += delta.y;
 		}
 
 		onResize({ x, y }, { width, height });
 	};
 
-	let axis = $derived.by(() => {
+	const axis = $derived.by(() => {
 		if (horizontal === Horizontal.Center) {
 			return DraggableAxis.Vertical;
 		} else if (vertical === Vertical.Center) {
@@ -56,13 +66,16 @@
 		}
 	});
 
-	let isResizing = $state(false);
-	let onStart = () => {
-		isResizing = true;
-		startSize = { width: size.width, height: size.height };
-		draggablePosition = { x: 0, y: 0 };
+	const onStart = () => {
+		resizing = {
+			position: { x: position.x, y: position.y },
+			size: { width: size.width, height: size.height }
+		};
 	};
-	let onEnd = () => (isResizing = false);
+
+	const onEnd = () => (resizing = undefined);
+
+	const isDraggable = $derived(context.isNodeResizable);
 </script>
 
 <div
@@ -70,14 +83,13 @@
 		'pin',
 		`horizontal-${horizontal}`,
 		`vertical-${vertical}`,
-		isResizing && 'resizing',
+		resizing && 'resizing',
 		_class
 	)}
 	style:--size="{pin}px"
 	use:draggable={{
-		isDraggable: true,
+		isDraggable,
 		pixel,
-		position: draggablePosition,
 		onPosition,
 		onStart,
 		onEnd,

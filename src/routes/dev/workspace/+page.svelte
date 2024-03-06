@@ -16,7 +16,8 @@
 		{ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' }
 	]);
 
-	let onResize = (box: Box, { position, size }: OnResizeEvent) => {
+	let onResize = (box: Box, { horizontal, vertical, position, size }: OnResizeEvent) => {
+		console.log(horizontal, vertical, position, size);
 		box.position = position;
 		box.size = size;
 	};

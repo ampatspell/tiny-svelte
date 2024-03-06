@@ -24,8 +24,9 @@
 	let position = $derived(context.position);
 	let pixel = $derived(context.pixel);
 	let onResize = $derived(context.onResize);
-	let isDraggable = $state(false);
-	let onSpace = (space: boolean) => (isDraggable = space);
+	let isDraggable = $derived(context.isWorkspaceDraggable);
+
+	let onSpace = (space: boolean) => (context.isWorkspaceDraggable = space);
 	let onPosition = (position: Point) => (context.position = position);
 </script>
 

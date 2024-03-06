@@ -7,6 +7,10 @@ export class WorkspaceContext {
 	position = $state<Point>({ x: 10, y: 10 });
 	pixel = $state<number>(8);
 
+	isWorkspaceDraggable = $state(false);
+	isNodeDraggable = $derived(!this.isWorkspaceDraggable);
+	isNodeResizable = $derived(!this.isWorkspaceDraggable);
+
 	@action
 	onResize(size: Size) {
 		this.size = size;
@@ -33,22 +37,11 @@ export enum Vertical {
 	Bottom = 'bottom'
 }
 
-export type OnResizeEvent = { position: Point; size: Size };
-export type OnResizeFn = (event: OnResizeEvent) => void;
-
-export class PinModel {
-	vertical: Vertical;
+export type OnResizeEvent = {
 	horizontal: Horizontal;
-	_onResize: OnResizeFn;
+	vertical: Vertical;
+	position: Point;
+	size: Size;
+};
 
-	constructor(vertical: Vertical, horizontal: Horizontal, onResize: OnResizeFn) {
-		this.vertical = vertical;
-		this.horizontal = horizontal;
-		this._onResize = onResize;
-	}
-
-	@action
-	onResize(position: Point, size: Size) {
-		this._onResize({ position, size });
-	}
-}
+export type OnResizeFn = (event: OnResizeEvent) => void;

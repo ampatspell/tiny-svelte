@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Point, Size } from '$lib/types';
-	import { Horizontal, PinModel, Vertical, type OnResizeFn } from './model.svelte';
+	import { Horizontal, Vertical, type OnResizeFn } from './model.svelte';
 	import Pin from './pin.svelte';
 
 	let { pixel, step, position, size, onResize } = $props<{
@@ -11,15 +11,27 @@
 		onResize: OnResizeFn;
 	}>();
 
+	let pin = (horizontal: Horizontal, vertical: Vertical) => ({
+		horizontal,
+		vertical,
+		onResize: (position: Point, size: Size) =>
+			onResize({
+				horizontal,
+				vertical,
+				position,
+				size
+			})
+	});
+
 	let pins = [
 		...[Horizontal.Left, Horizontal.Center, Horizontal.Right].map((horizontal) => {
-			return new PinModel(Vertical.Top, horizontal, onResize);
+			return pin(horizontal, Vertical.Top);
 		}),
 		...[Horizontal.Left, Horizontal.Right].map((horizontal) => {
-			return new PinModel(Vertical.Center, horizontal, onResize);
+			return pin(horizontal, Vertical.Center);
 		}),
 		...[Horizontal.Left, Horizontal.Center, Horizontal.Right].map((horizontal) => {
-			return new PinModel(Vertical.Bottom, horizontal, onResize);
+			return pin(horizontal, Vertical.Bottom);
 		})
 	];
 
