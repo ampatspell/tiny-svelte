@@ -22,7 +22,7 @@ export type Point = z.infer<typeof PointSchema>;
 
 export const AssetDataBaseSchema = z.object({
 	parent: z.string().optional(),
-	identifier: IdentifierSchema,
+	identifier: IdentifierSchema
 });
 
 //
@@ -30,7 +30,7 @@ export const AssetDataBaseSchema = z.object({
 export const BoxAssetDataSchema = AssetDataBaseSchema.extend({
 	type: z.literal('box'),
 	size: SizeSchema,
-	color: z.string(),
+	color: z.string()
 });
 
 export type BoxAssetData = z.infer<typeof BoxAssetDataSchema>;
@@ -63,7 +63,7 @@ export type LoopAssetData = z.infer<typeof LoopAssetDataSchema>;
 export const AssetDataSchema = z.discriminatedUnion('type', [
 	SpriteAssetDataSchema,
 	LoopAssetDataSchema,
-	BoxAssetDataSchema,
+	BoxAssetDataSchema
 ]);
 
 export type AssetData = z.infer<typeof AssetDataSchema>;
@@ -94,7 +94,7 @@ export type WorkspaceIndex = {
 
 export const WorkspaceNodeDataSchema = z.object({
 	position: PointSchema,
-	asset: IdentifierSchema,
+	asset: IdentifierSchema
 });
 
 export type WorkspaceNodeData = z.infer<typeof WorkspaceNodeDataSchema>;

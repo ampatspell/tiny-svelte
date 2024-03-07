@@ -2,7 +2,14 @@ import type { Handle } from '@sveltejs/kit';
 import { Collection } from './collection';
 import { dirname, once } from './utils';
 import path from 'path';
-import type { AssetData, AssetIndex, WorkspaceData, WorkspaceIndex, WorkspaceNodeData, WorkspaceNodeIndex } from '$lib/types';
+import type {
+	AssetData,
+	AssetIndex,
+	WorkspaceData,
+	WorkspaceIndex,
+	WorkspaceNodeData,
+	WorkspaceNodeIndex
+} from '$lib/types';
 
 export class Collections {
 	assets: Collection<AssetData, AssetIndex>;
