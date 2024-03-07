@@ -37,7 +37,7 @@
 	];
 
 	let pinSize = $state(9);
-	let offset = $derived(pinSize / 2);
+	let offset = $derived(Math.ceil(pinSize / 2));
 </script>
 
 <div class="pins" class:resizable={isResizable} style:--offset="{offset}px">

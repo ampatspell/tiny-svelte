@@ -37,7 +37,7 @@
 
 <style lang="scss">
 	.resizable {
-		border: 1px solid fade-out(#ef476f, 0.75);
+		border: 1px solid lighten(#ef476f, 10%);
 		transition: 0.15s ease-in-out border-color;
 		position: relative;
 		:global(> .pins) {
@@ -46,9 +46,6 @@
 			left: 0;
 			bottom: 0;
 			right: 0;
-		}
-		&:hover {
-			border-color: fade-out(#ef476f, 0.5);
 		}
 	}
 </style>

@@ -103,11 +103,12 @@
 	.pin {
 		width: var(--size);
 		height: var(--size);
-		background: fade-out(#ef476f, 0.7);
-		border-radius: 2px;
+		background: lighten(#ef476f, 20%);
+		border: 1px solid lighten(#ef476f, 10%);
 		&:hover,
 		&.resizing {
-			background: fade-out(#ef476f, 0.3);
+			border-color: lighten(#ef476f, 0%);
+			background: lighten(#ef476f, 10%);
 		}
 		display: block;
 		&.hidden {
