@@ -22,7 +22,7 @@ export const generateId = () => {
 
 export class SequentialQueue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  promise: Promise<any> = Promise.resolve();
+  private promise: Promise<any> = Promise.resolve();
 
   async run<T>(fn: () => Promise<T>): Promise<T> {
     const promise = this.promise.finally(() => fn());
