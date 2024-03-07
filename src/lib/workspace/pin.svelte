@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { classes, type Classes } from '$lib/utils/classes';
-	import { getWorkspaceContext, Horizontal, Vertical } from './model.svelte';
+	import { Horizontal, Vertical } from './model.svelte';
 	import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
 	import type { Point, Size } from '$lib/types';
 	import { calcPoint } from '$lib/utils/math';
@@ -14,6 +14,7 @@
 		step,
 		position,
 		size,
+		isResizable,
 		onResize
 	} = $props<{
 		class?: Classes;
@@ -24,10 +25,10 @@
 		position: Point;
 		size: Size;
 		step: number;
+		isResizable: boolean;
 		onResize: (position: Point, size: Size) => void;
 	}>();
 
-	let context = getWorkspaceContext();
 	let resizing = $state<{ position: Point; size: Size }>();
 
 	let onPosition = (next: Point) => {
@@ -75,8 +76,6 @@
 	const onEnd = () => {
 		resizing = undefined;
 	};
-
-	const isDraggable = $derived(context.isNodeResizable);
 </script>
 
 <div
@@ -85,12 +84,12 @@
 		`horizontal-${horizontal}`,
 		`vertical-${vertical}`,
 		resizing && 'resizing',
-		!isDraggable && 'hidden',
+		!isResizable && 'hidden',
 		_class
 	)}
 	style:--size="{pin}px"
 	use:draggable={{
-		isDraggable,
+		isDraggable: isResizable,
 		pixel,
 		onPosition,
 		onStart,

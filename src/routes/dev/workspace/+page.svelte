@@ -1,13 +1,12 @@
 <script lang="ts">
 	import Button from '$lib/editor/button.svelte';
 	import type { Point, Size } from '$lib/types';
-	import { WorkspaceContext, type OnResizeEvent } from '$lib/workspace/model.svelte';
+	import { type OnResizeEvent, WorkspaceModel } from '$lib/workspace/model.svelte';
 	import Node from '$lib/workspace/node.svelte';
 	import Workspace from '$lib/workspace/workspace.svelte';
 	import Box from './box.svelte';
 
-	let workspace = $state<WorkspaceContext>();
-	let onWorkspaceCreated = (next: WorkspaceContext) => (workspace = next);
+	let workspace = new WorkspaceModel();
 
 	type Box = { position: Point; size: Size; color: string };
 
@@ -33,6 +32,10 @@
 		// console.log('onBoxClick');
 		selected = box;
 	};
+
+	let isWorkspaceDraggable = false;
+	let isNodeDraggable = false;
+	let isNodeResizable = false;
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -43,7 +46,12 @@
 {/snippet}
 
 <div class="page">
-	<Workspace class="workspace" onCreated={onWorkspaceCreated} onClick={onWorkspaceClick}>
+	<Workspace
+		class="workspace"
+		isDraggable={isWorkspaceDraggable}
+		model={workspace}
+		onClick={onWorkspaceClick}
+	>
 		{#each boxes as box (box)}
 			<Node
 				name="Box"
@@ -52,8 +60,8 @@
 				onPosition={(next) => (box.position = next)}
 				size={box.size}
 				step={1}
-				isDraggable={true}
-				isResizable={box === selected}
+				isDraggable={isNodeDraggable}
+				isResizable={isNodeResizable}
 				onResize={(event) => onResize(box, event)}
 				onClick={() => onBoxClick(box)}
 			>
@@ -63,14 +71,14 @@
 	</Workspace>
 
 	<div class="sidebar">
-		{@render KeyValue('Size', `${workspace?.size.width} x ${workspace?.size.height}px`)}
-		{@render KeyValue('Position', `${workspace?.position.x}, ${workspace?.position.y}`)}
+		{@render KeyValue('Size', `${workspace.size.width} x ${workspace.size.height}px`)}
+		{@render KeyValue('Position', `${workspace.position.x}, ${workspace.position.y}`)}
 
 		<div class="row">
-			<div class="title">Pixel ({workspace?.pixel}px)</div>
+			<div class="title">Pixel ({workspace.pixel}px)</div>
 			<div class="value">
 				{#each [1, 2, 4, 8, 16] as value}
-					<Button value={value.toString()} onClick={() => workspace!.pixel = value} />
+					<Button value={value.toString()} onClick={() => (workspace.pixel = value)} />
 				{/each}
 			</div>
 		</div>

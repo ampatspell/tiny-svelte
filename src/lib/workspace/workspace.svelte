@@ -2,37 +2,33 @@
 	import { classes, type Classes } from '$lib/utils/classes';
 	import { resize } from '$lib/utils/use-resize.svelte';
 	import { draggable } from '$lib/utils/use-draggable.svelte';
-	import { space } from '$lib/utils/use-space.svelte';
 	import type { Snippet } from 'svelte';
-	import { setWorkspaceContext, WorkspaceContext } from './model.svelte';
+	import { setWorkspaceContext, WorkspaceModel } from './model.svelte';
 	import type { Point } from '$lib/types';
 
 	let {
 		class: _class,
-		onCreated,
+		model,
 		onClick,
+		isDraggable,
 		children
 	} = $props<{
 		class?: Classes;
-		onCreated?: (context: WorkspaceContext) => void;
+		model: WorkspaceModel;
+		isDraggable: boolean;
 		onClick: () => void;
 		children?: Snippet;
 	}>();
 
-	const context = new WorkspaceContext();
-	setWorkspaceContext(context);
-	onCreated?.(context);
+	setWorkspaceContext(model);
 
-	let position = $derived(context.position);
-	let pixel = $derived(context.pixel);
-	let onResize = $derived(context.onResize);
-	let isDraggable = $derived(context.isWorkspaceDraggable);
-
-	let onSpace = (space: boolean) => (context.isWorkspaceDraggable = space);
-	let onPosition = (position: Point) => (context.position = position);
+	let position = $derived(model.position);
+	let pixel = $derived(model.pixel);
+	let onResize = $derived(model.onResize);
+	let onPosition = (position: Point) => (model.position = position);
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
 	class={classes('workspace', _class)}
 	use:resize={{ onResize }}
@@ -42,7 +38,6 @@
 		pixel,
 		onPosition
 	}}
-	use:space={{ onSpace }}
 	onmousedown={() => onClick()}
 >
 	{#if children}

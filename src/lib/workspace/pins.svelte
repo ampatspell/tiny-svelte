@@ -49,6 +49,7 @@
 			horizontal={pin.horizontal}
 			{position}
 			{size}
+			{isResizable}
 			onResize={pin.onResize}
 			{pixel}
 			{step}

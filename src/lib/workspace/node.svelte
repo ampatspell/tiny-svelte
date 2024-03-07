@@ -5,7 +5,6 @@
 	import { addPoints, multiplyPoint } from '$lib/utils/math';
 	import { draggable } from '$lib/utils/use-draggable.svelte';
 	import Resizable from './resizable.svelte';
-	import { stopPropagation } from '$lib/utils/event';
 
 	let {
 		name,
@@ -15,8 +14,8 @@
 		size,
 		step,
 		onResize,
-		isDraggable: _isDraggable,
-		isResizable: _isResizable,
+		isDraggable,
+		isResizable,
 		onClick,
 		children
 	} = $props<{
@@ -36,16 +35,12 @@
 	let context = getWorkspaceContext();
 	let pixel = $derived(context.pixel);
 
-	let isDraggable = $derived(_isDraggable && context.isNodeDraggable);
-	let isResizable = $derived(_isResizable && context.isNodeResizable);
-
 	let translate = $derived.by(() => {
 		let point = multiplyPoint(addPoints(context.position, position), context.pixel);
 		return `${point.x}px ${point.y}px`;
 	});
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
 <div
 	class="node"
 	class:resizable={isResizable}
