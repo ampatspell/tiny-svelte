@@ -2,13 +2,16 @@ import type { Handle } from '@sveltejs/kit';
 import { Collection } from './collection';
 import { dirname, once } from './utils';
 import path from 'path';
-import type { AssetData, AssetIndex } from '$lib/types';
+import type { AssetData, AssetIndex, WorkspaceData, WorkspaceIndex, WorkspaceNodeData, WorkspaceNodeIndex } from '$lib/types';
 
 export class Collections {
 	assets: Collection<AssetData, AssetIndex>;
+	workspaces: Collection<WorkspaceData, WorkspaceIndex>;
+	workspaceNodes: Collection<WorkspaceNodeData, WorkspaceNodeIndex>;
 
 	constructor() {
 		const base = path.join(dirname(import.meta.url), 'collections');
+
 		this.assets = new Collection({
 			base,
 			name: 'assets',
@@ -17,6 +20,20 @@ export class Collections {
 				type,
 				identifier
 			})
+		});
+
+		this.workspaces = new Collection({
+			base,
+			name: 'workspaces',
+			index: ({ identifier }: WorkspaceData) => ({
+				identifier
+			})
+		});
+
+		this.workspaceNodes = new Collection({
+			base,
+			name: 'workspace-nodes',
+			index: () => ({})
 		});
 	}
 
