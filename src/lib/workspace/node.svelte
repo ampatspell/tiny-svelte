@@ -1,39 +1,27 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { getWorkspaceContext, type OnResizeFn } from './model.svelte';
-	import type { Point, Size } from '$lib/types';
+	import { getWorkspaceContext, type NodeModel } from './model.svelte';
 	import { addPoints, multiplyPoint } from '$lib/utils/math';
 	import { draggable } from '$lib/utils/use-draggable.svelte';
 	import Resizable from './resizable.svelte';
 
-	let {
-		name,
-		description,
-		position,
-		onPosition,
-		size,
-		step,
-		onResize,
-		isDraggable,
-		isResizable,
-		onClick,
-		children
-	} = $props<{
-		name: string;
-		description?: string;
-		position: Point;
-		size: Size;
-		step: number;
-		onPosition: (position: Point) => void;
-		isDraggable: boolean;
-		isResizable: boolean;
-		onResize: OnResizeFn;
+	let { model, onClick, children } = $props<{
+		model: NodeModel;
 		onClick: () => void;
 		children: Snippet;
 	}>();
 
 	let context = getWorkspaceContext();
 	let pixel = $derived(context.pixel);
+	let name = $derived(model.name);
+	let description = $derived(model.description);
+	let position = $derived(model.position);
+	let onPosition = $derived(model.onPosition);
+	let size = $derived(model.size);
+	let step = $derived(model.step);
+	let isResizable = $derived(model.isResizable);
+	let isDraggable = $derived(model.isDraggable);
+	let onResize = $derived(model.onResize);
 
 	let translate = $derived.by(() => {
 		let point = multiplyPoint(addPoints(context.position, position), context.pixel);

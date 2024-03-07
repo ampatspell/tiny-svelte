@@ -1,18 +1,17 @@
 <script lang="ts">
 	import Button from '$lib/editor/button.svelte';
 	import type { Point, Size } from '$lib/types';
-	import { type OnResizeEvent, WorkspaceModel } from '$lib/workspace/model.svelte';
-	import Node from '$lib/workspace/node.svelte';
+	import { type OnResizeEvent, WorkspaceModel, BoxNodeModel } from '$lib/workspace/model.svelte';
 	import Workspace from '$lib/workspace/workspace.svelte';
-	import Box from './box.svelte';
+	import BoxNode from './box-node.svelte';
 
 	let workspace = new WorkspaceModel();
 
 	type Box = { position: Point; size: Size; color: string };
 
 	let boxes = $state([
-		{ position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: 'red' },
-		{ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' }
+		new BoxNodeModel({ position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: 'red' }),
+		new BoxNodeModel({ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' })
 	]);
 
 	let selected = $state<Box>();
@@ -34,8 +33,6 @@
 	};
 
 	let isWorkspaceDraggable = false;
-	let isNodeDraggable = false;
-	let isNodeResizable = false;
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -53,20 +50,7 @@
 		onClick={onWorkspaceClick}
 	>
 		{#each boxes as box (box)}
-			<Node
-				name="Box"
-				description="{box.size.width}x{box.size.height}, {box.color}"
-				position={box.position}
-				onPosition={(next) => (box.position = next)}
-				size={box.size}
-				step={1}
-				isDraggable={isNodeDraggable}
-				isResizable={isNodeResizable}
-				onResize={(event) => onResize(box, event)}
-				onClick={() => onBoxClick(box)}
-			>
-				<Box size={box.size} color={box.color} />
-			</Node>
+			<BoxNode model={box} onClick={() => onBoxClick(box)} />
 		{/each}
 	</Workspace>
 
