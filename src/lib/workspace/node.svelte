@@ -87,14 +87,6 @@
 			> .name {
 				color: #000;
 			}
-			> .description {
-				&::before {
-					content: '(';
-				}
-				&::after {
-					content: ')';
-				}
-			}
 		}
 		&.resizable {
 			> .header {

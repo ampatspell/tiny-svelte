@@ -11,7 +11,7 @@
 	type Box = { position: Point; size: Size; color: string };
 
 	let boxes = $state([
-		{ position: { x: 1, y: 1 }, size: { width: 8, height: 8 }, color: 'red' },
+		{ position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: 'red' },
 		{ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' }
 	]);
 
