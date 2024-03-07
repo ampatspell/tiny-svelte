@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs/promises';
 import assert from 'assert';
+import { SequentialQueue } from './utils';
 
 interface NodeError extends Error {
   errno?: number;
@@ -115,6 +116,7 @@ export class CollectionIndex<T extends object, I extends object> {
 export class Collection<T extends object, I extends object> {
   options: CollectionOptions<T, I>;
   #index: CollectionIndex<T, I>;
+  #queue = new SequentialQueue();
 
   constructor(options: CollectionOptions<T, I>) {
     this.options = options;
@@ -156,15 +158,19 @@ export class Collection<T extends object, I extends object> {
 
   async set(id: string, data: T) {
     this.validateId(id);
-    await write(this.pathForId(id), data, async () => {
-      await this.#index.set(id, data);
+    this.#queue.run(async () => {
+      await write(this.pathForId(id), data, async () => {
+        await this.#index.set(id, data);
+      });
     });
   }
 
   async delete(id: string) {
     this.validateId(id);
-    await this.#index.delete(id);
-    await del(this.pathForId(id));
+    this.#queue.run(async () => {
+      await this.#index.delete(id);
+      await del(this.pathForId(id));
+    });
   }
 
   async index(): Promise<CollectionIndexDocument<I>[]> {
@@ -174,10 +180,12 @@ export class Collection<T extends object, I extends object> {
 
   async clear() {
     const index = await this.index();
-    await Promise.all(
-      index.map(async (entry) => {
-        await this.delete(entry.id);
-      })
-    );
+    this.#queue.run(async () => {
+      await Promise.all(
+        index.map(async (entry) => {
+          await this.delete(entry.id);
+        })
+      );
+    });
   }
 }

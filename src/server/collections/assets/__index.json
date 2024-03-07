@@ -1,6 +1,10 @@
 {
-  "0d21a1d0bc3349a8": {
+  "99f22bd5dedf4e7c": {
     "type": "box",
     "identifier": "box-0"
+  },
+  "ac6285200115448d": {
+    "type": "box",
+    "identifier": "box-1"
   }
 }

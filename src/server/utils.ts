@@ -19,3 +19,14 @@ export const once = async (token: string, cb: () => Promise<void>): Promise<void
 export const generateId = () => {
   return crypto.randomUUID().replaceAll('-', '').substring(0, 16);
 };
+
+export class SequentialQueue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  promise: Promise<any> = Promise.resolve();
+
+  async run<T>(fn: () => Promise<T>): Promise<T> {
+    const promise = this.promise.finally(() => fn());
+    this.promise = promise;
+    return promise;
+  }
+}
