@@ -1,18 +1,18 @@
 <script lang="ts">
-	import type { Point } from '$lib/types';
-	import type { Snippet } from 'svelte';
-	import Render from './render.svelte';
+  import type { Point } from '$lib/types';
+  import type { Snippet } from 'svelte';
+  import Render from './render.svelte';
 
-	let { position, children } = $props<{
-		position?: Point;
-		children?: Snippet;
-	}>();
+  let { position, children } = $props<{
+    position?: Point;
+    children?: Snippet;
+  }>();
 
-	let draw = () => {};
+  let draw = () => {};
 </script>
 
 <Render name="group" {position} model={null} {draw}>
-	{#if children}
-		{@render children()}
-	{/if}
+  {#if children}
+    {@render children()}
+  {/if}
 </Render>

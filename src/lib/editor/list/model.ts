@@ -1,4 +1,4 @@
 export type ItemProps = {
-	isSelected?: boolean;
-	route?: string;
+  isSelected?: boolean;
+  route?: string;
 };

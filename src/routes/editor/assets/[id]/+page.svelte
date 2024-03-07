@@ -1,19 +1,19 @@
 <script lang="ts">
-	import Details from '$lib/editor/asset/details.svelte';
+  import Details from '$lib/editor/asset/details.svelte';
 
-	let { data } = $props();
-	let asset = $derived(data.asset);
+  let { data } = $props();
+  let asset = $derived(data.asset);
 </script>
 
 <div class="page">
-	<Details {asset} />
+  <Details {asset} />
 </div>
 
 <style lang="scss">
-	.page {
-		padding: 15px;
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-	}
+  .page {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
 </style>

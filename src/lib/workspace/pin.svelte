@@ -1,117 +1,117 @@
 <script lang="ts">
-	import { classes, type Classes } from '$lib/utils/classes';
-	import { Horizontal, Vertical } from './model.svelte';
-	import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
-	import type { Point, Size } from '$lib/types';
-	import { calcPoint } from '$lib/utils/math';
+  import { classes, type Classes } from '$lib/utils/classes';
+  import { Horizontal, Vertical } from './model.svelte';
+  import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
+  import type { Point, Size } from '$lib/types';
+  import { calcPoint } from '$lib/utils/math';
 
-	let {
-		horizontal,
-		vertical,
-		pin,
-		class: _class,
-		pixel,
-		step,
-		position,
-		size,
-		isResizable,
-		onResize
-	} = $props<{
-		class?: Classes;
-		pin: number;
-		horizontal: Horizontal;
-		vertical: Vertical;
-		pixel: number;
-		position: Point;
-		size: Size;
-		step: number;
-		isResizable: boolean;
-		onResize: (position: Point, size: Size) => void;
-	}>();
+  let {
+    horizontal,
+    vertical,
+    pin,
+    class: _class,
+    pixel,
+    step,
+    position,
+    size,
+    isResizable,
+    onResize
+  } = $props<{
+    class?: Classes;
+    pin: number;
+    horizontal: Horizontal;
+    vertical: Vertical;
+    pixel: number;
+    position: Point;
+    size: Size;
+    step: number;
+    isResizable: boolean;
+    onResize: (position: Point, size: Size) => void;
+  }>();
 
-	let resizing = $state<{ position: Point; size: Size }>();
+  let resizing = $state<{ position: Point; size: Size }>();
 
-	let onPosition = (next: Point) => {
-		const delta = calcPoint(next, (d) => Math.round(d / step) * step);
+  let onPosition = (next: Point) => {
+    const delta = calcPoint(next, (d) => Math.round(d / step) * step);
 
-		let {
-			position: { x, y },
-			size: { width, height }
-		} = resizing!;
+    let {
+      position: { x, y },
+      size: { width, height }
+    } = resizing!;
 
-		if (horizontal == Horizontal.Right) {
-			width += delta.x;
-		} else if (horizontal === Horizontal.Left) {
-			x += delta.x;
-			width -= delta.x;
-		}
+    if (horizontal == Horizontal.Right) {
+      width += delta.x;
+    } else if (horizontal === Horizontal.Left) {
+      x += delta.x;
+      width -= delta.x;
+    }
 
-		if (vertical === Vertical.Top) {
-			y += delta.y;
-			height -= delta.y;
-		} else if (vertical === Vertical.Bottom) {
-			height += delta.y;
-		}
+    if (vertical === Vertical.Top) {
+      y += delta.y;
+      height -= delta.y;
+    } else if (vertical === Vertical.Bottom) {
+      height += delta.y;
+    }
 
-		onResize({ x, y }, { width, height });
-	};
+    onResize({ x, y }, { width, height });
+  };
 
-	const axis = $derived.by(() => {
-		if (horizontal === Horizontal.Center) {
-			return DraggableAxis.Vertical;
-		} else if (vertical === Vertical.Center) {
-			return DraggableAxis.Horizontal;
-		} else {
-			return DraggableAxis.Both;
-		}
-	});
+  const axis = $derived.by(() => {
+    if (horizontal === Horizontal.Center) {
+      return DraggableAxis.Vertical;
+    } else if (vertical === Vertical.Center) {
+      return DraggableAxis.Horizontal;
+    } else {
+      return DraggableAxis.Both;
+    }
+  });
 
-	const onStart = () => {
-		resizing = {
-			position: { x: position.x, y: position.y },
-			size: { width: size.width, height: size.height }
-		};
-	};
+  const onStart = () => {
+    resizing = {
+      position: { x: position.x, y: position.y },
+      size: { width: size.width, height: size.height }
+    };
+  };
 
-	const onEnd = () => {
-		resizing = undefined;
-	};
+  const onEnd = () => {
+    resizing = undefined;
+  };
 </script>
 
 <div
-	class={classes(
-		'pin',
-		`horizontal-${horizontal}`,
-		`vertical-${vertical}`,
-		resizing && 'resizing',
-		!isResizable && 'hidden',
-		_class
-	)}
-	style:--size="{pin}px"
-	use:draggable={{
-		isDraggable: isResizable,
-		pixel,
-		onPosition,
-		onStart,
-		onEnd,
-		axis
-	}}
+  class={classes(
+    'pin',
+    `horizontal-${horizontal}`,
+    `vertical-${vertical}`,
+    resizing && 'resizing',
+    !isResizable && 'hidden',
+    _class
+  )}
+  style:--size="{pin}px"
+  use:draggable={{
+    isDraggable: isResizable,
+    pixel,
+    onPosition,
+    onStart,
+    onEnd,
+    axis
+  }}
 ></div>
 
 <style lang="scss">
-	.pin {
-		width: var(--size);
-		height: var(--size);
-		background: lighten(#ef476f, 20%);
-		border: 1px solid lighten(#ef476f, 10%);
-		&:hover,
-		&.resizing {
-			border-color: lighten(#ef476f, 0%);
-			background: lighten(#ef476f, 10%);
-		}
-		display: block;
-		&.hidden {
-			display: none;
-		}
-	}
+  .pin {
+    width: var(--size);
+    height: var(--size);
+    background: lighten(#ef476f, 20%);
+    border: 1px solid lighten(#ef476f, 10%);
+    &:hover,
+    &.resizing {
+      border-color: lighten(#ef476f, 0%);
+      background: lighten(#ef476f, 10%);
+    }
+    display: block;
+    &.hidden {
+      display: none;
+    }
+  }
 </style>

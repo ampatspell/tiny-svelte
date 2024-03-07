@@ -1,10 +1,10 @@
 {
-	"2276a9b603bf425c": {
-		"type": "sprite",
-		"identifier": "hello"
-	},
-	"856dec0228044dbe": {
-		"type": "sprite",
-		"identifier": "hello"
-	}
+  "2276a9b603bf425c": {
+    "type": "sprite",
+    "identifier": "hello"
+  },
+  "856dec0228044dbe": {
+    "type": "sprite",
+    "identifier": "hello"
+  }
 }

@@ -4,13 +4,13 @@ import { getContext, setContext } from 'svelte';
 const STAGE = 'canvas:stage';
 
 export class StageContext {
-	size = $state<Size>();
+  size = $state<Size>();
 }
 
 export const setStageContext = (context: StageContext) => {
-	setContext(STAGE, context);
+  setContext(STAGE, context);
 };
 
 export const getStageContext = () => {
-	return getContext(STAGE) as StageContext;
+  return getContext(STAGE) as StageContext;
 };
