@@ -45,7 +45,7 @@ export class Collections {
   }
 
   async prepare() {
-    await this.assets.prepare();
+    await Promise.all([this.assets.prepare(), this.workspaces.prepare(), this.workspaceNodes.prepare()]);
   }
 }
 

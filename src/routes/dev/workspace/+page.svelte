@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '$lib/editor/button.svelte';
+  import { createTRPC } from '$lib/trpc/client.svelte';
   import type { Point, Size } from '$lib/types';
   import { type OnResizeEvent, WorkspaceModel, BoxNodeModel } from '$lib/workspace/model.svelte';
   import Workspace from '$lib/workspace/workspace.svelte';
@@ -33,6 +34,11 @@
   };
 
   let isWorkspaceDraggable = false;
+
+  let rpc = createTRPC();
+  let reset = async () => {
+    await rpc.dev.reset.query();
+  };
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -70,6 +76,11 @@
         `${box.position.x},${box.position.y} / ${box.size.width}x${box.size.height}`
       )}
     {/each}
+
+    <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events-->
+    <div class="row" onclick={reset}>
+      <div class="title">Reset</div>
+    </div>
   </div>
 </div>
 
