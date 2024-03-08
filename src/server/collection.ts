@@ -156,21 +156,25 @@ export class Collection<T extends object, I extends object> {
     };
   }
 
-  async set(id: string, data: T) {
+  async #set(id: string, data: T) {
     this.validateId(id);
-    this.#queue.run(async () => {
-      await write(this.pathForId(id), data, async () => {
-        await this.#index.set(id, data);
-      });
+    await write(this.pathForId(id), data, async () => {
+      await this.#index.set(id, data);
     });
   }
 
-  async delete(id: string) {
+  async set(id: string, data: T) {
+    await this.#queue.run(() => this.#set(id, data));
+  }
+
+  async #delete(id: string) {
     this.validateId(id);
-    this.#queue.run(async () => {
-      await this.#index.delete(id);
-      await del(this.pathForId(id));
-    });
+    await this.#index.delete(id);
+    await del(this.pathForId(id));
+  }
+
+  async delete(id: string) {
+    await this.#queue.run(() => this.#delete(id));
   }
 
   async index(): Promise<CollectionIndexDocument<I>[]> {
@@ -179,13 +183,11 @@ export class Collection<T extends object, I extends object> {
   }
 
   async clear() {
-    const index = await this.index();
-    this.#queue.run(async () => {
-      await Promise.all(
-        index.map(async (entry) => {
-          await this.delete(entry.id);
-        })
-      );
+    await this.#queue.run(async () => {
+      const index = await this.index();
+      for (const entry of index) {
+        await this.#delete(entry.id);
+      }
     });
   }
 }
