@@ -1,13 +1,12 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { getWorkspaceContext, type NodeModel } from './model.svelte';
+  import { getWorkspaceContext, ToolType, type NodeModel } from './model.svelte';
   import { addPoints, multiplyPoint } from '$lib/utils/math';
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import Resizable from './resizable.svelte';
 
-  let { model, onClick, children } = $props<{
+  let { model, children } = $props<{
     model: NodeModel;
-    onClick: () => void;
     children: Snippet;
   }>();
 
@@ -16,12 +15,21 @@
   let name = $derived(model.name);
   let description = $derived(model.description);
   let position = $derived(model.position);
+  let onResize = $derived(model.onResize);
   let onPosition = $derived(model.onPosition);
   let size = $derived(model.size);
   let step = $derived(model.step);
-  let isResizable = $derived(model.isResizable);
-  let isDraggable = $derived(model.isDraggable);
-  let onResize = $derived(model.onResize);
+
+  let isSelectedAndHasTools = (types: ToolType[]) => context.selected === model && types.includes(context.tool.type);
+  let isResizable = $derived(isSelectedAndHasTools([ToolType.Resize]));
+  let isDraggable = $derived(isSelectedAndHasTools([ToolType.Idle, ToolType.Resize]));
+
+  let onShouldStart = () => {
+    if ([ToolType.Idle, ToolType.Resize].includes(context.tool.type)) {
+      context.select(model);
+    }
+    return isDraggable;
+  };
 
   let translate = $derived.by(() => {
     let point = multiplyPoint(addPoints(context.position, position), context.pixel);
@@ -35,10 +43,10 @@
   style:translate
   use:draggable={{
     isDraggable,
+    onShouldStart,
     pixel,
     position,
-    onPosition,
-    onStart: onClick
+    onPosition
   }}
 >
   <div class="header">

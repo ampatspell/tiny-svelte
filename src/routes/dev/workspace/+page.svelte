@@ -1,39 +1,16 @@
 <script lang="ts">
   import Button from '$lib/editor/button.svelte';
   import { createTRPC } from '$lib/trpc/client.svelte';
-  import type { Point, Size } from '$lib/types';
-  import { type OnResizeEvent, WorkspaceModel, BoxNodeModel } from '$lib/workspace/model.svelte';
+  import { WorkspaceModel, BoxNodeModel, ToolType } from '$lib/workspace/model.svelte';
   import Workspace from '$lib/workspace/workspace.svelte';
   import BoxNode from './box-node.svelte';
 
   let workspace = new WorkspaceModel();
 
-  type Box = { position: Point; size: Size; color: string };
-
   let boxes = $state([
     new BoxNodeModel({ position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: 'red' }),
     new BoxNodeModel({ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' })
   ]);
-
-  let selected = $state<Box>();
-
-  let onResize = (box: Box, { horizontal, vertical, position, size }: OnResizeEvent) => {
-    // console.log(horizontal, vertical, position, size);
-    box.position = position;
-    box.size = size;
-  };
-
-  let onWorkspaceClick = () => {
-    // console.log('onWorkspaceClick');
-    selected = undefined;
-  };
-
-  let onBoxClick = (box: Box) => {
-    // console.log('onBoxClick');
-    selected = box;
-  };
-
-  let isWorkspaceDraggable = false;
 
   let rpc = createTRPC();
   let reset = async () => {
@@ -49,9 +26,9 @@
 {/snippet}
 
 <div class="page">
-  <Workspace class="workspace" isDraggable={isWorkspaceDraggable} model={workspace} onClick={onWorkspaceClick}>
+  <Workspace class="workspace" model={workspace}>
     {#each boxes as box (box)}
-      <BoxNode model={box} onClick={() => onBoxClick(box)} />
+      <BoxNode model={box} />
     {/each}
   </Workspace>
 
@@ -68,7 +45,18 @@
       </div>
     </div>
 
-    {@render KeyValue('Selected', `${selected?.color ?? 'No selection'}`)}
+    {@render KeyValue('Tool', workspace.tool.type)}
+
+    <div class="row">
+      <div class="title">Tools</div>
+      <div class="value">
+        {#each [ToolType.Idle, ToolType.Resize] as value}
+          <Button {value} onClick={() => workspace.tool.set(value)} />
+        {/each}
+      </div>
+    </div>
+
+    {@render KeyValue('Selected', `${workspace.selected?.name} ${workspace.selected?.description}`)}
 
     {#each boxes as box (box)}
       {@render KeyValue(

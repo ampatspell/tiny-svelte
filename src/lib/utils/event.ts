@@ -11,3 +11,10 @@ export const stopPropagation =
     e.stopPropagation();
     return fn(e);
   };
+
+export const blurActiveElement = () => {
+  const el = document.activeElement;
+  if (el instanceof HTMLElement) {
+    el.blur();
+  }
+};

@@ -13,6 +13,7 @@ export type DraggableParameters = {
   position?: Point;
   pixel: number;
   axis?: DraggableAxis;
+  onShouldStart?: () => boolean;
   onStart?: () => void;
   onPosition: (position: Point) => void;
   onEnd?: () => void;
@@ -32,7 +33,13 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
   const mouseOut = () => (isOver = false);
 
   const mouseDown = (e: MouseEvent) => {
-    if (e.button !== 0 || !isOver || !parameters.isDraggable) {
+    if (e.button !== 0) {
+      return;
+    }
+    if (!isOver) {
+      return;
+    }
+    if (!parameters.onShouldStart?.() && !parameters.isDraggable) {
       return;
     }
 

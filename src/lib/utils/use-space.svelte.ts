@@ -1,15 +1,25 @@
+import { blurActiveElement } from './event';
+
 export type SpaceProperties = {
   onSpace: (space: boolean) => void;
 };
 
 export const space = (node: HTMLElement, properties: SpaceProperties) => {
+  let isSpace = false;
+
   const keyDown = (e: KeyboardEvent) => {
-    if (e.code === 'Space') {
+    if (e.code === 'Space' && !isSpace) {
+      blurActiveElement();
+      isSpace = true;
       properties.onSpace(true);
     }
   };
 
   const keyUp = () => {
+    if (!isSpace) {
+      return;
+    }
+    isSpace = false;
     properties.onSpace(false);
   };
 
