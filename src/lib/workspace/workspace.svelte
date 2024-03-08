@@ -26,7 +26,8 @@
   let onClick = () => model.select(undefined);
 
   let onSpace = (space: boolean) => {
-    model.tool.set(space ? ToolType.WorkspaceDrag : ToolType.Idle);
+    const tool = space ? ToolType.WorkspaceDrag : ToolType.Idle;
+    model.tool.set(tool);
   };
 
   let isDraggable = $derived(model.tool.type === ToolType.WorkspaceDrag);
