@@ -30,5 +30,14 @@ export const calcSizes = (a: Size, b: Size, fn: (a: number, b: number) => number
   };
 };
 
+export const calcSize = (a: Size, fn: (value: number) => number): Size => {
+  return {
+    width: fn(a.width),
+    height: fn(a.height)
+  };
+};
+
 export const addSizes = (a: Size, b: Size): Size => calcSizes(a, b, (a, b) => a + b);
 export const subtractSizes = (a: Size, b: Size): Size => calcSizes(a, b, (a, b) => a - b);
+
+export const multiplySize = (a: Size, value: number): Size => calcSize(a, (a) => a * value);

@@ -44,6 +44,7 @@ export type NodeModel = {
   description?: string;
   position: Point;
   size: Size;
+  pixel: number;
   step: number;
 
   onPosition(position: Point): void;
@@ -64,18 +65,20 @@ export class BoxNodeModel implements NodeModel {
   position = $state<Point>()!;
   size = $state<Size>()!;
   color = $state<string>()!;
+  pixel = $state<number>()!;
   step = 4;
 
-  constructor(opts: Pick<BoxNodeModel, 'position' | 'size' | 'color'>) {
+  constructor(opts: Pick<BoxNodeModel, 'position' | 'size' | 'color' | 'pixel'>) {
     this.position = opts.position;
     this.size = opts.size;
     this.color = opts.color;
+    this.pixel = opts.pixel;
   }
 
   name = 'Box';
 
   get description() {
-    return `${this.size.width}x${this.size.height}, ${this.color}`;
+    return `${this.size.width}x${this.size.height}, ${this.pixel}, ${this.color}`;
   }
 
   @action

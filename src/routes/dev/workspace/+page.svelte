@@ -8,8 +8,8 @@
   let workspace = new WorkspaceModel();
 
   let boxes = $state([
-    new BoxNodeModel({ position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: 'red' }),
-    new BoxNodeModel({ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: 'green' })
+    new BoxNodeModel({ position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, pixel: 2, color: 'red' }),
+    new BoxNodeModel({ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, pixel: 2, color: 'green' })
   ]);
 
   let rpc = createTRPC();
