@@ -77,7 +77,6 @@
     {onResize}
     onStart={onResizeStart}
     onEnd={onResizeEnd}
-    class="content"
   >
     {@render children()}
   </Resizable>

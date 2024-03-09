@@ -17,7 +17,7 @@
     onEnd,
     children
   } = $props<{
-    class: Classes;
+    class?: Classes;
     pixel: number;
     step: number;
     position: Point;
