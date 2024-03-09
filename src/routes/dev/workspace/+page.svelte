@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Segment from '$lib/editor/segmented/segment.svelte';
+  import Segmented from '$lib/editor/segmented/segmented.svelte';
   import Button from '$lib/editor/button.svelte';
   import { createTRPC } from '$lib/trpc/client.svelte';
   import { WorkspaceModel, BoxNodeModel, ToolType } from '$lib/workspace/model.svelte';
@@ -37,11 +39,17 @@
     {@render KeyValue('Position', `${workspace.position.x}, ${workspace.position.y}`)}
 
     <div class="row">
-      <div class="title">Pixel ({workspace.pixel}px)</div>
+      <div class="title">Workspace</div>
       <div class="value">
-        {#each [1, 2, 4, 8, 16] as value}
-          <Button value={value.toString()} onClick={() => (workspace.pixel = value)} />
-        {/each}
+        <Segmented>
+          {#each [1, 2, 4, 8, 16] as value}
+            <Segment
+              value="{value}px"
+              isSelected={value === workspace.pixel}
+              onClick={() => (workspace.pixel = value)}
+            />
+          {/each}
+        </Segmented>
       </div>
     </div>
 
