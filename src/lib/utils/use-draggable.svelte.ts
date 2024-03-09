@@ -17,6 +17,7 @@ export type DraggableParameters = {
   onStart?: () => void;
   onPosition: (position: Point) => void;
   onEnd?: () => void;
+  onDragging?: (dragging: boolean) => void;
 };
 
 type Dragging = {
@@ -53,24 +54,31 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
     };
 
     parameters.onStart?.();
+    parameters.onDragging?.(true);
   };
 
   const mouseUp = (e: MouseEvent) => {
     if (!dragging) {
       return;
     }
+
     e.preventDefault();
     e.stopPropagation();
+
     dragging = undefined;
+
     parameters.onEnd?.();
+    parameters.onDragging?.(false);
   };
 
   const mouseMove = (e: MouseEvent) => {
     if (!dragging) {
       return;
     }
+
     e.preventDefault();
     e.stopPropagation();
+
     const axis = parameters.axis ?? DraggableAxis.Both;
     const client = mouseClientPositionToPoint(e);
     const delta = dividePoint(subtractPoints(client, dragging.window), dragging.pixel);
@@ -97,8 +105,11 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
     if (!dragging) {
       return;
     }
+
     dragging = undefined;
+
     parameters.onEnd?.();
+    parameters.onDragging?.(false);
   };
 
   node.addEventListener('mousedown', mouseDown);

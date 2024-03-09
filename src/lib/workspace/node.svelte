@@ -22,8 +22,10 @@
   let size = $derived(model.size);
   let step = $derived(model.step);
 
-  let isSelectedAndHasTools = (types: ToolType[]) =>
-    workspace.selected === model && types.includes(workspace.tool.type);
+  let isSelectedAndHasTools = (types: ToolType[]) => {
+    return workspace.selected === model && types.includes(workspace.tool.type);
+  };
+
   let isResizable = $derived(isSelectedAndHasTools([ToolType.Resize]));
   let isDraggable = $derived(isSelectedAndHasTools([ToolType.Idle, ToolType.Resize]));
 
@@ -33,6 +35,12 @@
     }
     return isDraggable;
   };
+
+  let onDragStart = () => (workspace.dragging = model);
+  let onDragEnd = () => (workspace.dragging = undefined);
+
+  let onResizeStart = () => (workspace.resizing = model);
+  let onResizeEnd = () => (workspace.resizing = undefined);
 
   let translate = $derived.by(() => {
     let point = multiplyPoint(addPoints(workspace.position, position), workspacePixel);
@@ -49,7 +57,9 @@
     onShouldStart,
     pixel: workspacePixel,
     position,
-    onPosition
+    onPosition,
+    onStart: onDragStart,
+    onEnd: onDragEnd
   }}
 >
   <div class="header">
@@ -58,7 +68,17 @@
       <div class="description">{description}</div>
     {/if}
   </div>
-  <Resizable pixel={workspacePixel * nodePixel} {step} {position} {size} {isResizable} {onResize} class="content">
+  <Resizable
+    pixel={workspacePixel * nodePixel}
+    {step}
+    {position}
+    {size}
+    {isResizable}
+    {onResize}
+    onStart={onResizeStart}
+    onEnd={onResizeEnd}
+    class="content"
+  >
     {@render children()}
   </Resizable>
 </div>

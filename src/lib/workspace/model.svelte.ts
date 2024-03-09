@@ -24,6 +24,8 @@ export class WorkspaceModel {
   pixel = $state<number>(8);
   tool = new Tool();
   selected = $state<NodeModel>();
+  dragging = $state<NodeModel>();
+  resizing = $state<NodeModel>();
 
   select(node?: NodeModel) {
     if (this.selected === node) {

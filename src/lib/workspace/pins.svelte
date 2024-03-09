@@ -3,25 +3,28 @@
   import { Horizontal, Vertical, type OnResizeFn } from './model.svelte';
   import Pin from './pin.svelte';
 
-  let { pixel, step, position, size, isResizable, onResize } = $props<{
+  let { pixel, step, position, size, isResizable, onResize, onStart, onEnd } = $props<{
     pixel: number;
     step: number;
     position: Point;
     size: Size;
     isResizable: boolean;
     onResize: OnResizeFn;
+    onStart: () => void;
+    onEnd: () => void;
   }>();
 
   let pin = (horizontal: Horizontal, vertical: Vertical) => ({
     horizontal,
     vertical,
-    onResize: (position: Point, size: Size) =>
+    onResize: (position: Point, size: Size) => {
       onResize({
         horizontal,
         vertical,
         position,
         size
-      })
+      });
+    }
   });
 
   let pins = [
@@ -51,6 +54,8 @@
       {size}
       {isResizable}
       onResize={pin.onResize}
+      {onStart}
+      {onEnd}
       {pixel}
       {step}
     />

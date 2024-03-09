@@ -26,6 +26,9 @@
   let onClick = () => model.select(undefined);
 
   let onSpace = (space: boolean) => {
+    if (model.dragging || model.resizing) {
+      return;
+    }
     const tool = space ? ToolType.WorkspaceDrag : ToolType.Idle;
     model.tool.set(tool);
   };

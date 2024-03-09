@@ -15,7 +15,9 @@
     position,
     size,
     isResizable,
-    onResize
+    onResize,
+    onStart: _onStart,
+    onEnd: _onEnd
   } = $props<{
     class?: Classes;
     pin: number;
@@ -26,6 +28,8 @@
     size: Size;
     step: number;
     isResizable: boolean;
+    onStart: () => void;
+    onEnd: () => void;
     onResize: (position: Point, size: Size) => void;
   }>();
 
@@ -71,10 +75,12 @@
       position: { x: position.x, y: position.y },
       size: { width: size.width, height: size.height }
     };
+    _onStart();
   };
 
   const onEnd = () => {
     resizing = undefined;
+    _onEnd();
   };
 </script>
 
