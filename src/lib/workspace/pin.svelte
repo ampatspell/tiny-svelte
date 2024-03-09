@@ -3,7 +3,7 @@
   import { Horizontal, Vertical } from './model.svelte';
   import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
   import type { Point, Size } from '$lib/types';
-  import { calcPoint } from '$lib/utils/math';
+  import { stepPoint } from '$lib/utils/math';
 
   let {
     horizontal,
@@ -36,7 +36,7 @@
   let resizing = $state<{ position: Point; size: Size }>();
 
   let onPosition = (next: Point) => {
-    const delta = calcPoint(next, (d) => Math.round(d / step) * step);
+    const delta = stepPoint(next, step);
 
     let {
       position: { x, y },
@@ -46,15 +46,19 @@
     if (horizontal == Horizontal.Right) {
       width += delta.x;
     } else if (horizontal === Horizontal.Left) {
-      x += delta.x;
+      x += 2 * delta.x;
       width -= delta.x;
     }
 
     if (vertical === Vertical.Top) {
-      y += delta.y;
+      y += 2 * delta.y;
       height -= delta.y;
     } else if (vertical === Vertical.Bottom) {
       height += delta.y;
+    }
+
+    if (width < 0 || height < 0) {
+      return;
     }
 
     onResize({ x, y }, { width, height });

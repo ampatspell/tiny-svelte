@@ -19,7 +19,9 @@ export const subtractPoints = (a: Point, b: Point): Point => calcPoints(a, b, (a
 
 export const multiplyPoint = (a: Point, value: number): Point => calcPoint(a, (a) => a * value);
 export const dividePoint = (a: Point, value: number): Point => calcPoint(a, (a) => a / value);
+export const roundPoint = (point: Point): Point => calcPoint(point, (value) => Math.round(value));
 export const floorPoint = (point: Point): Point => calcPoint(point, (value) => Math.floor(value));
+export const stepPoint = (point: Point, step: number) => calcPoint(point, (value) => Math.round(value / step) * step);
 
 export const pointEquals = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
 

@@ -101,6 +101,7 @@ export class BoxNodeModel implements WorkspaceNodeModel {
 
   @action
   onResize(event: OnResizeEvent) {
+    this.position = event.position;
     this.size = event.size;
   }
 }

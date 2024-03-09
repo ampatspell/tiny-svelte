@@ -20,7 +20,7 @@
       position: { x: 30, y: 10 },
       size: { width: 8, height: 8 },
       pixel: 2,
-      box: new BoxModel({ step: 2, color: 'green' })
+      box: new BoxModel({ step: 8, color: 'green' })
     })
   ]);
 

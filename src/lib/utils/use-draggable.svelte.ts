@@ -1,6 +1,6 @@
 import type { Point } from '$lib/types';
 import { mouseClientPositionToPoint } from './event';
-import { dividePoint, floorPoint, subtractPoints } from './math';
+import { dividePoint, roundPoint, subtractPoints } from './math';
 
 export enum DraggableAxis {
   Horizontal = 'horizontal',
@@ -96,7 +96,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
       point.y += delta.y;
     }
 
-    point = floorPoint(point);
+    point = roundPoint(point);
 
     parameters.onPosition(point);
   };
