@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 export type Nullable<T> = T | null | undefined;
 export type EmptyObject = Record<string, never>;
+export type Callback = () => void;
+export type OptionalCallback = (() => void) | undefined;
 
 export const IdentifierSchema = z.string().trim().min(1);
 

@@ -1,8 +1,10 @@
 <script lang="ts">
+  import type { Callback } from '$lib/types';
+
   let { value, isSelected, onClick } = $props<{
     value: string;
     isSelected: boolean;
-    onClick?: () => void;
+    onClick?: Callback;
   }>();
 </script>
 

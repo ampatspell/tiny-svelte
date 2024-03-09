@@ -2,7 +2,7 @@
   import { classes, type Classes } from '$lib/utils/classes';
   import { Horizontal, Vertical } from './model.svelte';
   import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
-  import type { Point, Size } from '$lib/types';
+  import type { Callback, Point, Size } from '$lib/types';
   import { stepPoint } from '$lib/utils/math';
 
   let {
@@ -28,8 +28,8 @@
     size: Size;
     step: number;
     isResizable: boolean;
-    onStart: () => void;
-    onEnd: () => void;
+    onStart: Callback;
+    onEnd: Callback;
     onResize: (position: Point, size: Size) => void;
   }>();
 

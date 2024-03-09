@@ -60,7 +60,7 @@ export abstract class WorkspaceNodeModel {
   abstract step: number;
 
   abstract onPosition(position: Point): void;
-  abstract onResize(event: OnResizeEvent): void;
+  abstract onResize(event: ResizeEvent): void;
 }
 
 export class BoxModel {
@@ -100,7 +100,7 @@ export class BoxNodeModel implements WorkspaceNodeModel {
   }
 
   @action
-  onResize(event: OnResizeEvent) {
+  onResize(event: ResizeEvent) {
     this.position = event.position;
     this.size = event.size;
   }
@@ -120,11 +120,11 @@ export enum Vertical {
   Bottom = 'bottom'
 }
 
-export type OnResizeEvent = {
+export type ResizeEvent = {
   horizontal: Horizontal;
   vertical: Vertical;
   position: Point;
   size: Size;
 };
 
-export type OnResizeFn = (event: OnResizeEvent) => void;
+export type ResizeCallback = (event: ResizeEvent) => void;

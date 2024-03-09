@@ -4,7 +4,7 @@
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import type { Snippet } from 'svelte';
   import { setWorkspaceContext, WorkspaceModel, ToolType } from './model.svelte';
-  import type { Point } from '$lib/types';
+  import type { OptionalCallback, Point } from '$lib/types';
   import { space } from '$lib/utils/use-space.svelte';
 
   let {
@@ -25,12 +25,22 @@
   let onPosition = (position: Point) => (model.position = position);
   let onClick = () => model.select(undefined);
 
-  let onSpace = (space: boolean) => {
+  let cancelDrag: OptionalCallback;
+  let onSpaceDown = () => {
     if (model.dragging || model.resizing) {
       return;
     }
-    const tool = space ? ToolType.WorkspaceDrag : ToolType.Idle;
-    model.tool.set(tool);
+    let current = model.tool.type;
+    cancelDrag = () => model.tool.set(current);
+    model.tool.set(ToolType.WorkspaceDrag);
+  };
+
+  let onSpaceUp = () => {
+    if (!cancelDrag) {
+      return;
+    }
+    cancelDrag();
+    cancelDrag = undefined;
   };
 
   let isDraggable = $derived(model.tool.type === ToolType.WorkspaceDrag);
@@ -46,7 +56,7 @@
     pixel,
     onPosition
   }}
-  use:space={{ onSpace }}
+  use:space={{ onSpaceDown, onSpaceUp }}
   onmousedown={onClick}
 >
   {#if children}

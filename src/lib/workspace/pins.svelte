@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Point, Size } from '$lib/types';
-  import { Horizontal, Vertical, type OnResizeFn } from './model.svelte';
+  import type { Callback, Point, Size } from '$lib/types';
+  import { Horizontal, Vertical, type ResizeCallback } from './model.svelte';
   import Pin from './pin.svelte';
 
   let { pixel, step, position, size, isResizable, onResize, onStart, onEnd } = $props<{
@@ -9,9 +9,9 @@
     position: Point;
     size: Size;
     isResizable: boolean;
-    onResize: OnResizeFn;
-    onStart: () => void;
-    onEnd: () => void;
+    onResize: ResizeCallback;
+    onStart: Callback;
+    onEnd: Callback;
   }>();
 
   let pin = (horizontal: Horizontal, vertical: Vertical) => ({

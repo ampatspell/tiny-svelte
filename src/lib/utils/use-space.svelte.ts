@@ -1,7 +1,9 @@
+import type { Callback } from '$lib/types';
 import { blurActiveElement } from './event';
 
 export type SpaceProperties = {
-  onSpace: (space: boolean) => void;
+  onSpaceDown: Callback;
+  onSpaceUp: Callback;
 };
 
 export const space = (node: HTMLElement, properties: SpaceProperties) => {
@@ -11,7 +13,7 @@ export const space = (node: HTMLElement, properties: SpaceProperties) => {
     if (e.code === 'Space' && !isSpace) {
       blurActiveElement();
       isSpace = true;
-      properties.onSpace(true);
+      properties.onSpaceDown();
     }
   };
 
@@ -20,7 +22,7 @@ export const space = (node: HTMLElement, properties: SpaceProperties) => {
       return;
     }
     isSpace = false;
-    properties.onSpace(false);
+    properties.onSpaceUp();
   };
 
   window.addEventListener('keydown', keyDown);

@@ -1,4 +1,4 @@
-import type { Point } from '$lib/types';
+import type { Callback, Point } from '$lib/types';
 import { mouseClientPositionToPoint } from './event';
 import { dividePoint, roundPoint, subtractPoints } from './math';
 
@@ -14,9 +14,9 @@ export type DraggableParameters = {
   pixel: number;
   axis?: DraggableAxis;
   onShouldStart?: () => boolean;
-  onStart?: () => void;
+  onStart?: Callback;
   onPosition: (position: Point) => void;
-  onEnd?: () => void;
+  onEnd?: Callback;
   onDragging?: (dragging: boolean) => void;
 };
 
