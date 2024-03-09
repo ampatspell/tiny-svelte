@@ -39,7 +39,7 @@
     })
   ];
 
-  let pinSize = $state(9);
+  let pinSize = $state(7);
   let offset = $derived(Math.ceil(pinSize / 2));
 </script>
 
