@@ -23,11 +23,11 @@ export class WorkspaceModel {
   position = $state<Point>({ x: 0, y: 0 });
   pixel = $state<number>(8);
   tool = new Tool();
-  selected = $state<NodeModel>();
-  dragging = $state<NodeModel>();
-  resizing = $state<NodeModel>();
+  selected = $state<WorkspaceNodeModel>();
+  dragging = $state<WorkspaceNodeModel>();
+  resizing = $state<WorkspaceNodeModel>();
 
-  select(node?: NodeModel) {
+  select(node?: WorkspaceNodeModel) {
     if (this.selected === node) {
       return;
     }
@@ -41,18 +41,6 @@ export class WorkspaceModel {
   }
 }
 
-export type NodeModel = {
-  name: string;
-  description?: string;
-  position: Point;
-  size: Size;
-  pixel: number;
-  step: number;
-
-  onPosition(position: Point): void;
-  onResize(event: OnResizeEvent): void;
-};
-
 export const setWorkspaceContext = (model: WorkspaceModel) => {
   setContext('workspace', model);
 };
@@ -63,25 +51,48 @@ export const getWorkspaceContext = () => {
 
 //
 
-export class BoxNodeModel implements NodeModel {
+export abstract class WorkspaceNodeModel {
+  abstract name: string;
+  abstract description?: string;
+  abstract position: Point;
+  abstract pixel: number;
+  abstract size: Size;
+  abstract step: number;
+
+  abstract onPosition(position: Point): void;
+  abstract onResize(event: OnResizeEvent): void;
+}
+
+export class BoxModel {
+  step = $state<number>()!;
+  color = $state<string>()!;
+
+  constructor(opts: Pick<BoxModel, 'step' | 'color'>) {
+    this.step = opts.step;
+    this.color = opts.color;
+  }
+}
+
+export class BoxNodeModel implements WorkspaceNodeModel {
   position = $state<Point>()!;
   size = $state<Size>()!;
-  color = $state<string>()!;
   pixel = $state<number>()!;
-  step = 4;
+  box = $state<BoxModel>()!;
 
-  constructor(opts: Pick<BoxNodeModel, 'position' | 'size' | 'color' | 'pixel'>) {
+  constructor(opts: Pick<BoxNodeModel, 'position' | 'size' | 'pixel' | 'box'>) {
     this.position = opts.position;
     this.size = opts.size;
-    this.color = opts.color;
     this.pixel = opts.pixel;
+    this.box = opts.box;
   }
 
   name = 'Box';
 
   get description() {
-    return `${this.size.width}x${this.size.height}, ${this.pixel}, ${this.color}`;
+    return `${this.size.width}x${this.size.height}, ${this.pixel}, ${this.box.color}`;
   }
+
+  step = $derived(this.box.step);
 
   @action
   onPosition(position: Point) {

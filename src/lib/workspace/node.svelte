@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { getWorkspaceContext, ToolType, type NodeModel } from './model.svelte';
+  import { getWorkspaceContext, ToolType, WorkspaceNodeModel } from './model.svelte';
   import { addPoints, multiplyPoint } from '$lib/utils/math';
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import Resizable from './resizable.svelte';
 
   let { model, children } = $props<{
-    model: NodeModel;
+    model: WorkspaceNodeModel;
     children: Snippet;
   }>();
 

@@ -3,15 +3,25 @@
   import Segmented from '$lib/editor/segmented/segmented.svelte';
   import Button from '$lib/editor/button.svelte';
   import { createTRPC } from '$lib/trpc/client.svelte';
-  import { WorkspaceModel, BoxNodeModel, ToolType } from '$lib/workspace/model.svelte';
+  import { WorkspaceModel, BoxNodeModel, ToolType, BoxModel } from '$lib/workspace/model.svelte';
   import Workspace from '$lib/workspace/workspace.svelte';
   import BoxNode from './box-node.svelte';
 
   let workspace = new WorkspaceModel();
 
   let boxes = $state([
-    new BoxNodeModel({ position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, pixel: 2, color: 'red' }),
-    new BoxNodeModel({ position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, pixel: 2, color: 'green' })
+    new BoxNodeModel({
+      position: { x: 3, y: 3 },
+      size: { width: 8, height: 8 },
+      pixel: 2,
+      box: new BoxModel({ step: 1, color: 'red' })
+    }),
+    new BoxNodeModel({
+      position: { x: 30, y: 10 },
+      size: { width: 8, height: 8 },
+      pixel: 2,
+      box: new BoxModel({ step: 1, color: 'green' })
+    })
   ]);
 
   let rpc = createTRPC();
@@ -68,7 +78,7 @@
 
     {#each boxes as box (box)}
       {@render KeyValue(
-        `Box "${box.color}"`,
+        `Box "${box.box.color}"`,
         `${box.position.x},${box.position.y} / ${box.size.width}x${box.size.height}`
       )}
     {/each}

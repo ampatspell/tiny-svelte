@@ -12,5 +12,5 @@
 </script>
 
 <Node {model}>
-  <Box {size} color={model.color} />
+  <Box {size} color={model.box.color} />
 </Node>
