@@ -11,7 +11,6 @@ import {
 } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 import { untrack } from 'svelte';
-import { activatable, type HasActivatable } from './activatable.svelte';
 
 export type FirestoreModelOptions = {
   isPassive?: boolean;
@@ -21,16 +20,15 @@ export type DocumentOptions = {
   ref: DocumentReference | undefined;
 } & FirestoreModelOptions;
 
-type CancelSubscription = () => void;
-
-export abstract class FirestoreModel<Options extends FirestoreModelOptions = FirestoreModelOptions> implements HasActivatable {
+export abstract class FirestoreModel<Options extends FirestoreModelOptions = FirestoreModelOptions> {
   options: Options;
-  activatable = activatable();
 
   constructor(options: Options) {
     this.options = options;
     if (!this.options.isPassive) {
-      this.activatable.onActivate(() => this.mount());
+      $effect(() => {
+        return this.mount();
+      });
     }
   }
 
@@ -38,7 +36,7 @@ export abstract class FirestoreModel<Options extends FirestoreModelOptions = Fir
     return this.options.isPassive;
   }
 
-  protected abstract subscribe(): CancelSubscription | undefined;
+  protected abstract subscribe(): (() => void) | undefined;
 
   private mount() {
     const subscription = this.subscribe();
@@ -114,6 +112,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirestoreMo
   serialized = $derived.by(() => {
     const { id, path, isLoading, isLoaded, isError, error, metadata, exists, data } = this;
     return {
+      type: 'document',
       id,
       path,
       isLoading,
@@ -139,8 +138,20 @@ abstract class BaseQuery<T extends DocumentData, O extends BaseQueryOptions> ext
   protected abstract normalizeQuery(query: FirestoreQuery): FirestoreQuery;
   protected abstract clear(): void;
 
+  get query() {
+    return this.options.query;
+  }
+
+  get path() {
+    const { query } = this;
+    if (query) {
+      const path = (query as unknown as { path: string | undefined }).path;
+      return path;
+    }
+  }
+
   protected subscribe() {
-    const query = this.options.query;
+    const query = this.query;
 
     this.metadata = undefined;
     this.error = undefined;
@@ -196,8 +207,10 @@ export class Query<T extends DocumentData = DocumentData> extends BaseQuery<T, B
   }
 
   serialized = $derived.by(() => {
-    const { isLoading, isLoaded, isError, error, metadata, content } = this;
+    const { path, isLoading, isLoaded, isError, error, metadata, content } = this;
     return {
+      type: 'quey',
+      path,
       isLoading,
       isLoaded,
       isError,
@@ -230,8 +243,10 @@ export class QueryFirst<T extends DocumentData = DocumentData> extends BaseQuery
   }
 
   serialized = $derived.by(() => {
-    const { isLoading, isLoaded, isError, error, metadata, content } = this;
+    const { path, isLoading, isLoaded, isError, error, metadata, content } = this;
     return {
+      type: 'query-first',
+      path,
       isLoading,
       isLoaded,
       isError,

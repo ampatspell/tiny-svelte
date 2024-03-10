@@ -1,6 +1,5 @@
 <script lang="ts">
   import Button from '$lib/editor/button.svelte';
-  import { activate } from '$lib/firebase/activatable.svelte';
   import { Assets, Project, Weird } from '$lib/firebase/experiments.svelte';
   import { firebase } from '$lib/firebase/firebase.svelte';
   import Json from '$lib/json.svelte';
@@ -39,9 +38,6 @@
     projectId = id;
   };
 
-  activate(weird, project, assets);
-  // activate(weird);
-
   setGlobal({ project });
 </script>
 
@@ -55,10 +51,6 @@
 
     <div class="row">
       <Json value={weird.doc.serialized} />
-    </div>
-
-    <div class="row">
-      <Json value={weird.query.serialized} />
     </div>
 
     <div class="row">

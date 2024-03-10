@@ -2,13 +2,12 @@ import { getter, options } from '$lib/utils/args';
 import { collection, doc } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 import { Query, Document, QueryFirst } from './firestore.svelte';
-import { activatable, type HasActivatable } from './activatable.svelte';
 
 export type WeirdOptions = {
   id?: string;
 };
 
-export class Weird implements HasActivatable {
+export class Weird {
   options: WeirdOptions;
 
   constructor(opts: WeirdOptions) {
@@ -16,17 +15,6 @@ export class Weird implements HasActivatable {
   }
 
   doc = new Document(options({ ref: getter(() => this.ref) }));
-
-  query = new Query(
-    options({
-      query: getter(() => {
-        const ref = this.ref;
-        if (ref) {
-          return collection(ref, 'assets');
-        }
-      })
-    })
-  );
 
   get id() {
     return this.options.id;
@@ -38,15 +26,13 @@ export class Weird implements HasActivatable {
     }
     return doc(collection(firebase.firestore, 'projects'), this.id);
   }
-
-  activatable = activatable(this.doc, this.query);
 }
 
 export type ProjectOptions = {
   id: string;
 };
 
-export class Project implements HasActivatable {
+export class Project {
   options: ProjectOptions;
 
   constructor(options: ProjectOptions) {
@@ -62,8 +48,6 @@ export class Project implements HasActivatable {
   }
 
   doc = new Document(options({ ref: getter(() => this.ref) }));
-
-  activatable = activatable(this.doc);
 }
 
 export type AssetsOptions = {
@@ -92,6 +76,4 @@ export class Assets {
       query: getter(() => this.ref)
     })
   );
-
-  activatable = activatable(this.query, this.first);
 }
