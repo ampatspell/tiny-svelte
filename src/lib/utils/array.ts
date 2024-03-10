@@ -25,3 +25,15 @@ export function sortedBy<T>(arr: T[], descriptors: SortDescriptor<T> | SortDescr
   }
   return sorted;
 }
+
+export const removeObjectAt = <T>(array: T[], index: number) => {
+  if (index > -1) {
+    array.splice(index, 1);
+  }
+};
+
+export const removeObject = <T>(array: T[], entry: T) => {
+  const index = array.indexOf(entry);
+  console.log('remove', entry);
+  removeObjectAt(array, index);
+};
