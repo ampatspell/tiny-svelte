@@ -10,19 +10,8 @@ export type WeirdOptions = {
 export class Weird {
   options: WeirdOptions;
 
-  constructor(options: WeirdOptions) {
-    this.options = options;
-  }
-
-  get id() {
-    return this.options.id;
-  }
-
-  get ref() {
-    if (!this.id) {
-      return;
-    }
-    return doc(collection(firebase.firestore, 'projects'), this.id);
+  constructor(opts: WeirdOptions) {
+    this.options = opts;
   }
 
   doc = new Document(options({ ref: getter(() => this.ref) }));
@@ -37,6 +26,17 @@ export class Weird {
       })
     })
   );
+
+  get id() {
+    return this.options.id;
+  }
+
+  get ref() {
+    if (!this.id) {
+      return;
+    }
+    return doc(collection(firebase.firestore, 'projects'), this.id);
+  }
 }
 
 export type ProjectOptions = {

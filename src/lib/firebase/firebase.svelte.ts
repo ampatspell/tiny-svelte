@@ -10,6 +10,8 @@ import {
 import { initializeAuth, type Auth, browserLocalPersistence } from 'firebase/auth';
 import { setGlobal } from '$lib/utils/set-global';
 import { Session } from './session.svelte';
+import type { Base } from './firestore.svelte';
+import { removeObject } from '$lib/utils/array';
 
 const options = JSON.parse(PUBLIC_FIREBASE) as FirebaseOptions;
 
@@ -19,10 +21,12 @@ export class Firebase {
   private _auth?: Auth;
 
   session: Session;
+  subscribed: Subscribed;
 
   constructor(options: FirebaseOptions) {
     this.options = options;
     this.session = new Session(this);
+    this.subscribed = new Subscribed();
   }
 
   get app() {
@@ -72,6 +76,17 @@ export class Firebase {
       session: session.serialized
     };
   });
+}
+
+export class Subscribed {
+  all: Base[] = [];
+
+  register(entry: Base) {
+    this.all.push(entry);
+    return () => {
+      removeObject(this.all, entry);
+    };
+  }
 }
 
 export const firebase = new Firebase(options);

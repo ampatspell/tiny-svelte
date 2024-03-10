@@ -56,7 +56,7 @@
       <Json value={weird.query.serialized} />
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
       {#each ['hello', 'another'] as id}
         <Button value={id} onClick={() => selectProject(id)} />
       {/each}
@@ -76,8 +76,14 @@
 
     <div class="row">
       <Json value={assets.query.serialized} />
-    </div>
+    </div> -->
   </div>
+
+  <!-- <div class="column">
+    {#each subscribed.all as entry}
+      <div class="row"><Json value={entry.serialized}/></div>
+    {/each}
+  </div> -->
 </div>
 
 <style lang="scss">

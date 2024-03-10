@@ -9,6 +9,7 @@ import {
   limit,
   query
 } from '@firebase/firestore';
+import { firebase } from './firebase.svelte';
 
 export type BaseOptions = {
   isPassive?: boolean;
@@ -20,7 +21,7 @@ export type DocumentOptions = {
 
 type CancelSubscription = () => void;
 
-export abstract class Base<O extends BaseOptions> {
+export abstract class Base<O extends BaseOptions = BaseOptions> {
   options: O;
 
   constructor(options: O) {
@@ -45,7 +46,17 @@ export abstract class Base<O extends BaseOptions> {
     if (this.isPassive) {
       return;
     }
-    this.cancel = this.subscribe();
+
+    const subscription = this.subscribe();
+    if (subscription) {
+      const registration = firebase.subscribed.register(this);
+      this.cancel = () => {
+        subscription();
+        registration();
+      };
+    } else {
+      this.cancel = undefined;
+    }
   }
 
   private unmount() {
@@ -59,7 +70,9 @@ export abstract class Base<O extends BaseOptions> {
   abstract serialized: unknown;
 }
 
-export class Document<T extends Record<string, never>> extends Base<DocumentOptions> {
+export type DocumentData = Record<string, never>;
+
+export class Document<T extends DocumentData = DocumentData> extends Base<DocumentOptions> {
   constructor(options: DocumentOptions) {
     super(options);
   }
@@ -132,7 +145,7 @@ export type BaseQueryOptions = {
   query: FirestoreQuery | undefined;
 } & BaseOptions;
 
-abstract class BaseQuery<T extends Record<string, never>, O extends BaseQueryOptions> extends Base<O> {
+abstract class BaseQuery<T extends DocumentData, O extends BaseQueryOptions> extends Base<O> {
   constructor(options: O) {
     super(options);
   }
@@ -178,7 +191,7 @@ abstract class BaseQuery<T extends Record<string, never>, O extends BaseQueryOpt
   }
 }
 
-export class Query<T extends Record<string, never>> extends BaseQuery<T, BaseQueryOptions> {
+export class Query<T extends DocumentData = DocumentData> extends BaseQuery<T, BaseQueryOptions> {
   content = $state<Document<T>[]>([]);
 
   protected normalizeQuery(query: FirestoreQuery): FirestoreQuery {
@@ -209,7 +222,7 @@ export class Query<T extends Record<string, never>> extends BaseQuery<T, BaseQue
   });
 }
 
-export class QueryFirst<T extends Record<string, never>> extends BaseQuery<T, BaseQueryOptions> {
+export class QueryFirst<T extends DocumentData = DocumentData> extends BaseQuery<T, BaseQueryOptions> {
   content = $state<Document<T>>();
 
   clear() {
