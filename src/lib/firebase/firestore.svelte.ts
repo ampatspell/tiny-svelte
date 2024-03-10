@@ -1,5 +1,3 @@
-import { removeObject } from '$lib/utils/array';
-import { setGlobal } from '$lib/utils/set-global';
 import {
   DocumentReference,
   DocumentSnapshot,

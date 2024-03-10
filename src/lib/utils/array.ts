@@ -34,6 +34,5 @@ export const removeObjectAt = <T>(array: T[], index: number) => {
 
 export const removeObject = <T>(array: T[], entry: T) => {
   const index = array.indexOf(entry);
-  console.log('remove', entry);
   removeObjectAt(array, index);
 };
