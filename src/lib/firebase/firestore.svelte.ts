@@ -11,6 +11,7 @@ import {
 } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 import { untrack } from 'svelte';
+import type { Mountable } from './mountable.svelte';
 
 export type FirestoreModelOptions = {
   isPassive?: boolean;
