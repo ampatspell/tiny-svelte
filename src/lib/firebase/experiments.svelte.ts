@@ -2,12 +2,13 @@ import { getter, options } from '$lib/utils/args';
 import { collection, doc } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 import { Query, Document, QueryFirst } from './firestore.svelte';
+import type { Mountable } from './mountable.svelte';
 
 export type WeirdOptions = {
   id?: string;
 };
 
-export class Weird {
+export class Weird implements Mountable {
   options: WeirdOptions;
 
   constructor(opts: WeirdOptions) {
@@ -26,13 +27,22 @@ export class Weird {
     }
     return doc(collection(firebase.firestore, 'projects'), this.id);
   }
+
+  deps = [this.doc];
+
+  mount() {
+    console.log('mount weird');
+    return () => {
+      console.log('unmount weird');
+    };
+  }
 }
 
 export type ProjectOptions = {
   id: string;
 };
 
-export class Project {
+export class Project implements Mountable {
   options: ProjectOptions;
 
   constructor(options: ProjectOptions) {
@@ -48,13 +58,22 @@ export class Project {
   }
 
   doc = new Document(options({ ref: getter(() => this.ref) }));
+
+  deps = [this.doc];
+
+  mount() {
+    console.log('mount project');
+    return () => {
+      console.log('unmount project');
+    };
+  }
 }
 
 export type AssetsOptions = {
   project: Project;
 };
 
-export class Assets {
+export class Assets implements Mountable {
   options: AssetsOptions;
 
   constructor(options: AssetsOptions) {
@@ -76,4 +95,6 @@ export class Assets {
       query: getter(() => this.ref)
     })
   );
+
+  deps = [this.query, this.first];
 }

@@ -20,15 +20,16 @@ export type DocumentOptions = {
   ref: DocumentReference | undefined;
 } & FirestoreModelOptions;
 
-export abstract class FirestoreModel<Options extends FirestoreModelOptions = FirestoreModelOptions> {
+export abstract class FirestoreModel<Options extends FirestoreModelOptions = FirestoreModelOptions> implements Mountable {
   options: Options;
 
   constructor(options: Options) {
     this.options = options;
-    if (!this.options.isPassive) {
-      $effect(() => {
-        return this.mount();
-      });
+  }
+
+  mount() {
+    if (!this.isPassive) {
+      return this._mount();
     }
   }
 
@@ -38,7 +39,7 @@ export abstract class FirestoreModel<Options extends FirestoreModelOptions = Fir
 
   protected abstract subscribe(): (() => void) | undefined;
 
-  private mount() {
+  private _mount() {
     const subscription = this.subscribe();
     if (!subscription) {
       return;
@@ -56,6 +57,15 @@ export abstract class FirestoreModel<Options extends FirestoreModelOptions = Fir
 export type DocumentData = Record<string, never>;
 
 export class Document<T extends DocumentData = DocumentData> extends FirestoreModel<DocumentOptions> {
+  metadata = $state<SnapshotMetadata>();
+  exists = $state<boolean>();
+  data = $state<T>();
+  error = $state<unknown>();
+
+  isLoading = $state(false);
+  isLoaded = $state(false);
+  isError = $derived(!!this.error);
+
   constructor(options: DocumentOptions) {
     super(options);
   }
@@ -89,15 +99,6 @@ export class Document<T extends DocumentData = DocumentData> extends FirestoreMo
     this.isLoading = true;
     return onSnapshot(ref, { includeMetadataChanges: true }, (snapshot) => this.onSnapshot(snapshot));
   }
-
-  metadata = $state<SnapshotMetadata>();
-  exists = $state<boolean>();
-  data = $state<T>();
-  error = $state<unknown>();
-
-  isLoading = $state(false);
-  isLoaded = $state(false);
-  isError = $derived(!!this.error);
 
   onSnapshot(snapshot: DocumentSnapshot) {
     this.metadata = snapshot.metadata;

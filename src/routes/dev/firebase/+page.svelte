@@ -2,6 +2,7 @@
   import Button from '$lib/editor/button.svelte';
   import { Assets, Project, Weird } from '$lib/firebase/experiments.svelte';
   import { firebase } from '$lib/firebase/firebase.svelte';
+  import { activate } from '$lib/firebase/mountable.svelte';
   import Json from '$lib/json.svelte';
   import { getter, options } from '$lib/utils/args';
   import { setGlobal } from '$lib/utils/set-global';
@@ -38,7 +39,13 @@
     projectId = id;
   };
 
+  activate(weird);
+  activate(project);
+  activate(assets);
+
   setGlobal({ project });
+
+  $inspect({ isLoading: weird.doc.isLoading, isLoaded: weird.doc.isLoaded, path: weird.doc.path });
 </script>
 
 <div class="page">
