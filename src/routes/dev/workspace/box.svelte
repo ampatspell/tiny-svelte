@@ -10,8 +10,7 @@
   let workspace = getWorkspaceContext();
   let pixel = $derived(workspace.pixel);
 
-  let onClick = () => {
-  }
+  let onClick = () => {};
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->

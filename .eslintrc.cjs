@@ -14,6 +14,9 @@ module.exports = {
     es2017: true,
     node: true
   },
+  rules: {
+    'no-console': 'error'
+  },
   overrides: [
     {
       files: ['*.svelte'],
