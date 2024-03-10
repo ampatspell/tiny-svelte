@@ -40,6 +40,7 @@
   };
 
   activate(weird, project, assets);
+  // activate(weird);
 
   setGlobal({ project });
 </script>

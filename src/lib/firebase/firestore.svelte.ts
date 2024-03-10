@@ -102,13 +102,13 @@ export class Document<T extends DocumentData = DocumentData> extends FirestoreMo
   isError = $derived(!!this.error);
 
   onSnapshot(snapshot: DocumentSnapshot) {
-    this.isLoading = false;
-    this.isLoaded = true;
     this.metadata = snapshot.metadata;
     this.exists = snapshot.exists();
     if (this.exists) {
       this.data = snapshot.data() as T;
     }
+    this.isLoading = false;
+    this.isLoaded = true;
   }
 
   serialized = $derived.by(() => {
@@ -189,10 +189,10 @@ export class Query<T extends DocumentData = DocumentData> extends BaseQuery<T, B
   }
 
   protected onSnapshot(querySnapshot: QuerySnapshot) {
-    super.onSnapshot(querySnapshot);
     this.content = querySnapshot.docs.map((snapshot) => {
       return this.createDocument(snapshot);
     });
+    super.onSnapshot(querySnapshot);
   }
 
   serialized = $derived.by(() => {
@@ -220,13 +220,13 @@ export class QueryFirst<T extends DocumentData = DocumentData> extends BaseQuery
   }
 
   protected onSnapshot(querySnapshot: QuerySnapshot) {
-    super.onSnapshot(querySnapshot);
     const [snapshot] = querySnapshot.docs;
     if (snapshot) {
       this.content = this.createDocument(snapshot);
     } else {
       this.content = undefined;
     }
+    super.onSnapshot(querySnapshot);
   }
 
   serialized = $derived.by(() => {
