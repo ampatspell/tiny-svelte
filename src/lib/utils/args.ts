@@ -19,11 +19,11 @@ type OptionsInput<T> = {
 class Options<T> {
   constructor(args: OptionsInput<T>) {
     for (const key in args) {
-      const value = args[key];
-      if (value instanceof OptionsGetter) {
-        Object.defineProperty(this, key, { get: () => value.value });
+      const arg = args[key];
+      if (arg instanceof OptionsGetter) {
+        Object.defineProperty(this, key, { get: () => arg.value });
       } else {
-        Object.defineProperty(this, key, { get: () => value });
+        Object.defineProperty(this, key, { get: () => arg });
       }
     }
   }
