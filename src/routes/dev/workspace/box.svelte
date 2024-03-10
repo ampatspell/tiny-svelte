@@ -9,13 +9,18 @@
 
   let workspace = getWorkspaceContext();
   let pixel = $derived(workspace.pixel);
+
+  let onClick = () => {
+  }
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
 <div
   class="box"
   style:--width="{size.width * pixel}px"
   style:--height="{size.height * pixel}px"
   style:--color={color}
+  onclick={onClick}
 ></div>
 
 <style lang="scss">
