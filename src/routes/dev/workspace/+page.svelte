@@ -53,11 +53,7 @@
       <div class="value">
         <Segmented>
           {#each [1, 2, 4, 8, 16] as value}
-            <Segment
-              value="{value}px"
-              isSelected={value === workspace.pixel}
-              onClick={() => (workspace.pixel = value)}
-            />
+            <Segment value="{value}px" isSelected={value === workspace.pixel} onClick={() => (workspace.pixel = value)} />
           {/each}
         </Segmented>
       </div>
@@ -77,10 +73,7 @@
     {@render KeyValue('Selected', `${workspace.selected?.name} ${workspace.selected?.description}`)}
 
     {#each boxes as box (box)}
-      {@render KeyValue(
-        `Box "${box.box.color}"`,
-        `${box.position.x},${box.position.y} / ${box.size.width}x${box.size.height}`
-      )}
+      {@render KeyValue(`Box "${box.box.color}"`, `${box.position.x},${box.position.y} / ${box.size.width}x${box.size.height}`)}
     {/each}
 
     <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events-->

@@ -89,14 +89,7 @@
 </script>
 
 <div
-  class={classes(
-    'pin',
-    `horizontal-${horizontal}`,
-    `vertical-${vertical}`,
-    resizing && 'resizing',
-    !isResizable && 'hidden',
-    _class
-  )}
+  class={classes('pin', `horizontal-${horizontal}`, `vertical-${vertical}`, resizing && 'resizing', !isResizable && 'hidden', _class)}
   style:--size="{pin}px"
   use:draggable={{
     isDraggable: isResizable,

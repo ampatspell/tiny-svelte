@@ -62,11 +62,7 @@ export type LoopAssetData = z.infer<typeof LoopAssetDataSchema>;
 
 //
 
-export const AssetDataSchema = z.discriminatedUnion('type', [
-  SpriteAssetDataSchema,
-  LoopAssetDataSchema,
-  BoxAssetDataSchema
-]);
+export const AssetDataSchema = z.discriminatedUnion('type', [SpriteAssetDataSchema, LoopAssetDataSchema, BoxAssetDataSchema]);
 
 export type AssetData = z.infer<typeof AssetDataSchema>;
 

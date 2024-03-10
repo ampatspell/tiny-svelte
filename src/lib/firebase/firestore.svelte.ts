@@ -10,27 +10,27 @@ import {
   query
 } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
+import { untrack } from 'svelte';
+import { activatable, type HasActivatable } from './activatable.svelte';
 
-export type BaseOptions = {
+export type FirestoreModelOptions = {
   isPassive?: boolean;
 };
 
 export type DocumentOptions = {
   ref: DocumentReference | undefined;
-} & BaseOptions;
+} & FirestoreModelOptions;
 
 type CancelSubscription = () => void;
 
-export abstract class Base<O extends BaseOptions = BaseOptions> {
-  options: O;
+export abstract class FirestoreModel<Options extends FirestoreModelOptions = FirestoreModelOptions> implements HasActivatable {
+  options: Options;
+  activatable = activatable();
 
-  constructor(options: O) {
+  constructor(options: Options) {
     this.options = options;
     if (!this.options.isPassive) {
-      $effect(() => {
-        this.mount();
-        return () => this.unmount();
-      });
+      this.activatable.onActivate(() => this.mount());
     }
   }
 
@@ -38,41 +38,26 @@ export abstract class Base<O extends BaseOptions = BaseOptions> {
     return this.options.isPassive;
   }
 
-  private cancel?: CancelSubscription;
   protected abstract subscribe(): CancelSubscription | undefined;
 
   private mount() {
-    this.unmount();
-    if (this.isPassive) {
+    const subscription = this.subscribe();
+    if (!subscription) {
       return;
     }
-
-    const subscription = this.subscribe();
-    if (subscription) {
-      const registration = firebase.subscribed.register(this);
-      this.cancel = () => {
-        subscription();
-        registration();
-      };
-    } else {
-      this.cancel = undefined;
-    }
+    const registration = untrack(() => firebase.subscribed.register(this));
+    return () => {
+      registration();
+      subscription();
+    };
   }
 
-  private unmount() {
-    const { cancel } = this;
-    if (cancel) {
-      cancel();
-      this.cancel = undefined;
-    }
-  }
-
-  abstract serialized: unknown;
+  abstract serialized: { [key: string]: unknown };
 }
 
 export type DocumentData = Record<string, never>;
 
-export class Document<T extends DocumentData = DocumentData> extends Base<DocumentOptions> {
+export class Document<T extends DocumentData = DocumentData> extends FirestoreModel<DocumentOptions> {
   constructor(options: DocumentOptions) {
     super(options);
   }
@@ -91,6 +76,7 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
 
   protected subscribe() {
     const ref = this.ref;
+
     this.metadata = undefined;
     this.exists = undefined;
     this.data = undefined;
@@ -143,9 +129,9 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
 
 export type BaseQueryOptions = {
   query: FirestoreQuery | undefined;
-} & BaseOptions;
+} & FirestoreModelOptions;
 
-abstract class BaseQuery<T extends DocumentData, O extends BaseQueryOptions> extends Base<O> {
+abstract class BaseQuery<T extends DocumentData, O extends BaseQueryOptions> extends FirestoreModel<O> {
   constructor(options: O) {
     super(options);
   }

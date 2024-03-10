@@ -1,17 +1,11 @@
 import { PUBLIC_FIREBASE } from '$env/static/public';
 import { getApps, initializeApp, type FirebaseOptions } from 'firebase/app';
-import {
-  DocumentReference,
-  Firestore,
-  initializeFirestore,
-  persistentLocalCache,
-  persistentMultipleTabManager
-} from 'firebase/firestore';
+import { DocumentReference, Firestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 import { initializeAuth, type Auth, browserLocalPersistence } from 'firebase/auth';
 import { setGlobal } from '$lib/utils/set-global';
 import { Session } from './session.svelte';
-import type { Base } from './firestore.svelte';
 import { removeObject } from '$lib/utils/array';
+import type { FirestoreModel } from './firestore.svelte';
 
 const options = JSON.parse(PUBLIC_FIREBASE) as FirebaseOptions;
 
@@ -79,9 +73,9 @@ export class Firebase {
 }
 
 export class Subscribed {
-  all: Base[] = [];
+  all = $state<FirestoreModel[]>([]);
 
-  register(entry: Base) {
+  register(entry: FirestoreModel) {
     this.all.push(entry);
     return () => {
       removeObject(this.all, entry);
