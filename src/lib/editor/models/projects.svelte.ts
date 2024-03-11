@@ -1,12 +1,9 @@
 import { firebase } from '$lib/firebase/firebase.svelte';
-import { Query, Document } from '$lib/firebase/firestore.svelte';
+import { Query, Document, Models } from '$lib/firebase/firestore.svelte';
 import type { Mountable } from '$lib/firebase/mountable.svelte';
 import { getter, options } from '$lib/utils/args';
 import { collection } from '@firebase/firestore';
-
-export type ProjectDocumentData = {
-  identifier: string;
-};
+import type { ProjectDocumentData } from './schema';
 
 export class ProjectModel {
   projects: ProjectsModel;
@@ -32,8 +29,12 @@ export class ProjectsModel implements Mountable {
     })
   );
 
-  deps = [this.query];
+  all = new Models(
+    options({
+      source: () => this.query.content,
+      model: (doc: Document<ProjectDocumentData>) => new ProjectModel(this, doc)
+    })
+  );
 
-  // TODO: map
-  all = $derived.by(() => this.query.content.map((doc) => new ProjectModel(this, doc)));
+  deps = [this.query];
 }

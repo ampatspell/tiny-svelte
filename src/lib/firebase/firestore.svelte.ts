@@ -206,7 +206,9 @@ export class Query<T extends DocumentData = DocumentData> extends BaseQuery<T, B
   }
 
   protected onSnapshot(querySnapshot: QuerySnapshot) {
+    // TODO: querySnapshot.docChanges
     this.content = querySnapshot.docs.map((snapshot) => {
+      // TODO: reuse
       return this.createDocument(snapshot);
     });
     super.onSnapshot(querySnapshot);
@@ -241,6 +243,7 @@ export class QueryFirst<T extends DocumentData = DocumentData> extends BaseQuery
   protected onSnapshot(querySnapshot: QuerySnapshot) {
     const [snapshot] = querySnapshot.docs;
     if (snapshot) {
+      // TODO: reuse
       this.content = this.createDocument(snapshot);
     } else {
       this.content = undefined;
@@ -261,4 +264,42 @@ export class QueryFirst<T extends DocumentData = DocumentData> extends BaseQuery
       content: content?.serialized
     };
   });
+}
+
+export type ModelsOptions<I, O> = {
+  source: () => I[];
+  model: (doc: I) => O;
+};
+
+export class Models<I, O> {
+  options: ModelsOptions<I, O>;
+
+  constructor(options: ModelsOptions<I, O>) {
+    this.options = options;
+  }
+
+  get source() {
+    return this.options.source();
+  }
+
+  private cache = new Map<I, O>();
+
+  private create(doc: I) {
+    return this.options.model(doc);
+  }
+
+  private findOrCreate(doc: I) {
+    if (this.cache.has(doc)) {
+      return this.cache.get(doc)!;
+    }
+    const model = this.create(doc);
+    this.cache.set(doc, model); // TODO: they will stay there. needs cache cleanup
+    return model;
+  }
+
+  private map() {
+    return this.source.map((doc) => this.findOrCreate(doc));
+  }
+
+  content = $derived.by(() => this.map());
 }
