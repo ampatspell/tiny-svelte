@@ -7,7 +7,8 @@ import {
   onSnapshot,
   QueryDocumentSnapshot,
   limit,
-  query
+  query,
+  type DocumentData
 } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 import { untrack } from 'svelte';
@@ -52,10 +53,13 @@ export abstract class FirestoreModel<Options extends FirestoreModelOptions = Fir
     };
   }
 
+  abstract isLoading: boolean;
+  abstract isLoaded: boolean;
+  abstract isError: boolean;
+  abstract error?: unknown;
+
   abstract serialized: { [key: string]: unknown };
 }
-
-export type DocumentData = Record<string, never>;
 
 export class Document<T extends DocumentData = DocumentData> extends FirestoreModel<DocumentOptions> {
   metadata = $state<SnapshotMetadata>();

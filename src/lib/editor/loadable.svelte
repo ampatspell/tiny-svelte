@@ -1,0 +1,26 @@
+<script lang="ts">
+  import type { Loadable } from '$lib/firebase/mountable.svelte';
+  import type { Snippet } from 'svelte';
+
+  let { model, children } = $props<{
+    model: Loadable;
+    children?: Snippet;
+  }>();
+</script>
+
+{#if model.isLoading}
+  <!-- <div class="loading">Loading…</div> -->
+{:else if model.isError}
+  <div class="error">{model.error}</div>
+{:else if model.isLoaded}
+  {#if children}
+    {@render children()}
+  {/if}
+{/if}
+
+<style lang="scss">
+  .loading,
+  .error {
+    padding: 10px 15px;
+  }
+</style>

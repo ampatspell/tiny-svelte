@@ -1,3 +1,10 @@
+export type Loadable = {
+  isLoading: boolean;
+  isLoaded: boolean;
+  isError: boolean;
+  error?: unknown;
+};
+
 export type Mountable = {
   mount?(): (() => void) | undefined;
   deps?: Mountable[];

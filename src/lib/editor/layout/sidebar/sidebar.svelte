@@ -8,7 +8,7 @@
   let items = createItems([
     { icon: Home, route: '/' },
     { icon: Editor, route: '/editor' },
-    { icon: Mushroom, route: '/editor/assets' }
+    { icon: Mushroom, route: '/editor/projects' }
   ]);
 </script>
 

@@ -3,7 +3,7 @@
 
   let { route, children } = $props<{
     children?: Snippet;
-    route: string;
+    route?: string;
   }>();
 </script>
 
