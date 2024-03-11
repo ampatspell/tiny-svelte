@@ -4,6 +4,7 @@ import type { Mountable } from '$lib/firebase/mountable.svelte';
 import { getter, options } from '$lib/utils/args';
 import { collection } from '@firebase/firestore';
 import type { ProjectDocumentData } from './schema';
+import { OrderBy } from './sorted.svelte';
 
 export class ProjectModel {
   projects: ProjectsModel;
@@ -23,9 +24,14 @@ export class ProjectsModel implements Mountable {
     return collection(firebase.firestore, 'projects');
   }
 
+  orderBy = new OrderBy<ProjectDocumentData>({
+    fields: ['identifier', 'name'],
+    initial: 'identifier'
+  });
+
   query = new Query<ProjectDocumentData>(
     options({
-      query: getter(() => this.collection)
+      query: getter(() => this.orderBy.apply(this.collection))
     })
   );
 
