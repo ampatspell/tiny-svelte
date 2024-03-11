@@ -17,7 +17,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: 5px 10px;
+    padding: 5px 0;
     border-radius: 2px;
     &.selected {
       background: #222;

@@ -161,10 +161,10 @@ abstract class BaseQuery<T extends DocumentData, O extends BaseQueryOptions> ext
 
     this.metadata = undefined;
     this.error = undefined;
-    this.isLoaded = false;
 
     if (!query) {
       this.clear();
+      this.isLoaded = false;
       this.isLoading = false;
       return;
     }

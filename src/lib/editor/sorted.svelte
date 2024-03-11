@@ -3,13 +3,14 @@
   import Segment from './segmented/segment.svelte';
   import Segmented from './segmented/segmented.svelte';
 
-  let { model } = $props<{
+  let { width, model } = $props<{
+    width?: number;
     model: OrderBy<T>;
   }>();
 </script>
 
 <div class="sorted">
-  <Segmented>
+  <Segmented {width}>
     {#if !model.initial}
       <Segment value="None" isSelected={!model.selected} onClick={() => model.onField(undefined)} />
     {/if}
@@ -18,7 +19,7 @@
     {/each}
   </Segmented>
 
-  <Segmented>
+  <Segmented width={45}>
     {#each model.directions as direction}
       <Segment value={direction} isSelected={model.direction === direction} onClick={() => model.onDirection(direction)} />
     {/each}

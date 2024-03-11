@@ -3,7 +3,6 @@
   import Loadable from '../loadable.svelte';
   import { ProjectsModel } from '../models/projects.svelte';
   import Sorted from '../sorted.svelte';
-  import Sort from '../sorted.svelte';
 
   let model = new ProjectsModel();
   activate(model);
@@ -12,9 +11,7 @@
 <div class="projects">
   <div class="header">All projects</div>
   <div class="actions">
-    <div class="sorted">
-      <Sorted model={model.orderBy} />
-    </div>
+    <Sorted width={90} model={model.orderBy} />
   </div>
   <Loadable model={model.query}>
     {#each model.all.content as project}
@@ -37,9 +34,6 @@
       display: flex;
       flex-direction: row;
       padding: 10px 15px;
-      > .sorted {
-        width: 350px;
-      }
     }
     > .project {
       padding: 10px 15px;
