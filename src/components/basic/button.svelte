@@ -33,15 +33,10 @@
     display: flex;
     flex-direction: row;
     gap: 5px;
-    border: 1px solid #eee;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 3px;
-    font-weight: bold;
     text-decoration: none;
-    &:not(:disabled) {
-      &:hover {
-        background: fade-out(#000, 0.98);
-      }
-    }
+    color: #fff;
+    background: fade-out(#000, 0.1);
   }
 </style>
