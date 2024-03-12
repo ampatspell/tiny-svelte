@@ -5,7 +5,7 @@
 </script>
 
 <div class="project">
-  {id}
+  project: {id}
 </div>
 
 <style lang="scss">
