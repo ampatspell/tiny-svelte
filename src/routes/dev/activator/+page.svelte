@@ -1,6 +1,7 @@
 <script lang="ts">
   import Button from '$lib/editor/button.svelte';
-  import { Projects } from '$lib/firebase/another.svelte';
+  import { Projects, activators } from '$lib/firebase/another.svelte';
+  import Activated from './activated.svelte';
   import Content from './content.svelte';
 
   let model = new Projects();
@@ -15,6 +16,7 @@
   </div>
   <div class="row">
     <Button value="Toggle" onClick={toggle} />
+    <Button value="Order" onClick={() => model.toggleOrder()} />
   </div>
 
   <div class="row">
@@ -24,6 +26,10 @@
   <div class="row">
     {model.query.activator.isActivated}
     {model.query.activator.owner.description}
+  </div>
+
+  <div class="row">
+    <Activated />
   </div>
 
   {#if show}

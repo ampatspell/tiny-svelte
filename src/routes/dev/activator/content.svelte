@@ -8,13 +8,7 @@
   activate(model);
 </script>
 
-<div class="content">
-  <div class="row">
-    {#each activators.all as model}
-      <div class="model">{model.description ?? model.constructor.name}</div>
-    {/each}
-  </div>
-</div>
+<div class="content"></div>
 
 <style lang="scss">
   .content {

@@ -1,5 +1,5 @@
 import { removeObject } from '$lib/utils/array';
-import { Query, QuerySnapshot, collection, onSnapshot } from '@firebase/firestore';
+import { FirestoreError, Query, QuerySnapshot, collection, onSnapshot, orderBy, query } from '@firebase/firestore';
 import { untrack } from 'svelte';
 import { firebase } from './firebase.svelte';
 import { getter, options } from '$lib/utils/args';
@@ -23,7 +23,7 @@ export class ActivatorsImpl implements Activators {
 const _activators = new ActivatorsImpl();
 export const activators: Activators = _activators;
 
-interface HasActivator {
+export interface HasActivator {
   activator: Activator;
   description?: string;
 }
@@ -31,6 +31,10 @@ interface HasActivator {
 abstract class Model implements HasActivator {
   activator: Activator;
   isActivated = $derived.by(() => this.activator.isActivated);
+
+  get isActivatedUntracked() {
+    return untrack(() => this.isActivated);
+  }
 
   constructor() {
     this.activator = new Activator({
@@ -114,17 +118,61 @@ export const activate = (model: HasActivator) => {
   });
 };
 
-export type QueryImplOptions = {
+export abstract class Base extends Model {
+  abstract subscribeDependencies: unknown[];
+  private cancel?: () => void;
+
+  constructor() {
+    super();
+    $effect(() => this.refresh());
+  }
+
+  abstract subscribe(): (() => void) | undefined;
+
+  _subscribe() {
+    this.cancel = this.subscribe();
+  }
+
+  _unsubscribe() {
+    const cancel = this.cancel;
+    if (cancel) {
+      cancel();
+      this.cancel = undefined;
+    }
+  }
+
+  refresh() {
+    this.subscribeDependencies;
+    if (this.isActivatedUntracked) {
+      this._unsubscribe();
+      this._subscribe();
+    }
+  }
+
+  activate() {
+    this._subscribe();
+    return () => {
+      this._unsubscribe();
+    };
+  }
+}
+
+export type BaseQueryOptions = {
   ref: Query | undefined;
 };
 
-export class QueryImpl extends Model {
-  private options: QueryImplOptions;
+export class BaseQuery<O extends BaseQueryOptions> extends Base {
+  private options: O;
 
-  constructor(options: QueryImplOptions) {
+  constructor(options: O) {
     super();
     this.options = options;
   }
+
+  isLoading = $state(false);
+  isLoaded = $state(false);
+  error = $state<unknown>();
+  isError = $derived.by(() => !!this.error);
 
   get ref() {
     return this.options.ref;
@@ -138,59 +186,64 @@ export class QueryImpl extends Model {
     }
   }
 
-  activate() {
+  get subscribeDependencies() {
+    return [this.ref];
+  }
+
+  subscribe() {
     const ref = this.ref;
+
+    this.error = undefined;
+    this.isLoading = true;
+    if (!ref) {
+      this.isLoaded = false;
+    }
+
     if (ref) {
-      return onSnapshot(ref, { includeMetadataChanges: true }, (snapshot) => this.onSnapshot(snapshot));
+      return onSnapshot(
+        ref,
+        { includeMetadataChanges: true },
+        (snapshot) => this.onSnapshot(snapshot),
+        (error) => this.onError(error)
+      );
     }
   }
 
-  protected onSnapshot(querySnapshot: QuerySnapshot) {
-    console.log('onSnapshot', querySnapshot);
+  onError(error: FirestoreError) {
+    this.isLoading = false;
+    this.error = error;
   }
 
-  get description() {
-    return `<QueryImpl isActivated=${this.isActivated} path=${this.path}>`;
+  protected onSnapshot(querySnapshot: QuerySnapshot) {
+    this.isLoading = false;
+    this.isLoaded = true;
+    console.log('onSnapshot', querySnapshot);
   }
 }
 
 //
 
-export type QueryOptions = {
-  ref: Query | undefined;
-};
+export type QueryAllOptions = BaseQueryOptions;
 
-export class QueryAll extends Model {
-  private options: QueryOptions;
-
-  constructor(options: QueryOptions) {
-    super();
-    this.options = options;
-  }
-
-  private query = new QueryImpl(
-    options({
-      ref: getter(() => this.options.ref)
-    })
-  );
-
-  dependencies = [this.query];
-
-  activate() {
-    console.log('query activate');
-    return () => {
-      console.log('query deactivate');
-    };
+export class QueryAll extends BaseQuery<QueryAllOptions> {
+  constructor(options: QueryAllOptions) {
+    super(options);
   }
 
   get description() {
-    return `<Query isActivated=${this.isActivated} impl=${this.query.description}>`;
+    return `<Query path=${this.path} isLoading=${this.isLoading} isLoaded=${this.isLoaded} active=${this.isActivated}>`;
   }
 }
 
 export class Projects extends Model {
+  order = $state<'asc' | 'desc'>('asc');
+
+  toggleOrder() {
+    this.order = this.order === 'asc' ? 'desc' : 'asc';
+  }
+
   get ref() {
-    return collection(firebase.firestore, 'projects');
+    return query(collection(firebase.firestore, 'projects'), orderBy('identifier', this.order));
   }
 
   query = new QueryAll(
@@ -209,6 +262,6 @@ export class Projects extends Model {
   }
 
   get description() {
-    return `<Projects isActivated=${this.activator.isActivated}>`;
+    return `<Projects active=${this.activator.isActivated}>`;
   }
 }
