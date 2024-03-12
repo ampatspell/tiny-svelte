@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Activated from '$lib/activated.svelte';
-  import Button from '$lib/editor/button.svelte';
+  import Activated from '$components/activated.svelte';
+  import Button from '$components/editor/button.svelte';
   import { Projects } from '$lib/firebase/experiments.svelte';
   import Content from './content.svelte';
 

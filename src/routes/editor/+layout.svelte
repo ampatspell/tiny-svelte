@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Sidebar from '$lib/editor/layout/sidebar/sidebar.svelte';
+  import Sidebar from '$components/editor/layout/sidebar/sidebar.svelte';
   import type { Snippet } from 'svelte';
 
   let { children } = $props<{

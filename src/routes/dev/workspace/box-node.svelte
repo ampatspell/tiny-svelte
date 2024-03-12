@@ -1,7 +1,7 @@
 <script lang="ts">
   import { multiplySize } from '$lib/utils/math';
-  import type { BoxNodeModel } from '$lib/workspace/model.svelte';
-  import Node from '$lib/workspace/node.svelte';
+  import type { BoxNodeModel } from '$components/workspace/model.svelte';
+  import Node from '$components/workspace/node.svelte';
   import Box from './box.svelte';
 
   let { model } = $props<{

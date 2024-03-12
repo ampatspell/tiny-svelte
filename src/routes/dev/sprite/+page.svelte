@@ -1,8 +1,8 @@
 <script lang="ts">
-  import SpriteEditor from '$lib/sprite/sprite-editor.svelte';
-  import Stage from '$lib/base/stage.svelte';
-  import Layer from '$lib/base/layer.svelte';
-  import Group from '$lib/base/group.svelte';
+  import Group from '$components/canvas/group.svelte';
+  import Layer from '$components/canvas/layer.svelte';
+  import Stage from '$components/canvas/stage.svelte';
+  import SpriteEditor from '$components/sprite-editor.svelte';
   import type { Size } from '$lib/types/schema';
 
   let sprite = $state<{ pixels: number[]; size: Size }>({

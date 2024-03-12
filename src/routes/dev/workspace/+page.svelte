@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Segment from '$lib/editor/segmented/segment.svelte';
-  import Segmented from '$lib/editor/segmented/segmented.svelte';
-  import Button from '$lib/editor/button.svelte';
-  import { WorkspaceModel, BoxNodeModel, ToolType, BoxModel } from '$lib/workspace/model.svelte';
-  import Workspace from '$lib/workspace/workspace.svelte';
+  import Segment from '$components/editor/segmented/segment.svelte';
+  import Segmented from '$components/editor/segmented/segmented.svelte';
+  import Button from '$components/editor/button.svelte';
+  import { WorkspaceModel, BoxNodeModel, ToolType, BoxModel } from '$components/workspace/model.svelte';
+  import Workspace from '$components/workspace/workspace.svelte';
   import BoxNode from './box-node.svelte';
 
   let workspace = new WorkspaceModel();
