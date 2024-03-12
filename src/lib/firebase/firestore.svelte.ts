@@ -131,12 +131,13 @@ class Activator {
   }
 }
 
-export const activate = (model: HasActivator) => {
+export const activate = <T extends HasActivator>(model: T): T => {
   $effect(() => {
     return untrack(() => {
       return model.activator.increment();
     });
   });
+  return model;
 };
 
 export type BaseSubscribableOptions = {

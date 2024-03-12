@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends object">
-  import type { OrderBy } from './models/sorted.svelte';
+  import type { OrderBy } from '$lib/models/order-by.svelte';
   import Segment from './segmented/segment.svelte';
   import Segmented from './segmented/segmented.svelte';
 

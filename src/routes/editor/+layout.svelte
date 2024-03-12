@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Sidebar from '$components/editor/layout/sidebar/sidebar.svelte';
+  import Layout from '$components/routes/editor/layout/layout.svelte';
   import type { Snippet } from 'svelte';
 
   let { children } = $props<{
@@ -7,22 +7,4 @@
   }>();
 </script>
 
-<div class="layout">
-  <Sidebar />
-  <div class="content">
-    {@render children()}
-  </div>
-</div>
-
-<style lang="scss">
-  .layout {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    > .content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-  }
-</style>
+<Layout {children} />

@@ -1,15 +1,14 @@
 import { firebase } from '$lib/firebase/firebase.svelte';
 import { ActivatableModel, Document, Models, QueryAll } from '$lib/firebase/firestore.svelte';
+import type { ProjectData } from '$lib/types/project';
 import { getter, options } from '$lib/utils/args';
 import { collection } from '@firebase/firestore';
-import type { ProjectDocumentData } from './schema';
-import { OrderBy } from './sorted.svelte';
 
 export class ProjectModel {
   projects: ProjectsModel;
-  doc: Document<ProjectDocumentData>;
+  doc: Document<ProjectData>;
 
-  constructor(projects: ProjectsModel, doc: Document<ProjectDocumentData>) {
+  constructor(projects: ProjectsModel, doc: Document<ProjectData>) {
     this.projects = projects;
     this.doc = doc;
   }
@@ -23,21 +22,16 @@ export class ProjectsModel extends ActivatableModel {
     return collection(firebase.firestore, 'projects');
   }
 
-  orderBy = new OrderBy<ProjectDocumentData>({
-    fields: ['identifier', 'name'],
-    initial: 'identifier'
-  });
-
-  query = new QueryAll<ProjectDocumentData>(
+  query = new QueryAll<ProjectData>(
     options({
-      ref: getter(() => this.orderBy.apply(this.collection))
+      ref: getter(() => this.collection)
     })
   );
 
   all = new Models(
     options({
       source: getter(() => this.query.content),
-      model: (doc: Document<ProjectDocumentData>) => new ProjectModel(this, doc)
+      model: (doc: Document<ProjectData>) => new ProjectModel(this, doc)
     })
   );
 

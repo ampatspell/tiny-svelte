@@ -4,7 +4,7 @@
   import Mushroom from '$icons/mingcute-mushroom-line.svelte';
   import Item from './item.svelte';
   import { createItems } from './model';
-  import Activated from '$components/activated.svelte';
+  import Activated from '$components/basic/activated.svelte';
   import { clickOutside } from '$lib/utils/use-click-outside.svelte';
   import CodeLine from '$icons/mingcute-code-line.svelte';
 

@@ -1,18 +1,13 @@
 <script lang="ts">
+  import Loadable from '$components/basic/loadable.svelte';
+  import { ProjectsModel } from '$lib/models/projects.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
-  import Loadable from '../loadable.svelte';
-  import { ProjectsModel } from '../models/projects.svelte';
-  import Sorted from '../sorted.svelte';
 
-  let model = new ProjectsModel();
-  activate(model);
+  let model = activate(new ProjectsModel());
 </script>
 
 <div class="projects">
   <div class="header">All projects</div>
-  <div class="actions">
-    <Sorted width={90} model={model.orderBy} />
-  </div>
   <Loadable model={model.query}>
     {#each model.all.content as project}
       <a class="project" href="/editor/projects/{project.id}">
