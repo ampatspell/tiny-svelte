@@ -1,79 +1,233 @@
+import { removeObject } from '$lib/utils/array';
 import {
+  FirestoreError,
+  Query,
+  QuerySnapshot,
+  onSnapshot,
+  type DocumentData,
+  SnapshotMetadata,
   DocumentReference,
   DocumentSnapshot,
-  Query as FirestoreQuery,
-  QuerySnapshot,
-  SnapshotMetadata,
-  onSnapshot,
-  QueryDocumentSnapshot,
-  limit,
-  query,
-  type DocumentData
+  QueryDocumentSnapshot
 } from '@firebase/firestore';
-import { firebase } from './firebase.svelte';
 import { untrack } from 'svelte';
-import type { Mountable } from './mountable.svelte';
+import { description, serialized } from '$lib/utils/object';
 
-export type FirestoreModelOptions = {
-  isPassive?: boolean;
+export type VoidCallback = () => void;
+
+export class Model {
+  declare serialized?: Record<string, unknown>;
+  declare description?: string;
+
+  toString() {
+    return this.description ?? description(this, this.serialized);
+  }
+}
+
+export interface Activators {
+  all: HasActivator[];
+}
+
+export class ActivatorsImpl implements Activators {
+  private _all = $state<HasActivator[]>([]);
+  all = $derived(this._all);
+
+  register(model: HasActivator) {
+    this.all.push(model);
+    return () => {
+      removeObject(this.all, model);
+    };
+  }
+}
+
+const _activators = new ActivatorsImpl();
+export const activators: Activators = _activators;
+
+export interface HasActivator {
+  activator: Activator;
+  description?: string;
+  serialized?: unknown;
+}
+
+export abstract class ActivatableModel extends Model implements HasActivator {
+  activator: Activator;
+  isActivated = $derived.by(() => this.activator.isActivated);
+
+  get isActivatedUntracked() {
+    return untrack(() => this.isActivated);
+  }
+
+  constructor() {
+    super();
+    this.activator = new Activator({
+      owner: () => this,
+      activate: () => this.activate(),
+      dependencies: () => this.dependencies
+    });
+  }
+
+  dependencies: HasActivator[] = [];
+  activate() {}
+}
+
+type OnActivateResult = (() => void) | void;
+type OnActivate = () => OnActivateResult;
+
+type ActivatorOptions = {
+  owner: () => HasActivator;
+  dependencies?: () => HasActivator[];
+  activate?: OnActivate;
 };
 
-export type DocumentOptions = {
-  ref: DocumentReference | undefined;
-} & FirestoreModelOptions;
+class Activator {
+  private options: ActivatorOptions;
+  private listeners = $state(0);
 
-export abstract class FirestoreModel<Options extends FirestoreModelOptions = FirestoreModelOptions> implements Mountable {
-  options: Options;
+  isActivated = $derived(this.listeners > 0);
 
-  constructor(options: Options) {
+  constructor(options: ActivatorOptions) {
     this.options = options;
   }
 
-  mount() {
-    if (!this.isPassive) {
-      return this._mount();
+  get dependencies() {
+    return this.options.dependencies?.() ?? [];
+  }
+
+  get owner() {
+    return this.options.owner();
+  }
+
+  private cancel: OnActivateResult | undefined;
+
+  private onIncrement() {
+    this.listeners++;
+    if (this.listeners === 1) {
+      const registration = _activators.register(this.owner);
+      const activation = this.options.activate?.();
+      this.cancel = () => {
+        registration();
+        activation?.();
+      };
     }
   }
 
-  get isPassive() {
-    return this.options.isPassive;
+  private onDecrement() {
+    this.listeners--;
+    if (this.listeners === 0) {
+      const cancel = this.cancel;
+      if (cancel) {
+        cancel();
+        this.cancel = undefined;
+      }
+    }
   }
 
-  protected abstract subscribe(): (() => void) | undefined;
-
-  private _mount() {
-    const subscription = this.subscribe();
-    if (!subscription) {
-      return;
-    }
-    const registration = untrack(() => firebase.subscribed.register(this));
+  increment() {
+    this.onIncrement();
+    const dependencies = this.dependencies.map((dep) => dep.activator.increment());
     return () => {
-      registration();
-      subscription();
+      dependencies.forEach((dep) => dep());
+      this.onDecrement();
     };
   }
-
-  abstract isLoading: boolean;
-  abstract isLoaded: boolean;
-  abstract isError: boolean;
-  abstract error?: unknown;
-
-  abstract serialized: { [key: string]: unknown };
 }
 
-export class Document<T extends DocumentData = DocumentData> extends FirestoreModel<DocumentOptions> {
-  metadata = $state<SnapshotMetadata>();
-  exists = $state<boolean>();
-  data = $state<T>();
-  error = $state<unknown>();
+export const activate = (model: HasActivator) => {
+  $effect(() => {
+    return untrack(() => {
+      return model.activator.increment();
+    });
+  });
+};
 
+export type BaseSubscribableOptions = {
+  isPassive?: boolean;
+};
+
+export abstract class BaseSubscribable extends ActivatableModel {
+  abstract subscribeDependencies: unknown[];
+  private cancel?: VoidCallback;
+
+  constructor(options: BaseSubscribableOptions) {
+    super();
+    if (!options.isPassive) {
+      $effect(() => this.refresh());
+    }
+  }
+
+  abstract subscribe(): VoidCallback | undefined;
+
+  _subscribe() {
+    this.cancel = this.subscribe();
+  }
+
+  _unsubscribe() {
+    const cancel = this.cancel;
+    if (cancel) {
+      cancel();
+      this.cancel = undefined;
+    }
+  }
+
+  refresh() {
+    this.subscribeDependencies;
+    if (this.isActivatedUntracked) {
+      this._unsubscribe();
+      this._subscribe();
+    }
+  }
+
+  activate() {
+    this._subscribe();
+    return () => {
+      this._unsubscribe();
+    };
+  }
+}
+
+export interface Loadable {
+  isLoading: boolean;
+  isLoaded: boolean;
+  error: unknown;
+}
+
+export abstract class Base extends BaseSubscribable implements Loadable {
   isLoading = $state(false);
   isLoaded = $state(false);
-  isError = $derived(!!this.error);
+  error = $state<FirestoreError>();
+  isError = $derived.by(() => !!this.error);
+  metadata = $state<SnapshotMetadata>();
+
+  willSubscribe(subscribe: boolean) {
+    this.error = undefined;
+    this.metadata = undefined;
+    this.isLoading = true;
+    if (!subscribe) {
+      this.isLoaded = false;
+    }
+  }
+
+  onError(error: FirestoreError) {
+    this.isLoading = false;
+    this.error = error;
+    this.metadata = undefined;
+  }
+}
+
+export type DocumentOptions = {
+  ref: DocumentReference | undefined;
+} & BaseSubscribableOptions;
+
+export class Document<T extends DocumentData = DocumentData> extends Base {
+  private options: DocumentOptions;
 
   constructor(options: DocumentOptions) {
     super(options);
+    this.options = options;
   }
+
+  exists = $state<boolean>();
+  data = $state<T>();
 
   get ref() {
     return this.options.ref;
@@ -87,219 +241,132 @@ export class Document<T extends DocumentData = DocumentData> extends FirestoreMo
     return this.ref?.path;
   }
 
-  protected subscribe() {
+  get subscribeDependencies() {
+    return [this.ref];
+  }
+
+  subscribe() {
     const ref = this.ref;
-
-    this.metadata = undefined;
-    this.exists = undefined;
-    this.data = undefined;
-    this.error = undefined;
-    this.isLoaded = false;
-
-    if (!ref) {
-      this.isLoading = false;
-      return;
+    this.willSubscribe(!!ref);
+    if (ref) {
+      const opts = { includeMetadataChanges: true };
+      return onSnapshot(
+        ref,
+        opts,
+        (snapshot) => this.onSnapshot(snapshot),
+        (error) => this.onError(error)
+      );
     }
-
-    this.isLoading = true;
-    return onSnapshot(ref, { includeMetadataChanges: true }, (snapshot) => this.onSnapshot(snapshot));
   }
 
   onSnapshot(snapshot: DocumentSnapshot) {
-    this.metadata = snapshot.metadata;
     this.exists = snapshot.exists();
     if (this.exists) {
+      // TODO: diff deep-equal
       this.data = snapshot.data() as T;
     }
-    this.isLoading = false;
-    this.isLoaded = true;
   }
-
-  serialized = $derived.by(() => {
-    const { id, path, isLoading, isLoaded, isError, error, metadata, exists, data } = this;
-    return {
-      type: 'document',
-      id,
-      path,
-      isLoading,
-      isLoaded,
-      isError,
-      error,
-      metadata,
-      exists,
-      data
-    };
-  });
 }
 
 export type BaseQueryOptions = {
-  query: FirestoreQuery | undefined;
-} & FirestoreModelOptions;
+  ref: Query | undefined;
+} & BaseSubscribableOptions;
 
-abstract class BaseQuery<T extends DocumentData, O extends BaseQueryOptions> extends FirestoreModel<O> {
+export abstract class BaseQuery<O extends BaseQueryOptions> extends Base {
+  private options: O;
+
   constructor(options: O) {
     super(options);
+    this.options = options;
   }
 
-  protected abstract normalizeQuery(query: FirestoreQuery): FirestoreQuery;
-  protected abstract clear(): void;
-
-  get query() {
-    return this.options.query;
+  get ref() {
+    return this.options.ref;
   }
 
   get path() {
-    const { query } = this;
-    if (query) {
-      const path = (query as unknown as { path: string | undefined }).path;
+    const { ref } = this;
+    if (ref) {
+      const path = (ref as unknown as { path: string | undefined }).path;
       return path;
     }
   }
 
-  protected subscribe() {
-    const query = this.query;
-
-    this.metadata = undefined;
-    this.error = undefined;
-
-    if (!query) {
-      this.clear();
-      this.isLoaded = false;
-      this.isLoading = false;
-      return;
-    }
-
-    this.isLoading = true;
-    const normalized = this.normalizeQuery(query);
-    return onSnapshot(normalized, (snapshot) => this.onSnapshot(snapshot));
+  get subscribeDependencies() {
+    return [this.ref];
   }
 
-  metadata = $state<SnapshotMetadata>();
-  error = $state<unknown>();
+  subscribe() {
+    const ref = this.ref;
+    this.willSubscribe(!!ref);
+    if (ref) {
+      const opts = { includeMetadataChanges: true };
+      return onSnapshot(
+        ref,
+        opts,
+        (snapshot) => this.onSnapshot(snapshot),
+        (error) => this.onError(error)
+      );
+    }
+  }
 
-  isLoading = $state(false);
-  isLoaded = $state(false);
-  isError = $derived(!!this.error);
-
-  protected onSnapshot(snapshot: QuerySnapshot) {
+  protected onSnapshot(querySnapshot: QuerySnapshot) {
     this.isLoading = false;
     this.isLoaded = true;
-    this.metadata = snapshot.metadata;
+    this.metadata = querySnapshot.metadata;
+  }
+}
+
+export type QueryAllOptions = BaseQueryOptions;
+
+export class QueryAll<T extends DocumentData> extends BaseQuery<QueryAllOptions> {
+  constructor(options: QueryAllOptions) {
+    super(options);
   }
 
-  protected createDocument(snapshot: QueryDocumentSnapshot) {
-    const doc = new Document<T>({ isPassive: true, ref: snapshot.ref });
+  content = $state<Document<T>[]>([]);
+
+  private createDocument(snapshot: QueryDocumentSnapshot) {
+    const doc = new Document<T>({ ref: snapshot.ref, isPassive: true });
     doc.onSnapshot(snapshot);
     return doc;
   }
-}
 
-export class Query<T extends DocumentData = DocumentData> extends BaseQuery<T, BaseQueryOptions> {
-  content = $state<Document<T>[]>([]);
-
-  protected normalizeQuery(query: FirestoreQuery): FirestoreQuery {
-    return query;
-  }
-
-  clear(): void {
-    this.content = [];
-  }
-
-  protected onSnapshot(querySnapshot: QuerySnapshot) {
+  protected onSnapshot(querySnapshot: QuerySnapshot<DocumentData, DocumentData>) {
+    const content = querySnapshot.docs.map((snapshot) => this.createDocument(snapshot));
     // TODO: querySnapshot.docChanges
-    this.content = querySnapshot.docs.map((snapshot) => {
-      // TODO: reuse
-      return this.createDocument(snapshot);
-    });
+    this.content = content;
     super.onSnapshot(querySnapshot);
   }
 
-  serialized = $derived.by(() => {
-    const { path, isLoading, isLoaded, isError, error, metadata, content } = this;
-    return {
-      type: 'quey',
-      path,
-      isLoading,
-      isLoaded,
-      isError,
-      error,
-      metadata,
-      content: content.map((doc) => doc.serialized)
-    };
-  });
-}
-
-export class QueryFirst<T extends DocumentData = DocumentData> extends BaseQuery<T, BaseQueryOptions> {
-  content = $state<Document<T>>();
-
-  clear() {
-    this.content = undefined;
-  }
-
-  protected normalizeQuery(provided: FirestoreQuery): FirestoreQuery {
-    return query(provided, limit(1));
-  }
-
-  protected onSnapshot(querySnapshot: QuerySnapshot) {
-    const [snapshot] = querySnapshot.docs;
-    if (snapshot) {
-      // TODO: reuse
-      this.content = this.createDocument(snapshot);
-    } else {
-      this.content = undefined;
-    }
-    super.onSnapshot(querySnapshot);
-  }
-
-  serialized = $derived.by(() => {
-    const { path, isLoading, isLoaded, isError, error, metadata, content } = this;
-    return {
-      type: 'query-first',
-      path,
-      isLoading,
-      isLoaded,
-      isError,
-      error,
-      metadata,
-      content: content?.serialized
-    };
-  });
+  serialized = $derived.by(() => serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error']));
 }
 
 export type ModelsOptions<I, O> = {
-  source: () => I[];
+  source: I[];
   model: (doc: I) => O;
 };
 
-export class Models<I, O> {
-  options: ModelsOptions<I, O>;
+export class Models<I, O> extends Model {
+  private options: ModelsOptions<I, O>;
 
   constructor(options: ModelsOptions<I, O>) {
+    super();
     this.options = options;
   }
 
   get source() {
-    return this.options.source();
+    return this.options.source;
   }
 
-  private cache = new Map<I, O>();
-
-  private create(doc: I) {
-    return this.options.model(doc);
+  model(source: I) {
+    return this.options.model(source);
   }
 
-  private findOrCreate(doc: I) {
-    if (this.cache.has(doc)) {
-      return this.cache.get(doc)!;
-    }
-    const model = this.create(doc);
-    this.cache.set(doc, model); // TODO: they will stay there. needs cache cleanup
-    return model;
+  createContent() {
+    // TODO: diff
+    return this.source.map((source) => this.model(source));
   }
 
-  private map() {
-    return this.source.map((doc) => this.findOrCreate(doc));
-  }
-
-  content = $derived.by(() => this.map());
+  content = $derived.by(() => this.createContent());
 }

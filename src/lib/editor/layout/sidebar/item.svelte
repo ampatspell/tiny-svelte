@@ -6,7 +6,7 @@
   }>();
 </script>
 
-<a class="item" class:current={item.isCurrent} href={item.route}>
+<a class="item" class:current={item.isCurrent} href={item.route} onclick={item.onClick}>
   <svelte:component this={item.icon} />
 </a>
 

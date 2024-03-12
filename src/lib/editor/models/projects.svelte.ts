@@ -1,6 +1,5 @@
 import { firebase } from '$lib/firebase/firebase.svelte';
-import { Query, Document, Models } from '$lib/firebase/firestore.svelte';
-import type { Mountable } from '$lib/firebase/mountable.svelte';
+import { ActivatableModel, Document, Models, QueryAll } from '$lib/firebase/firestore.svelte';
 import { getter, options } from '$lib/utils/args';
 import { collection } from '@firebase/firestore';
 import type { ProjectDocumentData } from './schema';
@@ -19,7 +18,7 @@ export class ProjectModel {
   identifier = $derived.by(() => this.doc.data!.identifier);
 }
 
-export class ProjectsModel implements Mountable {
+export class ProjectsModel extends ActivatableModel {
   get collection() {
     return collection(firebase.firestore, 'projects');
   }
@@ -29,18 +28,18 @@ export class ProjectsModel implements Mountable {
     initial: 'identifier'
   });
 
-  query = new Query<ProjectDocumentData>(
+  query = new QueryAll<ProjectDocumentData>(
     options({
-      query: getter(() => this.orderBy.apply(this.collection))
+      ref: getter(() => this.orderBy.apply(this.collection))
     })
   );
 
   all = new Models(
     options({
-      source: () => this.query.content,
+      source: getter(() => this.query.content),
       model: (doc: Document<ProjectDocumentData>) => new ProjectModel(this, doc)
     })
   );
 
-  deps = [this.query];
+  dependencies = [this.query];
 }

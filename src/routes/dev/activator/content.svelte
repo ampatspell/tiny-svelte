@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Projects, activate, activators } from '$lib/firebase/another.svelte';
+  import type { Projects } from '$lib/firebase/experiments.svelte';
+  import { activate } from '$lib/firebase/firestore.svelte';
 
   let { model } = $props<{
     model: Projects;
@@ -8,7 +9,11 @@
   activate(model);
 </script>
 
-<div class="content"></div>
+<div class="content">
+  {#each model.query.content as project}
+    <div class="row">{project.id}: {project.data?.identifier}</div>
+  {/each}
+</div>
 
 <style lang="scss">
   .content {

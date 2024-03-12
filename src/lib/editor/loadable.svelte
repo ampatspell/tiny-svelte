@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Loadable } from '$lib/firebase/mountable.svelte';
+  import type { Loadable } from '$lib/firebase/firestore.svelte';
   import type { Snippet } from 'svelte';
 
   let { model, children } = $props<{
@@ -14,7 +14,7 @@
   {/if}
 {:else if model.isLoading}
   <div class="loading">Loading…</div>
-{:else if model.isError}
+{:else if model.error}
   <div class="error">{model.error}</div>
 {/if}
 

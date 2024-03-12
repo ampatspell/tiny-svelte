@@ -1,19 +1,22 @@
+import type { VoidCallback } from '$lib/firebase/firestore.svelte';
 import type { EmptyObject } from '$lib/types';
 import { sortedBy } from '$lib/utils/array';
 import { useCurrentRoute } from '$lib/utils/page.svelte';
 import type { ComponentType, SvelteComponent } from 'svelte';
 
 export type Icon = ComponentType<SvelteComponent<EmptyObject>>;
-export type ItemOptions = { icon: Icon; route: string };
+export type ItemOptions = { icon: Icon; route?: string; onClick?: VoidCallback };
 
 export class Item {
   icon: Icon;
-  route: string;
+  route?: string;
+  onClick?: VoidCallback;
   items?: Items;
 
-  constructor({ icon, route }: ItemOptions) {
+  constructor({ icon, route, onClick }: ItemOptions) {
     this.icon = icon;
     this.route = route;
+    this.onClick = onClick;
   }
 
   get isCurrent() {
@@ -35,8 +38,8 @@ export class Items {
     if (!id) {
       return;
     }
-    const matching = this.all.filter((item) => id?.startsWith(item.route));
-    const [first] = sortedBy(matching, { value: (item) => item.route.length, direction: 'desc' });
+    const matching = this.all.filter((item) => item.route && id?.startsWith(item.route));
+    const [first] = sortedBy(matching, { value: (item) => item.route?.length, direction: 'desc' });
     return first;
   }
 }

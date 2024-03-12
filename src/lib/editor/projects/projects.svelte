@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { activate } from '$lib/firebase/mountable.svelte';
+  import { activate } from '$lib/firebase/firestore.svelte';
   import Loadable from '../loadable.svelte';
   import { ProjectsModel } from '../models/projects.svelte';
   import Sorted from '../sorted.svelte';

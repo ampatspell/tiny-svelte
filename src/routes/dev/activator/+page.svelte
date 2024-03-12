@@ -1,7 +1,7 @@
 <script lang="ts">
+  import Activated from '$lib/activated.svelte';
   import Button from '$lib/editor/button.svelte';
-  import { Projects, activators } from '$lib/firebase/another.svelte';
-  import Activated from './activated.svelte';
+  import { Projects } from '$lib/firebase/experiments.svelte';
   import Content from './content.svelte';
 
   let model = new Projects();
