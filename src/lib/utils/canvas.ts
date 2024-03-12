@@ -1,4 +1,4 @@
-import type { Size } from '$lib/types';
+import type { Size } from '$lib/types/schema';
 
 export type DrawGridOptions = {
   ctx: CanvasRenderingContext2D;

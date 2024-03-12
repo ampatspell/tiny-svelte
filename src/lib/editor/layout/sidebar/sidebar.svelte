@@ -1,12 +1,12 @@
 <script lang="ts">
-  import Home from '$lib/icons/mingcute-left-fill.svelte';
-  import Editor from '$lib/icons/mingcute-game-2-line.svelte';
-  import Mushroom from '$lib/icons/mingcute-mushroom-line.svelte';
+  import Home from '$icons/mingcute-left-fill.svelte';
+  import Editor from '$icons/mingcute-game-2-line.svelte';
+  import Mushroom from '$icons/mingcute-mushroom-line.svelte';
   import Item from './item.svelte';
   import { createItems } from './model';
   import Activated from '$lib/activated.svelte';
   import { clickOutside } from '$lib/utils/use-click-outside.svelte';
-  import CodeLine from '$lib/icons/mingcute-code-line.svelte';
+  import CodeLine from '$icons/mingcute-code-line.svelte';
 
   let top = createItems([
     { icon: Home, route: '/' },

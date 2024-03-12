@@ -1,4 +1,5 @@
-import type { Nullable, Point, Size } from '$lib/types';
+import type { Point, Size } from '$lib/types/schema';
+import type { Nullable } from '$lib/types/types';
 
 type StyleObject = { [key: string]: Nullable<string> };
 

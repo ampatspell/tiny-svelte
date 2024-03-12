@@ -2,7 +2,6 @@
   import Segment from '$lib/editor/segmented/segment.svelte';
   import Segmented from '$lib/editor/segmented/segmented.svelte';
   import Button from '$lib/editor/button.svelte';
-  import { createTRPC } from '$lib/trpc/client.svelte';
   import { WorkspaceModel, BoxNodeModel, ToolType, BoxModel } from '$lib/workspace/model.svelte';
   import Workspace from '$lib/workspace/workspace.svelte';
   import BoxNode from './box-node.svelte';
@@ -23,11 +22,6 @@
       box: new BoxModel({ step: 8, color: 'green' })
     })
   ]);
-
-  let rpc = createTRPC();
-  let reset = async () => {
-    await rpc.dev.reset.query();
-  };
 </script>
 
 {#snippet KeyValue(title: string, value: string)}
@@ -75,11 +69,6 @@
     {#each boxes as box (box)}
       {@render KeyValue(`Box "${box.box.color}"`, `${box.position.x},${box.position.y} / ${box.size.width}x${box.size.height}`)}
     {/each}
-
-    <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events-->
-    <div class="row" onclick={reset}>
-      <div class="title">Reset</div>
-    </div>
   </div>
 </div>
 

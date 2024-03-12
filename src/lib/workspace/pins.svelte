@@ -1,5 +1,6 @@
 <script lang="ts">
-  import type { Callback, Point, Size } from '$lib/types';
+  import type { Point, Size } from '$lib/types/schema';
+  import type { VoidCallback } from '$lib/types/types';
   import { Horizontal, Vertical, type ResizeCallback } from './model.svelte';
   import Pin from './pin.svelte';
 
@@ -10,8 +11,8 @@
     size: Size;
     isResizable: boolean;
     onResize: ResizeCallback;
-    onStart: Callback;
-    onEnd: Callback;
+    onStart: VoidCallback;
+    onEnd: VoidCallback;
   }>();
 
   let pin = (horizontal: Horizontal, vertical: Vertical) => ({

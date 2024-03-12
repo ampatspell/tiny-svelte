@@ -2,8 +2,9 @@
   import { classes, type Classes } from '$lib/utils/classes';
   import type { Snippet } from 'svelte';
   import Pins from './pins.svelte';
-  import type { Callback, Point, Size } from '$lib/types';
   import type { ResizeCallback } from './model.svelte';
+  import type { VoidCallback } from '$lib/types/types';
+  import type { Point, Size } from '$lib/types/schema';
 
   let {
     class: _class,
@@ -24,8 +25,8 @@
     size: Size;
     isResizable: boolean;
     onResize: ResizeCallback;
-    onStart: Callback;
-    onEnd: Callback;
+    onStart: VoidCallback;
+    onEnd: VoidCallback;
     children?: Snippet;
   }>();
 </script>

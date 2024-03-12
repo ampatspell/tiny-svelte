@@ -1,4 +1,4 @@
-import { type Point, type Size } from '$lib/types';
+import type { Point, Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
 import { getContext, setContext } from 'svelte';
 

@@ -1,6 +1,6 @@
-import type { Point } from '$lib/types';
 import { getContext, setContext } from 'svelte';
 import { RenderContext, type RenderContextOptions } from './render.svelte';
+import type { Point } from '$lib/types/schema';
 
 const LAYER = 'canvas:layer';
 

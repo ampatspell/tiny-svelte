@@ -1,9 +1,9 @@
-import type { Callback } from '$lib/types';
+import type { VoidCallback } from '$lib/types/types';
 import { blurActiveElement } from './event';
 
 export type SpaceProperties = {
-  onSpaceDown: Callback;
-  onSpaceUp: Callback;
+  onSpaceDown: VoidCallback;
+  onSpaceUp: VoidCallback;
 };
 
 export const space = (node: HTMLElement, properties: SpaceProperties) => {

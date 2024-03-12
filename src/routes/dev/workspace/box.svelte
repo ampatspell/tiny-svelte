@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Size } from '$lib/types';
+  import type { Size } from '$lib/types/schema';
   import { getWorkspaceContext } from '$lib/workspace/model.svelte';
 
   let { size, color } = $props<{

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { Point } from '$lib/types';
   import type { Snippet } from 'svelte';
   import Render from './render.svelte';
+  import type { Point } from '$lib/types/schema';
 
   let { position, children } = $props<{
     position?: Point;

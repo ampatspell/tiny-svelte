@@ -1,6 +1,7 @@
-import type { Nullable, Point } from '$lib/types';
+import type { Nullable } from '$lib/types/types';
 import { getContext, setContext } from 'svelte';
 import type { StageContext } from './stage.svelte';
+import type { Point } from '$lib/types/schema';
 
 const RENDER = 'canvas:render';
 

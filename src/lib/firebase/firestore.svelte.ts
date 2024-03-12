@@ -12,8 +12,7 @@ import {
 } from '@firebase/firestore';
 import { untrack } from 'svelte';
 import { description, serialized } from '$lib/utils/object';
-
-export type VoidCallback = () => void;
+import type { OptionalVoidCallback, VoidCallback } from '$lib/types/types';
 
 export class Model {
   declare serialized?: Record<string, unknown>;
@@ -155,7 +154,7 @@ export abstract class BaseSubscribable extends ActivatableModel {
     }
   }
 
-  abstract subscribe(): VoidCallback | undefined;
+  abstract subscribe(): OptionalVoidCallback;
 
   _subscribe() {
     this.cancel = this.subscribe();

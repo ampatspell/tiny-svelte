@@ -1,7 +1,8 @@
 <script lang="ts" generics="T">
+  import type { Point } from '$lib/types/schema';
+
   import { getStageContext } from './contexts/stage.svelte';
   import { getRenderContext, RenderContext, setRenderContext, type RenderContextDrawFunction } from './contexts/render.svelte';
-  import type { Point } from '$lib/types';
   import type { Snippet } from 'svelte';
 
   let { name, position, model, draw, children, onCreated } = $props<{

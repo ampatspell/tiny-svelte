@@ -1,4 +1,4 @@
-import type { Point, Size } from '$lib/types';
+import type { Point, Size } from '$lib/types/schema';
 
 export const toIndex = (position: Point, size: Size) => {
   return position.y * size.width + position.x;

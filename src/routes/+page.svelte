@@ -1,5 +1,5 @@
 <script>
-  import Editor from '$lib/icons/mingcute-game-2-line.svelte';
+  import Editor from '$icons/mingcute-game-2-line.svelte';
 </script>
 
 <div class="page">

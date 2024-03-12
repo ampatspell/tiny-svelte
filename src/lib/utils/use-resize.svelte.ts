@@ -1,4 +1,4 @@
-import type { Size } from '../types';
+import type { Size } from '$lib/types/schema';
 
 export type ResizeParameters = {
   onResize: (size: Size) => void;

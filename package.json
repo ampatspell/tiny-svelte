@@ -16,7 +16,7 @@
     "svelte": "^5.0.0-next.75"
   },
   "devDependencies": {
-    "@sveltejs/adapter-node": "^5.0.1",
+    "@sveltejs/adapter-auto": "^3.1.1",
     "@sveltejs/kit": "^2.5.3",
     "@sveltejs/vite-plugin-svelte": "^3.0.2",
     "@types/eslint": "8.56.5",
@@ -36,13 +36,8 @@
     "vite": "^5.1.5",
     "firebase": "^10.8.1",
     "@firebase/firestore": "^4.4.3",
-    "@firebase/auth": "^1.6.1"
-  },
-  "type": "module",
-  "dependencies": {
-    "@trpc/client": "^10.45.2",
-    "@trpc/server": "^10.45.2",
-    "trpc-sveltekit": "^3.6.1",
+    "@firebase/auth": "^1.6.1",
     "zod": "^3.22.4"
-  }
+  },
+  "type": "module"
 }

@@ -1,9 +1,9 @@
 <script lang="ts">
   import { type Snippet } from 'svelte';
   import { classes, type Classes } from '$lib/utils/classes';
-  import type { Size } from '$lib/types';
   import { StageContext, setStageContext } from './contexts/stage.svelte';
   import { objectToStyle, sizeToStyleObject } from '$lib/utils/style.svelte';
+  import type { Size } from '$lib/types/schema';
 
   let {
     class: className,

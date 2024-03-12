@@ -1,4 +1,4 @@
-import type { Size } from '$lib/types';
+import type { Size } from '$lib/types/schema';
 import { getContext, setContext } from 'svelte';
 
 const STAGE = 'canvas:stage';

@@ -1,4 +1,4 @@
-import type { VoidCallback } from '$lib/firebase/firestore.svelte';
+import type { VoidCallback } from '$lib/types/types';
 
 export type ClickOutsideParameters = VoidCallback;
 

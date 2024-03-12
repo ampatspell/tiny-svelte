@@ -3,15 +3,19 @@
   import Stage from '$lib/base/stage.svelte';
   import Layer from '$lib/base/layer.svelte';
   import Group from '$lib/base/group.svelte';
+  import type { Size } from '$lib/types/schema';
 
-  let { data: root } = $props();
+  let sprite = $state<{ pixels: number[]; size: Size }>({
+    pixels: new Array(8 * 8).fill(0),
+    size: { width: 8, height: 8 }
+  });
 
-  let data = $derived(root.sprite.data.pixels);
-  let size = $derived(root.sprite.data.size);
+  let data = $derived(sprite.pixels);
+  let size = $derived(sprite.size);
   let pixel = $state(32);
 
   let onUpdated = (next: number[]) => {
-    root.sprite.data.pixels = next;
+    sprite.pixels = next;
   };
 
   let large = $derived.by(() => {
@@ -41,10 +45,5 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    > .stage {
-      :global(> .stage) {
-        // outline: 1px solid fade-out(red, 0.9);
-      }
-    }
   }
 </style>

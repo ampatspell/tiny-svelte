@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Point, Size } from '$lib/types';
+  import type { Point, Size } from '$lib/types/schema';
   import Render from './render.svelte';
 
   let { position, size, fill } = $props<{

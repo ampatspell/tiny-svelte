@@ -4,8 +4,9 @@
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import type { Snippet } from 'svelte';
   import { setWorkspaceContext, WorkspaceModel, ToolType } from './model.svelte';
-  import type { OptionalCallback, Point } from '$lib/types';
   import { space } from '$lib/utils/use-space.svelte';
+  import type { OptionalVoidCallback } from '$lib/types/types';
+  import type { Point } from '$lib/types/schema';
 
   let {
     class: _class,
@@ -25,7 +26,7 @@
   let onPosition = (position: Point) => (model.position = position);
   let onClick = () => model.select(undefined);
 
-  let cancelDrag: OptionalCallback;
+  let cancelDrag: OptionalVoidCallback;
   let onSpaceDown = () => {
     if (model.dragging || model.resizing) {
       return;

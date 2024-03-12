@@ -1,5 +1,4 @@
-import type { VoidCallback } from '$lib/firebase/firestore.svelte';
-import type { EmptyObject } from '$lib/types';
+import type { EmptyObject, VoidCallback } from '$lib/types/types';
 import { sortedBy } from '$lib/utils/array';
 import { useCurrentRoute } from '$lib/utils/page.svelte';
 import type { ComponentType, SvelteComponent } from 'svelte';

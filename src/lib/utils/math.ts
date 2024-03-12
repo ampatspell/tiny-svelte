@@ -1,4 +1,4 @@
-import type { Point, Size } from '$lib/types';
+import type { Point, Size } from '$lib/types/schema';
 
 export const calcPoint = (a: Point, fn: (value: number) => number): Point => {
   return {

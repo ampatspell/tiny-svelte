@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { RenderContext } from '$lib/base/contexts/render.svelte';
   import Render from '$lib/base/render.svelte';
-  import type { Point, Size } from '$lib/types';
+  import type { Point, Size } from '$lib/types/schema';
   import { drawGrid } from '$lib/utils/canvas';
   import { fromIndex, toIndex } from '$lib/utils/pixel';
 

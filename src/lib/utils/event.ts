@@ -1,4 +1,4 @@
-import type { Point } from '$lib/types';
+import type { Point } from '$lib/types/schema';
 
 export const mouseClientPositionToPoint = (e: MouseEvent): Point => ({
   x: e.clientX,
