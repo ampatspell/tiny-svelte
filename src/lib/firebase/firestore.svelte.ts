@@ -16,7 +16,7 @@ import type { OptionalVoidCallback, VoidCallback } from '$lib/types/types';
 
 export class Model {
   declare serialized?: Record<string, unknown>;
-  declare description?: string;
+  description = $derived.by(() => description(this, this.serialized));
 
   toString() {
     return this.description ?? description(this, this.serialized);
@@ -198,7 +198,7 @@ export abstract class Base extends BaseSubscribable implements Loadable {
   isError = $derived.by(() => !!this.error);
   metadata = $state<SnapshotMetadata>();
 
-  willSubscribe(subscribe: boolean) {
+  onWillSubscribe(subscribe: boolean) {
     this.error = undefined;
     this.metadata = undefined;
     this.isLoading = true;
@@ -211,6 +211,12 @@ export abstract class Base extends BaseSubscribable implements Loadable {
     this.isLoading = false;
     this.error = error;
     this.metadata = undefined;
+  }
+
+  onDidLoad(metadata: SnapshotMetadata) {
+    this.isLoading = false;
+    this.isLoaded = true;
+    this.metadata = metadata;
   }
 }
 
@@ -247,7 +253,7 @@ export class Document<T extends DocumentData = DocumentData> extends Base {
 
   subscribe() {
     const ref = this.ref;
-    this.willSubscribe(!!ref);
+    this.onWillSubscribe(!!ref);
     if (ref) {
       const opts = { includeMetadataChanges: true };
       return onSnapshot(
@@ -265,7 +271,10 @@ export class Document<T extends DocumentData = DocumentData> extends Base {
       // TODO: diff deep-equal
       this.data = snapshot.data() as T;
     }
+    this.onDidLoad(snapshot.metadata);
   }
+
+  serialized = $derived.by(() => serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error']));
 }
 
 export type BaseQueryOptions = {
@@ -298,7 +307,7 @@ export abstract class BaseQuery<O extends BaseQueryOptions> extends Base {
 
   subscribe() {
     const ref = this.ref;
-    this.willSubscribe(!!ref);
+    this.onWillSubscribe(!!ref);
     if (ref) {
       const opts = { includeMetadataChanges: true };
       return onSnapshot(
@@ -311,9 +320,7 @@ export abstract class BaseQuery<O extends BaseQueryOptions> extends Base {
   }
 
   protected onSnapshot(querySnapshot: QuerySnapshot) {
-    this.isLoading = false;
-    this.isLoaded = true;
-    this.metadata = querySnapshot.metadata;
+    this.onDidLoad(querySnapshot.metadata);
   }
 }
 
