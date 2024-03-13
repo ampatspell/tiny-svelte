@@ -12,15 +12,13 @@
   let project = activate(new ProjectModel({ id: id }));
 </script>
 
-<Loadable model={project.doc}>
-  <Loadable model={project.workspaces.query}>
-    <div class="project">
-      <div class="row">{project.description}</div>
-      {#each project.workspaces.query.content as workspace}
-        <div class="row">{workspace}</div>
-      {/each}
-    </div>
-  </Loadable>
+<Loadable model={project}>
+  <div class="project">
+    <div class="row">{project.description}</div>
+    {#each project.workspaces.query.content as workspace}
+      <div class="row">{workspace}</div>
+    {/each}
+  </div>
 </Loadable>
 
 <style lang="scss">

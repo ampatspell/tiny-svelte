@@ -3,18 +3,17 @@
 </script>
 
 <div class="page">
-  <div class="row">
-    <a href="/editor">
-      <Editor />
-    </a>
-  </div>
+  <a class="editor" href="/editor">
+    <Editor />
+  </a>
 </div>
 
 <style lang="scss">
   .page {
-    padding: 5px;
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    align-items: center;
+    justify-content: center;
   }
 </style>

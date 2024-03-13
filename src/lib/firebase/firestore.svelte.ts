@@ -14,7 +14,12 @@ import { untrack } from 'svelte';
 import { description, serialized } from '$lib/utils/object';
 import type { OptionalVoidCallback, VoidCallback } from '$lib/types/types';
 
-export class Model {
+export type HasDescriptionAndSerialized = {
+  description?: string;
+  serialized?: unknown;
+};
+
+export class Model implements HasDescriptionAndSerialized {
   declare serialized?: Record<string, unknown>;
   description = $derived.by(() => description(this, this.serialized));
 
@@ -52,8 +57,6 @@ export const activators: Activators = _activators;
 
 export interface HasActivator {
   activator: Activator;
-  description?: string;
-  serialized?: unknown;
 }
 
 export abstract class ActivatableModel extends Model implements HasActivator {
@@ -102,6 +105,15 @@ class Activator {
 
   get owner() {
     return this.options.owner();
+  }
+
+  get allDependencies() {
+    const deps: HasActivator[] = [this.owner];
+    this.dependencies.forEach((dep) => {
+      deps.push(dep);
+      deps.push(...dep.activator.allDependencies);
+    });
+    return deps;
   }
 
   private cancel: OnActivateResult | undefined;
@@ -198,13 +210,26 @@ export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extend
   }
 }
 
+export const isLoadable: unique symbol = Symbol('loadable');
+
 export interface Loadable {
+  [isLoadable]: boolean; // TODO: this is marker to cast to loadable
   isLoading: boolean;
   isLoaded: boolean;
   error: unknown;
 }
 
+// Cast from HasActivator to Loadable is messed up
+export const allLoadableDependencies = (model: HasActivator) => {
+  return model.activator.allDependencies.filter((dep) => {
+    const loadable = dep as unknown as Loadable;
+    return loadable[isLoadable];
+  }) as unknown as Loadable[];
+};
+
 export abstract class Base<O extends BaseSubscribableOptions> extends BaseSubscribable<O> implements Loadable {
+  [isLoadable] = true;
+
   isLoading = $state(false);
   isLoaded = $state(false);
   error = $state<FirestoreError>();
