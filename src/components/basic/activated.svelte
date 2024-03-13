@@ -1,9 +1,15 @@
 <script lang="ts">
-  import { activators, type HasActivator } from '$lib/firebase/firestore.svelte';
+  import { activators, type HasActivator, type HasDescriptionAndSerialized } from '$lib/firebase/firestore.svelte';
   import { setGlobal } from '$lib/utils/set-global';
 
   let log = (model: HasActivator) => {
     setGlobal({ model });
+  };
+
+  let render = (model: HasActivator) => {
+    // TODO: mess
+    const description = (model as HasDescriptionAndSerialized).description;
+    return description ?? model.toString();
   };
 </script>
 
@@ -12,7 +18,7 @@
     {#each models as model}
       <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
       <div class="model" onclick={() => log(model)}>
-        {model.description ?? model.toString()}
+        {render(model)}
       </div>
     {:else}
       <div class="placeholder">No models</div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { isLoadable, type HasActivator, type Loadable, allLoadableDependencies } from '$lib/firebase/firestore.svelte';
+  import { type HasActivator, allLoadableDependencies } from '$lib/firebase/firestore.svelte';
   import type { Snippet } from 'svelte';
 
   let {
