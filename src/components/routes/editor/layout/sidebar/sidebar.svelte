@@ -66,7 +66,7 @@
     justify-content: center;
     > .content {
       width: 600px;
-      max-height: 300px;
+      max-height: 80vh;
       background: #fff;
       border: 1px solid fade-out(#000, 0.98);
       box-shadow: 0 1px 5px 0 fade-out(#000, 0.9);

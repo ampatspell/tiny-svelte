@@ -2,7 +2,7 @@ import { firebase } from '$lib/firebase/firebase.svelte';
 import { ActivatableModel, Document, Models, QueryAll } from '$lib/firebase/firestore.svelte';
 import type { ProjectData } from '$lib/types/project';
 import { getter, options } from '$lib/utils/args';
-import { collection } from '@firebase/firestore';
+import { collection, orderBy, query } from '@firebase/firestore';
 
 export class ProjectModel {
   projects: ProjectsModel;
@@ -22,9 +22,11 @@ export class ProjectsModel extends ActivatableModel {
     return collection(firebase.firestore, 'projects');
   }
 
+  direction = $state<'asc' | 'desc'>('asc');
+
   query = new QueryAll<ProjectData>(
     options({
-      ref: getter(() => this.collection)
+      ref: getter(() => query(this.collection, orderBy('identifier', this.direction)))
     })
   );
 
@@ -34,6 +36,10 @@ export class ProjectsModel extends ActivatableModel {
       model: (doc: Document<ProjectData>) => new ProjectModel(this, doc)
     })
   );
+
+  toggle() {
+    this.direction = this.direction === 'asc' ? 'desc' : 'asc';
+  }
 
   dependencies = [this.query];
 }

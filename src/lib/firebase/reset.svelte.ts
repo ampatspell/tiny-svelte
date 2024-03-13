@@ -1,4 +1,4 @@
-import { CollectionReference, collection, deleteDoc, doc, getDocs, setDoc } from '@firebase/firestore';
+import { CollectionReference, DocumentReference, collection, deleteDoc, doc, getDocs, setDoc } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 
 const clearCollection = async (ref: CollectionReference) => {
@@ -10,13 +10,9 @@ const clearCollection = async (ref: CollectionReference) => {
   );
 };
 
-export const reset = async () => {
-  const { firestore } = firebase;
-
-  const projectRef = doc(firestore, 'projects/hello');
-
+const createProject = async (projectRef: DocumentReference) => {
   await setDoc(projectRef, {
-    identifier: 'hello'
+    identifier: projectRef.id
   });
 
   const assetsRef = collection(projectRef, 'assets');
@@ -53,4 +49,10 @@ export const reset = async () => {
       });
     })
   );
+};
+
+export const reset = async () => {
+  const { firestore } = firebase;
+  await createProject(doc(firestore, 'projects/hello'));
+  await createProject(doc(firestore, 'projects/kitty'));
 };

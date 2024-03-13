@@ -24,17 +24,25 @@ export class Model {
 }
 
 export interface Activators {
-  all: HasActivator[];
+  activated: HasActivator[];
+  subscribed: HasActivator[];
 }
 
 export class ActivatorsImpl implements Activators {
-  private _all = $state<HasActivator[]>([]);
-  all = $derived(this._all);
+  activated = $state<HasActivator[]>([]);
+  subscribed = $state<HasActivator[]>([]);
 
-  register(model: HasActivator) {
-    this.all.push(model);
+  registerActivated(model: HasActivator) {
+    this.activated.push(model);
     return () => {
-      removeObject(this.all, model);
+      removeObject(this.activated, model);
+    };
+  }
+
+  registerSubscribed(model: HasActivator) {
+    this.subscribed.push(model);
+    return () => {
+      removeObject(this.subscribed, model);
     };
   }
 }
@@ -101,7 +109,7 @@ class Activator {
   private onIncrement() {
     this.listeners++;
     if (this.listeners === 1) {
-      const registration = _activators.register(this.owner);
+      const registration = _activators.registerActivated(this.owner);
       const activation = this.options.activate?.();
       this.cancel = () => {
         registration();
@@ -144,22 +152,26 @@ export type BaseSubscribableOptions = {
   isPassive?: boolean;
 };
 
-export abstract class BaseSubscribable extends ActivatableModel {
+export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extends ActivatableModel {
+  protected options: O;
   abstract subscribeDependencies: unknown[];
   private cancel?: VoidCallback;
 
-  constructor(options: BaseSubscribableOptions) {
+  constructor(options: O) {
     super();
-    if (!options.isPassive) {
-      // TODO: $effect.root in activate
-      $effect(() => this.refresh());
-    }
+    this.options = options;
   }
 
   abstract subscribe(): OptionalVoidCallback;
 
   _subscribe() {
-    this.cancel = this.subscribe();
+    this.cancel = $effect.root(() => {
+      const cancel = _activators.registerSubscribed(this);
+      $effect(() => {
+        return this.subscribe();
+      });
+      return () => cancel();
+    });
   }
 
   _unsubscribe() {
@@ -192,7 +204,7 @@ export interface Loadable {
   error: unknown;
 }
 
-export abstract class Base extends BaseSubscribable implements Loadable {
+export abstract class Base<O extends BaseSubscribableOptions> extends BaseSubscribable<O> implements Loadable {
   isLoading = $state(false);
   isLoaded = $state(false);
   error = $state<FirestoreError>();
@@ -225,9 +237,7 @@ export type DocumentOptions = {
   ref: DocumentReference | undefined;
 } & BaseSubscribableOptions;
 
-export class Document<T extends DocumentData = DocumentData> extends Base {
-  private options: DocumentOptions;
-
+export class Document<T extends DocumentData = DocumentData> extends Base<DocumentOptions> {
   constructor(options: DocumentOptions) {
     super(options);
     this.options = options;
@@ -282,12 +292,9 @@ export type BaseQueryOptions = {
   ref: Query | undefined;
 } & BaseSubscribableOptions;
 
-export abstract class BaseQuery<O extends BaseQueryOptions> extends Base {
-  private options: O;
-
+export abstract class BaseQuery<O extends BaseQueryOptions> extends Base<O> {
   constructor(options: O) {
     super(options);
-    this.options = options;
   }
 
   get ref() {
