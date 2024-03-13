@@ -1,4 +1,4 @@
-import { removeObject } from '$lib/utils/array';
+import { insertObjectAt, removeObject, removeObjectAt } from '$lib/utils/array';
 import {
   FirestoreError,
   Query,
@@ -8,7 +8,8 @@ import {
   SnapshotMetadata,
   DocumentReference,
   DocumentSnapshot,
-  QueryDocumentSnapshot
+  QueryDocumentSnapshot,
+  snapshotEqual
 } from '@firebase/firestore';
 import { untrack } from 'svelte';
 import { description, serialized } from '$lib/utils/object';
@@ -280,7 +281,7 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
     this.exists = snapshot.exists();
     if (this.exists) {
       // TODO: diff deep-equal
-      this.data = snapshot.data() as T;
+      this.data = snapshot.data({ serverTimestamps: 'estimate' }) as T;
     }
     this.onDidLoad(snapshot.metadata);
   }
@@ -341,16 +342,57 @@ export class QueryAll<T extends DocumentData> extends BaseQuery<QueryAllOptions>
 
   content = $state<Document<T>[]>([]);
 
+  private needsContentReset = false;
+
   private createDocument(snapshot: QueryDocumentSnapshot) {
     const doc = new Document<T>({ ref: snapshot.ref, isPassive: true });
     doc.onSnapshot(snapshot);
     return doc;
   }
 
+  onWillSubscribe(subscribe: boolean): void {
+    super.onWillSubscribe(subscribe);
+    if (subscribe) {
+      this.needsContentReset = true;
+    }
+  }
+
+  private maybeResetContent() {
+    const content = this.content;
+    if (this.needsContentReset) {
+      this.content = [];
+      this.needsContentReset = false;
+    }
+    return content;
+  }
+
   protected onSnapshot(querySnapshot: QuerySnapshot<DocumentData, DocumentData>) {
-    const content = querySnapshot.docs.map((snapshot) => this.createDocument(snapshot));
-    // TODO: querySnapshot.docChanges
-    this.content = content;
+    const previous = this.maybeResetContent();
+    const findOrCreate = (snapshot: QueryDocumentSnapshot) => {
+      let doc = previous.find((doc) => doc.path === snapshot.ref.path);
+      if (!doc) {
+        doc = this.createDocument(snapshot);
+      }
+      return doc;
+    };
+
+    const current = this.content;
+    querySnapshot.docChanges().forEach(({ type, oldIndex, newIndex, doc: snapshot }) => {
+      if (type === 'added') {
+        const doc = findOrCreate(snapshot);
+        insertObjectAt(current, newIndex, doc);
+      } else if (type === 'modified') {
+        const doc = current[oldIndex];
+        doc.onSnapshot(snapshot);
+        if (oldIndex !== newIndex) {
+          removeObjectAt(current, oldIndex);
+          insertObjectAt(current, newIndex, doc);
+        }
+      } else if (type === 'removed') {
+        removeObjectAt(current, oldIndex);
+      }
+    });
+
     super.onSnapshot(querySnapshot);
   }
 

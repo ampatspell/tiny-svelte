@@ -36,3 +36,9 @@ export const removeObject = <T>(array: T[], entry: T) => {
   const index = array.indexOf(entry);
   removeObjectAt(array, index);
 };
+
+export const insertObjectAt = <T>(array: T[], index: number, object: T) => {
+  if (index > -1) {
+    array.splice(index, 0, object);
+  }
+};
