@@ -354,6 +354,8 @@ export class QueryAll<T extends DocumentData> extends BaseQuery<QueryAllOptions>
     super.onWillSubscribe(subscribe);
     if (subscribe) {
       this.needsContentReset = true;
+    } else {
+      this.content = [];
     }
   }
 
