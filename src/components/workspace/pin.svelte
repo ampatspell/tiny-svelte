@@ -19,7 +19,7 @@
     onResize,
     onStart: _onStart,
     onEnd: _onEnd
-  } = $props<{
+  }: {
     class?: Classes;
     pin: number;
     horizontal: Horizontal;
@@ -32,7 +32,7 @@
     onStart: VoidCallback;
     onEnd: VoidCallback;
     onResize: (position: Point, size: Size) => void;
-  }>();
+  } = $props();
 
   let resizing = $state<{ position: Point; size: Size }>();
 

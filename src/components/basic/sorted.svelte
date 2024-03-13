@@ -3,10 +3,13 @@
   import Segment from './segmented/segment.svelte';
   import Segmented from './segmented/segmented.svelte';
 
-  let { width, model } = $props<{
+  let {
+    width,
+    model
+  }: {
     width?: number;
     model: OrderBy<T>;
-  }>();
+  } = $props();
 </script>
 
 <div class="sorted">

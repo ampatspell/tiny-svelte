@@ -4,9 +4,11 @@
   import Node from '$components/workspace/node.svelte';
   import Box from './box.svelte';
 
-  let { model } = $props<{
+  let {
+    model
+  }: {
     model: BoxNodeModel;
-  }>();
+  } = $props();
 
   let size = $derived(multiplySize(model.size, model.pixel));
 </script>

@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { Item } from './model';
 
-  let { item } = $props<{
+  let {
+    item
+  }: {
     item: Item;
-  }>();
+  } = $props();
 </script>
 
 <a class="item" class:current={item.isCurrent} href={item.route} onclick={item.onClick}>

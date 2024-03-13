@@ -10,12 +10,12 @@
     size,
     onCreated,
     children
-  } = $props<{
+  }: {
     class?: Classes;
     size?: Size;
     onCreated?: (stage: StageContext) => void;
     children?: Snippet;
-  }>();
+  } = $props();
 
   let stage = new StageContext();
   setStageContext(stage);

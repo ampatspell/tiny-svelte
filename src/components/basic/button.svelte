@@ -1,13 +1,19 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  let { children, value, isDisabled, onClick, route } = $props<{
+  let {
+    children,
+    value,
+    isDisabled,
+    onClick,
+    route
+  }: {
     children?: Snippet;
     value?: string;
     isDisabled?: boolean;
     onClick?: (e: Event) => void;
     route?: string;
-  }>();
+  } = $props();
 </script>
 
 {#snippet content()}

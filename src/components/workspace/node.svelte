@@ -5,10 +5,13 @@
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import Resizable from './resizable.svelte';
 
-  let { model, children } = $props<{
+  let {
+    model,
+    children
+  }: {
     model: WorkspaceNodeModel;
     children: Snippet;
-  }>();
+  } = $props();
 
   let workspace = getWorkspaceContext();
   let workspacePixel = $derived(workspace.pixel);

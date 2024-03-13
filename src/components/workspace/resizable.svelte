@@ -17,7 +17,7 @@
     onStart,
     onEnd,
     children
-  } = $props<{
+  }: {
     class?: Classes;
     pixel: number;
     step: number;
@@ -28,7 +28,7 @@
     onStart: VoidCallback;
     onEnd: VoidCallback;
     children?: Snippet;
-  }>();
+  } = $props();
 </script>
 
 <div class={classes('resizable', _class)}>

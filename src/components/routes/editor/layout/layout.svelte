@@ -2,9 +2,11 @@
   import type { Snippet } from 'svelte';
   import Sidebar from './sidebar/sidebar.svelte';
 
-  let { children } = $props<{
+  let {
+    children
+  }: {
     children: Snippet;
-  }>();
+  } = $props();
 </script>
 
 <div class="layout">

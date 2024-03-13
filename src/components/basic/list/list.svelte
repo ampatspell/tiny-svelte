@@ -1,10 +1,13 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  let { route, children } = $props<{
+  let {
+    route,
+    children
+  }: {
     children?: Snippet;
     route?: string;
-  }>();
+  } = $props();
 </script>
 
 <div class="list">

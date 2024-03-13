@@ -2,10 +2,13 @@
   import type { Loadable } from '$lib/firebase/firestore.svelte';
   import type { Snippet } from 'svelte';
 
-  let { model, children } = $props<{
+  let {
+    model,
+    children
+  }: {
     model: Loadable;
     children?: Snippet;
-  }>();
+  } = $props();
 </script>
 
 {#if model.isLoaded}

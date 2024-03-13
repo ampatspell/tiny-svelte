@@ -4,10 +4,12 @@
   import { LayerContext, setLayerContext } from './contexts/layer.svelte';
   import { setRenderContext } from './contexts/render.svelte';
 
-  let { children } = $props<{
+  let {
+    children
+  }: {
     name?: string;
     children?: Snippet;
-  }>();
+  } = $props();
 
   let stage = getStageContext();
   let layer = new LayerContext({

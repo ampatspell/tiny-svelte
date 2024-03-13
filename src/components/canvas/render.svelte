@@ -5,14 +5,21 @@
   import { getRenderContext, RenderContext, setRenderContext, type RenderContextDrawFunction } from './contexts/render.svelte';
   import type { Snippet } from 'svelte';
 
-  let { name, position, model, draw, children, onCreated } = $props<{
+  let {
+    name,
+    position,
+    model,
+    draw,
+    children,
+    onCreated
+  }: {
     name: string;
     position?: Point;
     model: T;
     draw: RenderContextDrawFunction<T>;
     children?: Snippet;
     onCreated?: (context: RenderContext<T>) => void;
-  }>();
+  } = $props();
 
   let stage = getStageContext();
   let parent = getRenderContext();

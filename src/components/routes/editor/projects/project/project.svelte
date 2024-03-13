@@ -3,9 +3,11 @@
   import { activate } from '$lib/firebase/firestore.svelte';
   import { ProjectModel } from '$lib/models/project.svelte';
 
-  let { id } = $props<{
+  let {
+    id
+  }: {
     id: string;
-  }>();
+  } = $props();
 
   let project = activate(new ProjectModel({ id: id }));
 </script>

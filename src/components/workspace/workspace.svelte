@@ -12,11 +12,11 @@
     class: _class,
     model,
     children
-  } = $props<{
+  }: {
     class?: Classes;
     model: WorkspaceModel;
     children?: Snippet;
-  }>();
+  } = $props();
 
   setWorkspaceContext(model);
 

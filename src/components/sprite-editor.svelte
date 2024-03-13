@@ -5,13 +5,19 @@
   import { drawGrid } from '$lib/utils/canvas';
   import { fromIndex, toIndex } from '$lib/utils/pixel';
 
-  let { position, pixel, size, data, onUpdated } = $props<{
+  let {
+    position,
+    pixel,
+    size,
+    data,
+    onUpdated
+  }: {
     position?: Point;
     pixel: number;
     size: Size;
     data: number[];
     onUpdated: (data: number[]) => void;
-  }>();
+  } = $props();
 
   type Model = {
     pixel: number;

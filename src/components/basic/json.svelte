@@ -1,5 +1,6 @@
 <script lang="ts">
-  let { value } = $props<{ value: unknown }>();
+  let { value }: { value: unknown } = $props();
+
   let string = $derived.by(() => {
     try {
       return JSON.stringify(value, null, 2);

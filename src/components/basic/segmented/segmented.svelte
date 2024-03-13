@@ -1,10 +1,13 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
 
-  let { width, children } = $props<{
+  let {
+    width,
+    children
+  }: {
     width?: number;
     children?: Snippet;
-  }>();
+  } = $props();
 </script>
 
 <div class="segmented" style:--segment-width="{width ?? 0}px">

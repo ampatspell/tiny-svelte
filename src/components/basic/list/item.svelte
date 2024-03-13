@@ -2,11 +2,13 @@
   import type { Snippet } from 'svelte';
   import type { ItemProps } from './model';
 
-  let { isSelected, route, children } = $props<
-    {
-      children?: Snippet;
-    } & ItemProps
-  >();
+  let {
+    isSelected,
+    route,
+    children
+  }: {
+    children?: Snippet;
+  } & ItemProps = $props();
 </script>
 
 <a class="item" href={route} class:selected={isSelected}>

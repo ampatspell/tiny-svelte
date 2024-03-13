@@ -13,7 +13,7 @@
     "deploy": "npm run build && firebase deploy"
   },
   "overrides": {
-    "svelte": "^5.0.0-next.75"
+    "svelte": "^5.0.0-next.76"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^3.1.1",
@@ -29,7 +29,7 @@
     "prettier": "^3.2.5",
     "prettier-plugin-svelte": "^3.2.2",
     "sass": "^1.71.1",
-    "svelte": "^5.0.0-next.75",
+    "svelte": "^5.0.0-next.76",
     "svelte-check": "^3.6.6",
     "tslib": "^2.6.2",
     "typescript": "^5.4.2",

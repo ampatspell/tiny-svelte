@@ -3,10 +3,13 @@
   import Render from './render.svelte';
   import type { Point } from '$lib/types/schema';
 
-  let { position, children } = $props<{
+  let {
+    position,
+    children
+  }: {
     position?: Point;
     children?: Snippet;
-  }>();
+  } = $props();
 
   let draw = () => {};
 </script>

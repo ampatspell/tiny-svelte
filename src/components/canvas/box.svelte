@@ -2,11 +2,15 @@
   import type { Point, Size } from '$lib/types/schema';
   import Render from './render.svelte';
 
-  let { position, size, fill } = $props<{
+  let {
+    position,
+    size,
+    fill
+  }: {
     position?: Point;
     size: Size;
     fill: string;
-  }>();
+  } = $props();
 
   let draw = (ctx: CanvasRenderingContext2D) => {
     ctx.fillStyle = fill;

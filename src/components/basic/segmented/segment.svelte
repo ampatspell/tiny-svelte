@@ -1,11 +1,15 @@
 <script lang="ts">
   import type { VoidCallback } from '$lib/types/types';
 
-  let { value, isSelected, onClick } = $props<{
+  let {
+    value,
+    isSelected,
+    onClick
+  }: {
     value: string;
     isSelected: boolean;
     onClick?: VoidCallback;
-  }>();
+  } = $props();
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->

@@ -2,10 +2,13 @@
   import type { Size } from '$lib/types/schema';
   import { getWorkspaceContext } from '$components/workspace/model.svelte';
 
-  let { size, color } = $props<{
+  let {
+    size,
+    color
+  }: {
     size: Size;
     color: string;
-  }>();
+  } = $props();
 
   let workspace = getWorkspaceContext();
   let pixel = $derived(workspace.pixel);
