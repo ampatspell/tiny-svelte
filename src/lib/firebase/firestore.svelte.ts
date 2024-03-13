@@ -151,6 +151,7 @@ export abstract class BaseSubscribable extends ActivatableModel {
   constructor(options: BaseSubscribableOptions) {
     super();
     if (!options.isPassive) {
+      // TODO: $effect.root in activate
       $effect(() => this.refresh());
     }
   }
