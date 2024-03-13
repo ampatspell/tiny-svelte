@@ -14,6 +14,8 @@
       <div class="model" onclick={() => log(model)}>
         {model.description ?? model.toString()}
       </div>
+    {:else}
+      <div class="placeholder">No models</div>
     {/each}
   </div>
 {/snippet}
@@ -34,6 +36,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    background: fade-out(#000, 0.98);
+    border: 1px solid fade-out(#000, 0.95);
     > .section {
       display: flex;
       flex-direction: column;
@@ -48,12 +52,18 @@
   .models {
     display: flex;
     flex-direction: column;
+    > .placeholder,
     > .model {
+      padding: 10px;
       border-bottom: 1px solid fade-out(#000, 0.97);
+      &:first-child {
+        border-top: 1px solid fade-out(#000, 0.97);
+      }
+    }
+    > .model {
       &:last-child {
         border-bottom: none;
       }
-      padding: 10px;
       &:hover {
         background: fade-out(#000, 0.97);
       }

@@ -1,20 +1,24 @@
 import { firebase } from '$lib/firebase/firebase.svelte';
-import { ActivatableModel, Document, Models, QueryAll } from '$lib/firebase/firestore.svelte';
+import { ActivatableModel, Document, Model, Models, QueryAll } from '$lib/firebase/firestore.svelte';
 import type { ProjectData } from '$lib/types/project';
 import { getter, options } from '$lib/utils/args';
+import { serialized } from '$lib/utils/object';
 import { collection, orderBy, query } from '@firebase/firestore';
 
-export class ProjectModel {
+export class ProjectModel extends Model {
   projects: ProjectsModel;
   doc: Document<ProjectData>;
 
   constructor(projects: ProjectsModel, doc: Document<ProjectData>) {
+    super();
     this.projects = projects;
     this.doc = doc;
   }
 
   id = $derived.by(() => this.doc.id);
   identifier = $derived.by(() => this.doc.data!.identifier);
+
+  serialized = $derived.by(() => serialized(this, ['id', 'identifier']));
 }
 
 export class ProjectsModel extends ActivatableModel {

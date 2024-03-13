@@ -8,8 +8,7 @@ import {
   SnapshotMetadata,
   DocumentReference,
   DocumentSnapshot,
-  QueryDocumentSnapshot,
-  snapshotEqual
+  QueryDocumentSnapshot
 } from '@firebase/firestore';
 import { untrack } from 'svelte';
 import { description, serialized } from '$lib/utils/object';
@@ -408,6 +407,7 @@ export type ModelsOptions<I, O> = {
 
 export class Models<I, O> extends Model {
   private options: ModelsOptions<I, O>;
+  private cache: Map<I, O> = new Map();
 
   constructor(options: ModelsOptions<I, O>) {
     super();
@@ -422,10 +422,23 @@ export class Models<I, O> extends Model {
     return this.options.model(source);
   }
 
-  createContent() {
-    // TODO: diff
-    return this.source.map((source) => this.model(source));
+  private create() {
+    const cache = this.cache;
+    const next = new Map<I, O>();
+
+    const findOrCreate = (source: I) => {
+      let target = cache.get(source);
+      if (!target) {
+        target = this.model(source);
+      }
+      next.set(source, target);
+      return target;
+    };
+
+    const content = this.source.map((source) => findOrCreate(source));
+    this.cache = next;
+    return content;
   }
 
-  content = $derived.by(() => this.createContent());
+  content = $derived.by(() => this.create());
 }

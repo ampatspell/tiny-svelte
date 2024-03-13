@@ -5,7 +5,6 @@
   import Item from './item.svelte';
   import { createItems } from './model';
   import Activated from '$components/basic/activated.svelte';
-  import { clickOutside } from '$lib/utils/use-click-outside.svelte';
   import CodeLine from '$icons/mingcute-code-line.svelte';
 
   let top = createItems([
@@ -37,7 +36,7 @@
 
 {#if activated}
   <div class="activated">
-    <div class="content" use:clickOutside={onActivated}><Activated /></div>
+    <div class="content"><Activated /></div>
   </div>
 {/if}
 
@@ -55,21 +54,12 @@
   }
   .activated {
     position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: fade-out(#000, 0.8);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    bottom: 10px;
+    left: 50px;
+    box-shadow: 0 1px 8px 0 fade-out(#000, 0.95);
     > .content {
       width: 600px;
-      max-height: 80vh;
-      background: #fff;
-      border: 1px solid fade-out(#000, 0.98);
-      box-shadow: 0 1px 5px 0 fade-out(#000, 0.9);
+      max-height: 40vh;
       overflow-y: scroll;
     }
   }
