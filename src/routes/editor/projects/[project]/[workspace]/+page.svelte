@@ -13,6 +13,14 @@
   <div class="page">
     <div class="row">{workspace.project}</div>
     <div class="row">{workspace}</div>
+    <div class="row">{workspace.nodes}</div>
+    {#each workspace.nodes.query.content as node}
+      <div class="row">{node}</div>
+    {/each}
+    <div class="row">{workspace.project.assets}</div>
+    {#each workspace.project.assets.query.content as node}
+      <div class="row">{node}</div>
+    {/each}
   </div>
 </Loadable>
 

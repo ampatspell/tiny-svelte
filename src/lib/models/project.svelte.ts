@@ -1,10 +1,38 @@
 import { firebase } from '$lib/firebase/firebase.svelte';
 import { ActivatableModel, Document, QueryAll } from '$lib/firebase/firestore.svelte';
+import { type AssetData } from '$lib/types/assets';
 import type { ProjectData } from '$lib/types/project';
-import type { WorkspaceData } from '$lib/types/workspace';
+import { type WorkspaceData, type WorkspaceNodeData } from '$lib/types/workspace';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
+
+export type WorkspaceNodesModelOptions = {
+  workspace: WorkspaceModel;
+};
+
+export class WorkspaceNodesModel extends ActivatableModel {
+  options: WorkspaceNodesModelOptions;
+
+  constructor(options: WorkspaceNodesModelOptions) {
+    super();
+    this.options = options;
+  }
+
+  workspace = $derived.by(() => this.options.workspace);
+
+  get ref() {
+    return collection(this.workspace.ref, 'nodes');
+  }
+
+  query = new QueryAll<WorkspaceNodeData>(
+    options({
+      ref: getter(() => this.ref)
+    })
+  );
+
+  dependencies = [this.query];
+}
 
 export type WorkspaceModelOptions = {
   project: ProjectModel;
@@ -19,18 +47,21 @@ export class WorkspaceModel extends ActivatableModel {
     this.options = options;
   }
 
-  get id() {
-    return this.options.id;
+  project = $derived.by(() => this.options.project);
+  id = $derived.by(() => this.options.id);
+
+  get ref() {
+    return doc(collection(this.project.ref, 'workspaces'), this.id);
   }
 
-  get project() {
-    return this.options.project;
-  }
+  nodes = new WorkspaceNodesModel({
+    workspace: this
+  });
 
   serialized = $derived.by(() => serialized(this, ['id']));
 
   get dependencies() {
-    return [this.project];
+    return [this.project, this.nodes];
   }
 }
 
@@ -47,6 +78,7 @@ export class WorkspacesModel extends ActivatableModel {
   }
 
   ref = $derived.by(() => collection(this.options.project.ref, 'workspaces'));
+  path = $derived.by(() => this.ref.path);
 
   query = new QueryAll<WorkspaceData>(
     options({
@@ -54,7 +86,41 @@ export class WorkspacesModel extends ActivatableModel {
     })
   );
 
+  serialized = $derived.by(() => serialized(this, ['path']));
   dependencies = [this.query];
+}
+
+export type ProjectAssetsModelOptions = {
+  project: ProjectModel;
+};
+
+export class ProjectAssetsModel extends ActivatableModel {
+  options: ProjectAssetsModelOptions;
+
+  constructor(options: ProjectAssetsModelOptions) {
+    super();
+    this.options = options;
+  }
+
+  project = $derived.by(() => this.options.project);
+
+  get ref() {
+    return collection(this.project.ref, 'assets');
+  }
+
+  path = $derived.by(() => this.ref.path);
+
+  query = new QueryAll<AssetData>(
+    options({
+      ref: getter(() => this.ref)
+    })
+  );
+
+  get dependencies() {
+    return [this.query];
+  }
+
+  serialized = $derived.by(() => serialized(this, ['path']));
 }
 
 export type ProjectModelOptions = {
@@ -84,6 +150,11 @@ export class ProjectModel extends ActivatableModel {
     project: this
   });
 
+  assets = new ProjectAssetsModel({
+    project: this
+  });
+
   serialized = $derived.by(() => serialized(this, ['id', 'identifier']));
-  dependencies = [this.doc, this.workspaces];
+
+  dependencies = [this.doc, this.workspaces, this.assets];
 }
