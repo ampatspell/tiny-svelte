@@ -72,11 +72,12 @@ export abstract class ActivatableModel extends Model implements HasActivator {
     this.activator = new Activator({
       owner: () => this,
       activate: () => this.activate(),
-      dependencies: () => this.dependencies?.() ?? []
+      dependencies: () => this.dependencies ?? []
     });
   }
 
-  dependencies?: () => HasActivator[];
+  abstract dependencies?: HasActivator[];
+
   activate() {}
 }
 
@@ -259,6 +260,8 @@ export abstract class Base<O extends BaseSubscribableOptions> extends BaseSubscr
     this.isLoaded = true;
     this.metadata = metadata;
   }
+
+  dependencies = [];
 }
 
 export type DocumentOptions = {

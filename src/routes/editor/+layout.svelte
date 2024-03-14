@@ -9,4 +9,6 @@
   } = $props();
 </script>
 
-<Layout {children} />
+<Layout>
+  {@render children()}
+</Layout>

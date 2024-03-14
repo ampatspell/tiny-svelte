@@ -29,7 +29,9 @@ export class WorkspaceModel extends ActivatableModel {
 
   serialized = $derived.by(() => serialized(this, ['id']));
 
-  dependencies = () => [this.project];
+  get dependencies() {
+    return [this.project];
+  }
 }
 
 export type WorkspacesModelOptions = {
@@ -52,7 +54,7 @@ export class WorkspacesModel extends ActivatableModel {
     })
   );
 
-  dependencies = () => [this.query];
+  dependencies = [this.query];
 }
 
 export type ProjectModelOptions = {
@@ -83,5 +85,5 @@ export class ProjectModel extends ActivatableModel {
   });
 
   serialized = $derived.by(() => serialized(this, ['id', 'identifier']));
-  dependencies = () => [this.doc, this.workspaces];
+  dependencies = [this.doc, this.workspaces];
 }
