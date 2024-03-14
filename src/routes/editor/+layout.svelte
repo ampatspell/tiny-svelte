@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createItems } from '$components/basic/sidebar/model';
+  import { createSidebarItems } from '$components/basic/sidebar/model';
   import Sidebar from '$components/basic/sidebar/sidebar.svelte';
   import type { Snippet } from 'svelte';
   import Home from '$icons/mingcute-left-fill.svelte';
@@ -10,7 +10,7 @@
 
   let { children }: { children: Snippet } = $props();
 
-  let top = createItems([
+  let top = createSidebarItems([
     { icon: Home, route: '/' },
     { icon: Editor, route: '/editor' },
     { icon: Mushroom, route: '/editor/projects' }
@@ -21,7 +21,7 @@
     activated = !activated;
   };
 
-  let bottom = createItems([{ icon: CodeLine, onClick: onActivated }]);
+  let bottom = createSidebarItems([{ icon: CodeLine, onClick: onActivated }]);
 </script>
 
 <div class="layout">
