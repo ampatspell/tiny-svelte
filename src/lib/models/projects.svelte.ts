@@ -45,5 +45,5 @@ export class ProjectsModel extends ActivatableModel {
     this.direction = this.direction === 'asc' ? 'desc' : 'asc';
   }
 
-  dependencies = [this.query];
+  dependencies = () => [this.query];
 }

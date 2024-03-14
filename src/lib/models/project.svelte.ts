@@ -6,6 +6,32 @@ import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
 
+export type WorkspaceModelOptions = {
+  project: ProjectModel;
+  id: string;
+};
+
+export class WorkspaceModel extends ActivatableModel {
+  options: WorkspaceModelOptions;
+
+  constructor(options: WorkspaceModelOptions) {
+    super();
+    this.options = options;
+  }
+
+  get id() {
+    return this.options.id;
+  }
+
+  get project() {
+    return this.options.project;
+  }
+
+  serialized = $derived.by(() => serialized(this, ['id']));
+
+  dependencies = () => [this.project];
+}
+
 export type WorkspacesModelOptions = {
   project: ProjectModel;
 };
@@ -26,7 +52,7 @@ export class WorkspacesModel extends ActivatableModel {
     })
   );
 
-  dependencies = [this.query];
+  dependencies = () => [this.query];
 }
 
 export type ProjectModelOptions = {
@@ -50,13 +76,12 @@ export class ProjectModel extends ActivatableModel {
     })
   );
 
+  identifier = $derived.by(() => this.doc.data?.identifier);
+
   workspaces = new WorkspacesModel({
     project: this
   });
 
-  identifier = $derived.by(() => this.doc.data?.identifier);
-
   serialized = $derived.by(() => serialized(this, ['id', 'identifier']));
-
-  dependencies = [this.doc, this.workspaces];
+  dependencies = () => [this.doc, this.workspaces];
 }

@@ -72,11 +72,11 @@ export abstract class ActivatableModel extends Model implements HasActivator {
     this.activator = new Activator({
       owner: () => this,
       activate: () => this.activate(),
-      dependencies: () => this.dependencies
+      dependencies: () => this.dependencies?.() ?? []
     });
   }
 
-  dependencies: HasActivator[] = [];
+  dependencies?: () => HasActivator[];
   activate() {}
 }
 
@@ -145,8 +145,11 @@ class Activator {
     this.onIncrement();
     const dependencies = this.dependencies.map((dep) => dep.activator.increment());
     return () => {
-      dependencies.forEach((dep) => dep());
-      this.onDecrement();
+      // TODO: is this correct?
+      setTimeout(() => {
+        dependencies.forEach((dep) => dep());
+        this.onDecrement();
+      }, 0);
     };
   }
 }
@@ -291,10 +294,9 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
     const ref = this.ref;
     this.onWillSubscribe(!!ref);
     if (ref) {
-      const opts = { includeMetadataChanges: true };
       return onSnapshot(
         ref,
-        opts,
+        { includeMetadataChanges: true },
         (snapshot) => this.onSnapshot(snapshot),
         (error) => this.onError(error)
       );

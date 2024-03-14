@@ -1,28 +1,39 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
-  import { activate } from '$lib/firebase/firestore.svelte';
-  import { ProjectModel } from '$lib/models/project.svelte';
+  import type { ProjectModel } from '$lib/models/project.svelte';
 
   let {
-    id
+    project
   }: {
-    id: string;
+    project: ProjectModel;
   } = $props();
-
-  let project = activate(new ProjectModel({ id: id }));
 </script>
 
-<Loadable model={project}>
-  <div class="project">
-    <div class="row">{project.description}</div>
+<div class="project">
+  <div class="header">{project.identifier} workspaces</div>
+  <Loadable model={project}>
     {#each project.workspaces.query.content as workspace}
-      <div class="row">{workspace}</div>
+      <a class="workspace" href="/editor/projects/{project.id}/{workspace.id}">
+        {workspace.data?.identifier}
+      </a>
     {/each}
-  </div>
-</Loadable>
+  </Loadable>
+</div>
 
 <style lang="scss">
   .project {
-    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    > .header {
+      padding: 10px 15px;
+      font-weight: 600;
+    }
+    > .workspace {
+      padding: 10px 15px;
+      text-decoration: none;
+      &:hover {
+        background: fade-out(#000, 0.97);
+      }
+    }
   }
 </style>

@@ -1,15 +1,18 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
   import { ProjectsModel } from '$lib/models/projects.svelte';
-  import { activate } from '$lib/firebase/firestore.svelte';
 
-  let model = activate(new ProjectsModel());
+  let {
+    projects
+  }: {
+    projects: ProjectsModel;
+  } = $props();
 </script>
 
 <div class="projects">
   <div class="header">All projects</div>
-  <Loadable model={model.query}>
-    {#each model.all.content as project}
+  <Loadable model={projects}>
+    {#each projects.all.content as project}
       <a class="project" href="/editor/projects/{project.id}">
         {project.identifier}
       </a>
@@ -24,12 +27,6 @@
     > .header {
       padding: 10px 15px;
       font-weight: 600;
-    }
-    > .actions {
-      display: flex;
-      flex-direction: row;
-      padding: 10px 15px;
-      gap: 10px;
     }
     > .project {
       padding: 10px 15px;
