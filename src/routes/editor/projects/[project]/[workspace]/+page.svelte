@@ -7,25 +7,63 @@
 
   let workspace = $derived(data.workspace);
   $effect(() => activate(workspace));
+
+  let project = $derived(data.workspace.project);
+  let workspaces = $derived(project.workspaces);
 </script>
 
 <Loadable model={workspace}>
   <div class="page">
-    <div class="row">{workspace.project}</div>
-    <div class="row">{workspace}</div>
-    <div class="row">{workspace.nodes}</div>
-    {#each workspace.nodes.query.content as node}
-      <div class="row">{node}</div>
-    {/each}
-    <div class="row">{workspace.project.assets}</div>
-    {#each workspace.project.assets.query.content as node}
-      <div class="row">{node}</div>
-    {/each}
+    <div class="section">
+      <div class="title">Project</div>
+      <div class="row">{workspace.project}</div>
+    </div>
+    <div class="section">
+      <div class="title">Workspaces</div>
+      {#each workspaces.query.content as workspace (workspace)}
+        <a href="/editor/projects/{project.id}/{workspace.id}">{workspace.data?.identifier}</a>
+      {/each}
+    </div>
+    <div class="section">
+      <div class="title">Workspace</div>
+      <div class="row">{workspace}</div>
+    </div>
+    <div class="section">
+      <div class="title">Nodes</div>
+      <div class="row">{workspace.nodes}</div>
+    </div>
+    <div class="section">
+      <div class="title">Nodes content</div>
+      {#each workspace.nodes.query.content as node (node)}
+        <div class="row">{node}</div>
+      {/each}
+    </div>
+    <div class="section">
+      <div class="title">Assets</div>
+      <div class="row">{workspace.project.assets}</div>
+    </div>
+    <div class="section">
+      <div class="title">Assets content</div>
+      {#each workspace.project.assets.query.content as node (node)}
+        <div class="row">{node}</div>
+      {/each}
+    </div>
   </div>
 </Loadable>
 
 <style lang="scss">
   .page {
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    > .section {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      > .title {
+        font-weight: 600;
+      }
+    }
   }
 </style>

@@ -4,6 +4,7 @@ import { DocumentReference, Firestore, initializeFirestore, persistentLocalCache
 import { initializeAuth, type Auth, browserLocalPersistence } from 'firebase/auth';
 import { setGlobal } from '$lib/utils/set-global';
 import { Session } from './session.svelte';
+import { reset } from './reset.svelte';
 
 const options = JSON.parse(PUBLIC_FIREBASE) as FirebaseOptions;
 
@@ -54,6 +55,10 @@ export class Firebase {
   openDocumentReference(ref: DocumentReference) {
     const path = encodeURIComponent(ref.path);
     window.open(`${this.dashboardUrl}/firestore/data/${path}`);
+  }
+
+  async reset() {
+    await reset();
   }
 
   serialized = $derived.by(() => {
