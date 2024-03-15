@@ -31,7 +31,7 @@ const createWorkspace = async (workspacesRef: CollectionReference, identifier: s
     boxes.map(async (box) => {
       const nodeRef = doc(workspaceNodesRef);
       await setDoc(nodeRef, {
-        identifier: box.identifier,
+        asset: box.identifier,
         position: box.position
       });
     })

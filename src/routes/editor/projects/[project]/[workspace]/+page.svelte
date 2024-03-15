@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Json from '$components/basic/json.svelte';
   import Loadable from '$components/basic/loadable.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
   import type { WorkspaceModel } from '$lib/models/project.svelte';
@@ -35,7 +36,7 @@
     <div class="section">
       <div class="title">Nodes content</div>
       {#each workspace.nodes.query.content as node (node)}
-        <div class="row">{node}</div>
+        <div class="row"><Json value={{ id: node.id, data: node.data }} /></div>
       {/each}
     </div>
     <div class="section">
@@ -44,8 +45,8 @@
     </div>
     <div class="section">
       <div class="title">Assets content</div>
-      {#each workspace.project.assets.query.content as node (node)}
-        <div class="row">{node}</div>
+      {#each workspace.project.assets.query.content as asset (asset)}
+        <div class="row"><Json value={{ id: asset.id, data: asset.data }} /></div>
       {/each}
     </div>
   </div>
