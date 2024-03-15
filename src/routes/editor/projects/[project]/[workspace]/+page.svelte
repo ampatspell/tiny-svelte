@@ -10,45 +10,25 @@
   $effect(() => activate(workspace));
 
   let project = $derived(data.workspace.project);
-  let workspaces = $derived(project.workspaces);
+  // let workspaces = $derived(project.workspaces);
 </script>
 
 <Loadable model={workspace}>
   <div class="page">
-    <div class="section">
-      <div class="title">Project</div>
-      <div class="row">{workspace.project}</div>
-    </div>
-    <div class="section">
-      <div class="title">Workspaces</div>
-      {#each workspaces.query.content as workspace (workspace)}
-        <a href="/editor/projects/{project.id}/{workspace.id}">{workspace.data?.identifier}</a>
+    <!-- <div class="left"></div> -->
+
+    <div class="content">
+      {#each workspace.nodes.query.content as node}
+        <div class="row">{node}</div>
       {/each}
     </div>
-    <div class="section">
-      <div class="title">Workspace</div>
-      <div class="row">{workspace}</div>
-    </div>
-    <div class="section">
-      <div class="title">Nodes</div>
-      <div class="row">{workspace.nodes}</div>
-    </div>
-    <div class="section">
-      <div class="title">Nodes content</div>
-      {#each workspace.nodes.query.content as node (node)}
-        <div class="row"><Json value={{ id: node.id, data: node.data }} /></div>
+    <div class="content">
+      {#each workspace.nodes.all.content as node}
+        <div class="row">{node}</div>
       {/each}
     </div>
-    <div class="section">
-      <div class="title">Assets</div>
-      <div class="row">{workspace.project.assets}</div>
-    </div>
-    <div class="section">
-      <div class="title">Assets content</div>
-      {#each workspace.project.assets.query.content as asset (asset)}
-        <div class="row"><Json value={{ id: asset.id, data: asset.data }} /></div>
-      {/each}
-    </div>
+
+    <!-- <div class="right"></div> -->
   </div>
 </Loadable>
 
@@ -57,14 +37,21 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    > .section {
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-      > .title {
-        font-weight: 600;
-      }
-    }
+    gap: 10px;
+
+    // flex: 1;
+    // display: flex;
+    // flex-direction: row;
+    // > .left {
+    //   width: 250px;
+    //   border-right: 1px solid fade-out(#000, 0.95);
+    // }
+    // > .content {
+    //   flex: 1;
+    // }
+    // > .right {
+    //   width: 250px;
+    //   border-left: 1px solid fade-out(#000, 0.95);
+    // }
   }
 </style>

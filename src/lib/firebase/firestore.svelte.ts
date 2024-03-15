@@ -19,9 +19,14 @@ export type HasDescriptionAndSerialized = {
   serialized?: unknown;
 };
 
-export class Model implements HasDescriptionAndSerialized {
+export class Model<T> implements HasDescriptionAndSerialized {
+  options: T;
   declare serialized?: Record<string, unknown>;
   description = $derived.by(() => description(this, this.serialized));
+
+  constructor(options: T) {
+    this.options = options;
+  }
 
   toString() {
     return this.description ?? description(this, this.serialized);
@@ -59,7 +64,7 @@ export interface HasActivator {
   activator: Activator;
 }
 
-export abstract class ActivatableModel extends Model implements HasActivator {
+export abstract class ActivatableModel<T> extends Model<T> implements HasActivator {
   activator: Activator;
   isActivated = $derived.by(() => this.activator.isActivated);
 
@@ -67,8 +72,8 @@ export abstract class ActivatableModel extends Model implements HasActivator {
     return untrack(() => this.isActivated);
   }
 
-  constructor() {
-    super();
+  constructor(options: T) {
+    super(options);
     this.activator = new Activator({
       owner: () => this,
       activate: () => this.activate(),
@@ -94,11 +99,11 @@ class Activator {
   private options: ActivatorOptions;
   private listeners = $state(0);
 
-  isActivated = $derived(this.listeners > 0);
-
   constructor(options: ActivatorOptions) {
     this.options = options;
   }
+
+  isActivated = $derived(this.listeners > 0);
 
   get dependencies() {
     return this.options.dependencies?.() ?? [];
@@ -167,15 +172,9 @@ export type BaseSubscribableOptions = {
   isPassive?: boolean;
 };
 
-export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extends ActivatableModel {
-  protected options: O;
+export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extends ActivatableModel<O> {
   abstract subscribeDependencies: unknown[];
   private cancel?: VoidCallback;
-
-  constructor(options: O) {
-    super();
-    this.options = options;
-  }
 
   abstract subscribe(): OptionalVoidCallback;
 
@@ -268,11 +267,6 @@ export type DocumentOptions = {
 } & BaseSubscribableOptions;
 
 export class Document<T extends DocumentData = DocumentData> extends Base<DocumentOptions> {
-  constructor(options: DocumentOptions) {
-    super(options);
-    this.options = options;
-  }
-
   exists = $state<boolean>();
   data = $state<T>();
 
@@ -322,10 +316,6 @@ export type BaseQueryOptions = {
 } & BaseSubscribableOptions;
 
 export abstract class BaseQuery<O extends BaseQueryOptions> extends Base<O> {
-  constructor(options: O) {
-    super(options);
-  }
-
   get ref() {
     return this.options.ref;
   }
@@ -364,10 +354,6 @@ export abstract class BaseQuery<O extends BaseQueryOptions> extends Base<O> {
 export type QueryAllOptions = BaseQueryOptions;
 
 export class QueryAll<T extends DocumentData> extends BaseQuery<QueryAllOptions> {
-  constructor(options: QueryAllOptions) {
-    super(options);
-  }
-
   content = $state<Document<T>[]>([]);
 
   private needsContentReset = false;
@@ -434,14 +420,8 @@ export type ModelsOptions<I, O> = {
   model: (doc: I) => O;
 };
 
-export class Models<I, O> extends Model {
-  private options: ModelsOptions<I, O>;
+export class Models<I, O> extends Model<ModelsOptions<I, O>> {
   private cache: Map<I, O> = new Map();
-
-  constructor(options: ModelsOptions<I, O>) {
-    super();
-    this.options = options;
-  }
 
   get source() {
     return this.options.source;

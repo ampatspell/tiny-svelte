@@ -2,11 +2,11 @@
   import Button from '$components/basic/button.svelte';
   import Segment from '$components/basic/segmented/segment.svelte';
   import Segmented from '$components/basic/segmented/segmented.svelte';
-  import { WorkspaceModel, BoxNodeModel, ToolType, BoxModel } from '$components/workspace/model.svelte';
+  import { WorkspaceContext, BoxNodeModel, ToolType, BoxModel } from '$components/workspace/model.svelte';
   import Workspace from '$components/workspace/workspace.svelte';
   import BoxNode from './box-node.svelte';
 
-  let workspace = new WorkspaceModel();
+  let workspace = new WorkspaceContext();
 
   let boxes = $state([
     new BoxNodeModel({
@@ -32,7 +32,7 @@
 {/snippet}
 
 <div class="page">
-  <Workspace class="workspace" model={workspace}>
+  <Workspace class="workspace" context={workspace}>
     {#each boxes as box (box)}
       <BoxNode model={box} />
     {/each}

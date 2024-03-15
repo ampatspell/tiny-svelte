@@ -17,7 +17,7 @@ export class Tool {
   }
 }
 
-export class WorkspaceModel {
+export class WorkspaceContext {
   isBound = $state(false);
   size = $state<Size>({ width: 0, height: 0 });
   position = $state<Point>({ x: 0, y: 0 });
@@ -41,12 +41,12 @@ export class WorkspaceModel {
   }
 }
 
-export const setWorkspaceContext = (model: WorkspaceModel) => {
+export const setWorkspaceContext = (model: WorkspaceContext) => {
   setContext('workspace', model);
 };
 
 export const getWorkspaceContext = () => {
-  return getContext('workspace') as WorkspaceModel;
+  return getContext('workspace') as WorkspaceContext;
 };
 
 //

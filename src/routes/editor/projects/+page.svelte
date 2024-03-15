@@ -3,7 +3,7 @@
   import { activate } from '$lib/firebase/firestore.svelte';
   import { ProjectsModel } from '$lib/models/projects.svelte';
 
-  let projects = new ProjectsModel();
+  let projects = new ProjectsModel({});
   activate(projects);
 </script>
 
