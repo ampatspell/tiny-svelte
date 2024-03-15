@@ -43,6 +43,7 @@ const createAssets = async (assetsRef: CollectionReference, boxes: Box[]) => {
     boxes.map(async (box) => {
       const assetRef = doc(assetsRef);
       await setDoc(assetRef, {
+        type: 'box',
         identifier: box.identifier,
         size: box.size,
         color: box.color

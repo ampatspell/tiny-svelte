@@ -134,6 +134,7 @@ export class ProjectAssetsModel extends ActivatableModel<ProjectAssetsModelOptio
       source: getter(() => this.query.content),
       model: (doc: Document<AssetData>) => {
         const type = doc.data?.type;
+        console.log(doc.data);
         if (!type) {
           return;
         }
