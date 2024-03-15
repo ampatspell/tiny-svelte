@@ -57,6 +57,7 @@
       width: 600px;
       max-height: 50vh;
       overflow-y: scroll;
+      background: #fff;
     }
   }
 </style>
