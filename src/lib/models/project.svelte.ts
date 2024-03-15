@@ -1,16 +1,18 @@
 import { firebase } from '$lib/firebase/firebase.svelte';
 import { ActivatableModel, Document, Model, Models, QueryAll } from '$lib/firebase/firestore.svelte';
-import { type AssetData } from '$lib/types/assets';
+import { type AssetData, type BoxAssetData } from '$lib/types/assets';
 import type { ProjectData } from '$lib/types/project';
 import { type WorkspaceData, type WorkspaceNodeData } from '$lib/types/workspace';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
-import { collection, doc } from '@firebase/firestore';
+import { collection, doc, type DocumentData } from '@firebase/firestore';
+
+export type AssetByIdentifier = (identifier: string) => ProjectAssetModel | undefined;
 
 export type WorkspaceNodeModelOptions = {
   nodes: WorkspaceNodesModelOptions;
   doc: Document<WorkspaceNodeData>;
-  // TODO: add asset model provider
+  asset: AssetByIdentifier;
 };
 
 export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
@@ -18,14 +20,7 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
   id = $derived(this.doc.id);
   position = $derived(this.doc.data!.position);
   assetIdentifier = $derived(this.doc.data!.asset);
-
-  _assets = $derived(this.options.nodes.workspace.project.assets);
-
-  asset = $derived.by(() => {
-    const identifier = this.assetIdentifier;
-    const doc = this._assets.query.content.find((doc) => doc.data?.identifier === identifier);
-    return doc;
-  });
+  asset = $derived(this.options.asset(this.assetIdentifier));
 
   serialized = $derived(serialized(this, ['id', 'assetIdentifier', 'asset']));
 }
@@ -44,13 +39,18 @@ export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOpt
     })
   );
 
+  assetByIdentifier(identifier: string) {
+    return this.workspace.project.assets.all.content.find((asset) => asset?.identifier === identifier);
+  }
+
   all = new Models(
     options({
       source: getter(() => this.query.content),
       model: (doc: Document<WorkspaceNodeData>) =>
         new WorkspaceNodeModel({
           nodes: this,
-          doc
+          doc,
+          asset: (identifier) => this.assetByIdentifier(identifier)
         })
     })
   );
@@ -91,9 +91,28 @@ export class WorkspacesModel extends ActivatableModel<WorkspacesModelOptions> {
     })
   );
 
-  serialized = $derived.by(() => serialized(this, ['path']));
+  serialized = $derived(serialized(this, ['path']));
   dependencies = [this.query];
 }
+
+//
+
+export type ProjectAssetModelOptions<D extends DocumentData> = {
+  assets: ProjectAssetsModel;
+  doc: Document<D>;
+};
+
+export class ProjectAssetModel<D extends DocumentData = DocumentData> extends Model<ProjectAssetModelOptions<D>> {
+  doc = $derived(this.options.doc);
+  id = $derived(this.doc.id);
+  identifier = $derived(this.doc.data?.identifier);
+
+  serialized = $derived(serialized(this, ['id', 'identifier']));
+}
+
+export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {}
+
+//
 
 export type ProjectAssetsModelOptions = {
   project: ProjectModel;
@@ -107,6 +126,22 @@ export class ProjectAssetsModel extends ActivatableModel<ProjectAssetsModelOptio
   query = new QueryAll<AssetData>(
     options({
       ref: getter(() => this.ref)
+    })
+  );
+
+  all = new Models(
+    options({
+      source: getter(() => this.query.content),
+      model: (doc: Document<AssetData>) => {
+        const type = doc.data?.type;
+        if (!type) {
+          return;
+        }
+        if (type === 'box') {
+          return new ProjectBoxAssetModel({ assets: this, doc });
+        }
+        throw new Error(`unsupported asset type '${type}'`);
+      }
     })
   );
 

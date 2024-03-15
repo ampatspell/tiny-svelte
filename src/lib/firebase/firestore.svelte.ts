@@ -1,4 +1,4 @@
-import { insertObjectAt, removeObject, removeObjectAt } from '$lib/utils/array';
+import { insertObjectAt, isTruthy, removeObject, removeObjectAt } from '$lib/utils/array';
 import {
   FirestoreError,
   Query,
@@ -444,7 +444,7 @@ export class Models<I, O> extends Model<ModelsOptions<I, O>> {
       return target;
     };
 
-    const content = this.source.map((source) => findOrCreate(source));
+    const content = this.source.map((source) => findOrCreate(source)).filter(isTruthy);
     this.cache = next;
     return content;
   }

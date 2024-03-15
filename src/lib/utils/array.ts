@@ -42,3 +42,7 @@ export const insertObjectAt = <T>(array: T[], index: number, object: T) => {
     array.splice(index, 0, object);
   }
 };
+
+export function isTruthy<T>(value?: T | undefined | null | false): value is T {
+  return !!value;
+}
