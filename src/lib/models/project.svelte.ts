@@ -10,6 +10,7 @@ import { collection, doc } from '@firebase/firestore';
 export type WorkspaceNodeModelOptions = {
   nodes: WorkspaceNodesModelOptions;
   doc: Document<WorkspaceNodeData>;
+  // TODO: add asset model provider
 };
 
 export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
@@ -128,7 +129,7 @@ export class ProjectModel extends ActivatableModel<ProjectModelOptions> {
     })
   );
 
-  identifier = $derived.by(() => this.doc.data?.identifier);
+  identifier = $derived(this.doc.data?.identifier);
 
   workspaces = new WorkspacesModel({
     project: this
