@@ -134,7 +134,6 @@ export class ProjectAssetsModel extends ActivatableModel<ProjectAssetsModelOptio
       source: getter(() => this.query.content),
       model: (doc: Document<AssetData>) => {
         const type = doc.data?.type;
-        console.log(doc.data);
         if (!type) {
           return;
         }
@@ -148,7 +147,7 @@ export class ProjectAssetsModel extends ActivatableModel<ProjectAssetsModelOptio
 
   dependencies = [this.query];
 
-  serialized = $derived.by(() => serialized(this, ['path']));
+  serialized = $derived(serialized(this, ['path']));
 }
 
 export type ProjectModelOptions = {
@@ -175,7 +174,7 @@ export class ProjectModel extends ActivatableModel<ProjectModelOptions> {
     project: this
   });
 
-  serialized = $derived.by(() => serialized(this, ['id', 'identifier']));
+  serialized = $derived(serialized(this, ['id', 'identifier']));
 
   dependencies = [this.doc, this.workspaces, this.assets];
 }

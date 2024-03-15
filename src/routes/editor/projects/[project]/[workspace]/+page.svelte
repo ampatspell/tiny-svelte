@@ -24,7 +24,7 @@
     </div>
     <div class="content">
       {#each workspace.nodes.all.content as node}
-        <div class="row">{node} {node.asset}</div>
+        <div class="row">{node}</div>
       {/each}
     </div>
 
