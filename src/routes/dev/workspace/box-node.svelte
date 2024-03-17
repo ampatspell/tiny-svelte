@@ -1,7 +1,7 @@
 <script lang="ts">
+  import type { BoxNodeModel } from '$components/workspace/content/model.svelte';
+  import Node from '$components/workspace/content/node.svelte';
   import { multiplySize } from '$lib/utils/math';
-  import type { BoxNodeModel } from '$components/workspace/model.svelte';
-  import Node from '$components/workspace/node.svelte';
   import Box from './box.svelte';
 
   let {

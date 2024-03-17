@@ -5,7 +5,7 @@ import type { EmptyObject } from '$lib/types/types';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, orderBy, query } from '@firebase/firestore';
-import { ProjectModel } from './project.svelte';
+import { ProjectsProjectModel } from './project.svelte';
 
 export class ProjectsModel extends ActivatableModel<EmptyObject> {
   collection = $derived(collection(firebase.firestore, 'projects'));
@@ -20,7 +20,7 @@ export class ProjectsModel extends ActivatableModel<EmptyObject> {
     options({
       source: getter(() => this._query.content),
       model: (doc: Document<ProjectData>) =>
-        new ProjectModel({
+        new ProjectsProjectModel({
           projects: this,
           doc
         })

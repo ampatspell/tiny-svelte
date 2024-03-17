@@ -3,8 +3,9 @@ import { collection } from '@firebase/firestore';
 import type { WorkspaceModel } from './workspace.svelte';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { getter, options } from '$lib/utils/args';
-import { WorkspaceNodeModel } from './node.svelte';
 import { serialized } from '$lib/utils/object';
+import { WorkspaceNodeModel } from './node.svelte';
+import type { ProjectAssetModel } from '../asset.svelte';
 
 export type WorkspaceNodesModelOptions = {
   workspace: WorkspaceModel;
@@ -37,6 +38,14 @@ export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOpt
   );
 
   all = $derived(this._all.content);
+
+  orphans = $derived.by(() => {
+    return this.all.filter((node) => !node.asset);
+  });
+
+  nodeForAsset(asset: ProjectAssetModel) {
+    return this.all.find((node) => node.asset === asset);
+  }
 
   dependencies = [this._query, this._all];
 

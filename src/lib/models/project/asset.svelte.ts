@@ -15,9 +15,10 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   id = $derived(this._doc.id);
   path = $derived(this._doc.path);
 
-  identifier = $derived(this._data?.identifier);
+  type = $derived(this._data!.type);
+  identifier = $derived(this._data!.identifier);
 
-  serialized = $derived(serialized(this, ['id', 'identifier']));
+  serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
 }
 
 export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {}

@@ -1,10 +1,10 @@
 import { Model, type Document } from '$lib/firebase/firestore.svelte';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { serialized } from '$lib/utils/object';
-import type { ProjectAssetModel } from './asset.svelte';
+import type { ProjectAssetModel } from '../asset.svelte';
 import type { WorkspaceNodesModelOptions } from './nodes.svelte';
 
-export type AssetByIdentifier = (identifier: string) => ProjectAssetModel | undefined;
+type AssetByIdentifier = (identifier: string) => ProjectAssetModel | undefined;
 
 export type WorkspaceNodeModelOptions = {
   nodes: WorkspaceNodesModelOptions;
@@ -18,6 +18,7 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
   path = $derived(this._doc.path);
 
   position = $derived(this._doc.data!.position);
+  pixel = $derived(this._doc.data!.pixel);
   assetIdentifier = $derived(this._doc.data!.asset);
 
   asset = $derived(this.options.asset(this.assetIdentifier));

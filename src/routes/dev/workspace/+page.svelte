@@ -2,8 +2,8 @@
   import Button from '$components/basic/button.svelte';
   import Segment from '$components/basic/segmented/segment.svelte';
   import Segmented from '$components/basic/segmented/segmented.svelte';
-  import { WorkspaceContext, BoxNodeModel, ToolType, BoxModel } from '$components/workspace/model.svelte';
-  import Workspace from '$components/workspace/workspace.svelte';
+  import { BoxModel, BoxNodeModel, ToolType, WorkspaceContext } from '$components/workspace/content/model.svelte';
+  import Workspace from '$components/workspace/content/workspace.svelte';
   import BoxNode from './box-node.svelte';
 
   let workspace = new WorkspaceContext();

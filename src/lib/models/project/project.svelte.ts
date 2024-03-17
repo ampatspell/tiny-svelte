@@ -4,8 +4,8 @@ import type { ProjectData } from '$lib/types/project';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
-import { WorkspacesModel } from './workspaces.svelte';
 import { ProjectAssetsModel } from './assets.svelte';
+import { WorkspacesModel } from './workspaces/workspaces.svelte';
 
 export type ProjectModelOptions = {
   id: string;

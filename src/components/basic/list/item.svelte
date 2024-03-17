@@ -5,13 +5,14 @@
   let {
     isSelected,
     route,
-    children
+    children,
+    onClick
   }: {
     children?: Snippet;
   } & ItemProps = $props();
 </script>
 
-<a class="item" href={route} class:selected={isSelected}>
+<a class="item" class:selected={isSelected} href={route} onclick={onClick}>
   {#if children}
     {@render children()}
   {/if}

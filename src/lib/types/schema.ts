@@ -15,3 +15,4 @@ export const PointSchema = z.object({
 export type Point = z.infer<typeof PointSchema>;
 
 export const IdentifierSchema = z.string().trim().min(1);
+export const PixelSchema = z.number().min(1).max(64);
