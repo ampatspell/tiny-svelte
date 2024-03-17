@@ -1,20 +1,22 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
   import Sidebar from '$components/workspace/sidebar/sidebar.svelte';
+  import Workspace from '$components/workspace/workspace/workspace.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
 
   let { data } = $props();
 
   let workspace = $derived(data.workspace);
   $effect(() => activate(workspace));
-
-  let project = $derived(data.workspace.project);
 </script>
 
 <Loadable model={workspace}>
   <div class="page">
     <div class="left">
-      <Sidebar {project} {workspace} />
+      <Sidebar {workspace} />
+    </div>
+    <div class="content">
+      <Workspace {workspace} />
     </div>
   </div>
 </Loadable>
@@ -30,6 +32,8 @@
     }
     > .content {
       flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     > .right {
       width: 250px;

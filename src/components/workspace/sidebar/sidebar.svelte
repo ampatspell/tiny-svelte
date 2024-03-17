@@ -1,18 +1,16 @@
 <script lang="ts">
-  import type { ProjectModel } from '$lib/models/project/project.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
   import Assets from './assets.svelte';
   import Nodes from './nodes.svelte';
   import Workspaces from './workspaces.svelte';
 
   let {
-    project,
     workspace
   }: {
-    project: ProjectModel;
     workspace: WorkspaceModel;
   } = $props();
 
+  let project = $derived(workspace.project);
   let workspaces = $derived(project.workspaces);
 </script>
 
