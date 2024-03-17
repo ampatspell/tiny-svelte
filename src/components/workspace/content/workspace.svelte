@@ -6,7 +6,6 @@
   import { setWorkspaceContext, WorkspaceContext, ToolType } from './model.svelte';
   import { space } from '$lib/utils/use-space.svelte';
   import type { OptionalVoidCallback } from '$lib/types/types';
-  import type { Point } from '$lib/types/schema';
 
   let {
     class: _class,
