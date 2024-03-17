@@ -1,9 +1,7 @@
 <script lang="ts">
-  import Json from '$components/basic/json.svelte';
   import Loadable from '$components/basic/loadable.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
   import type { WorkspaceModel } from '$lib/models/project.svelte';
-  import { setGlobal } from '$lib/utils/set-global';
 
   let { data }: { data: { workspace: WorkspaceModel } } = $props();
 
