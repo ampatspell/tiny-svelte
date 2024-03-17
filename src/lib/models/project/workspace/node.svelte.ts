@@ -1,4 +1,6 @@
+import type { ResizeEvent } from '$components/workspace/content/model.svelte';
 import { Model, type Document } from '$lib/firebase/firestore.svelte';
+import type { Point } from '$lib/types/schema';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { serialized } from '$lib/utils/object';
 import type { ProjectAssetModel } from '../asset.svelte';
@@ -19,9 +21,19 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
 
   position = $derived(this._doc.data!.position);
   pixel = $derived(this._doc.data!.pixel);
-  assetIdentifier = $derived(this._doc.data!.asset);
+  identifier = $derived(this._doc.data!.asset);
 
-  asset = $derived(this.options.asset(this.assetIdentifier));
+  asset = $derived(this.options.asset(this.identifier));
 
-  serialized = $derived(serialized(this, ['id', 'assetIdentifier', 'asset']));
+  size = { width: 8, height: 8 };
+  step = 1;
+
+  onPosition(position: Point) {
+    console.log('onPosition', position);
+  }
+  onResize(event: ResizeEvent) {
+    console.log('onResize', event);
+  }
+
+  serialized = $derived(serialized(this, ['id', 'identifier', 'asset']));
 }

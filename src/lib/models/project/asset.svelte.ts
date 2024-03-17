@@ -21,4 +21,9 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
 }
 
-export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {}
+export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
+  size = $derived(this._data!.size);
+  color = $derived(this._data!.color);
+
+  serialized = $derived(serialized(this, ['id', 'identifier', 'type', 'size', 'color']));
+}

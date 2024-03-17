@@ -23,7 +23,7 @@
   let position = $derived(context.position);
   let pixel = $derived(context.pixel);
   let onResize = $derived(context.onResize);
-  let onPosition = (position: Point) => (context.position = position);
+  let onPosition = $derived(context.onPosition);
   let onClick = () => context.select(undefined);
 
   let cancelDrag: OptionalVoidCallback;

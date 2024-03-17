@@ -1,32 +1,33 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { getWorkspaceContext, ToolType, WorkspaceNodeModel } from './model.svelte';
+  import { getWorkspaceContext, ToolType } from './model.svelte';
   import { addPoints, multiplyPoint } from '$lib/utils/math';
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import Resizable from './resizable.svelte';
+  import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
 
   let {
-    model,
+    node,
     children
   }: {
-    model: WorkspaceNodeModel;
+    node: WorkspaceNodeModel;
     children: Snippet;
   } = $props();
 
   let workspace = getWorkspaceContext();
   let workspacePixel = $derived(workspace.pixel);
 
-  let nodePixel = $derived(model.pixel);
-  let name = $derived(model.name);
-  let description = $derived(model.description);
-  let position = $derived(model.position);
-  let onResize = $derived(model.onResize);
-  let onPosition = $derived(model.onPosition);
-  let size = $derived(model.size);
-  let step = $derived(model.step);
+  let nodePixel = $derived(node.pixel);
+  let identifier = $derived(node.identifier);
+  let description = $derived(node.description);
+  let position = $derived(node.position);
+  let onResize = $derived(node.onResize);
+  let onPosition = $derived(node.onPosition);
+  let size = $derived(node.size);
+  let step = $derived(node.step);
 
   let isSelectedAndHasTools = (types: ToolType[]) => {
-    return workspace.selected === model && types.includes(workspace.tool.type);
+    return workspace.selected === node && types.includes(workspace.tool.type);
   };
 
   let isResizable = $derived(isSelectedAndHasTools([ToolType.Resize]));
@@ -34,15 +35,15 @@
 
   let onShouldStart = () => {
     if ([ToolType.Idle, ToolType.Resize].includes(workspace.tool.type)) {
-      workspace.select(model);
+      workspace.select(node);
     }
     return isDraggable;
   };
 
-  let onDragStart = () => (workspace.dragging = model);
+  let onDragStart = () => (workspace.dragging = node);
   let onDragEnd = () => (workspace.dragging = undefined);
 
-  let onResizeStart = () => (workspace.resizing = model);
+  let onResizeStart = () => (workspace.resizing = node);
   let onResizeEnd = () => (workspace.resizing = undefined);
 
   let translate = $derived.by(() => {
@@ -66,7 +67,7 @@
   }}
 >
   <div class="header">
-    <div class="name">{name}</div>
+    <div class="name">{identifier}</div>
     {#if description}
       <div class="description">{description}</div>
     {/if}

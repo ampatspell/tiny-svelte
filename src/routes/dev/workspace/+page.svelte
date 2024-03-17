@@ -1,4 +1,4 @@
-<script lang="ts">
+<!-- <script lang="ts">
   import Button from '$components/basic/button.svelte';
   import Segment from '$components/basic/segmented/segment.svelte';
   import Segmented from '$components/basic/segmented/segmented.svelte';
@@ -103,4 +103,4 @@
       gap: 1px;
     }
   }
-</style>
+</style> -->
