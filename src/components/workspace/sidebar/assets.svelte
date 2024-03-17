@@ -15,7 +15,9 @@
           {asset.asset.identifier}
         </div>
         {#if asset.node}
-          <div class="row">{asset.asset.size?.width}x{asset.asset.size?.height}, [{asset.node.position.x},{asset.node.position.y}] @ {asset.node.pixel}px</div>
+          <div class="row">
+            {asset.asset.size?.width}x{asset.asset.size?.height}, [{asset.node.position.x},{asset.node.position.y}] @ {asset.node.pixel}px
+          </div>
         {/if}
       </div>
     </Item>
