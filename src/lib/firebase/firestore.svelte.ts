@@ -457,6 +457,7 @@ export class QueryAll<T extends DocumentData> extends BaseQuery<QueryAllOptions>
     };
 
     const current = this.content;
+
     querySnapshot.docChanges().forEach(({ type, oldIndex, newIndex, doc: snapshot }) => {
       if (type === 'added') {
         const doc = findOrCreate(snapshot);
