@@ -8,7 +8,8 @@ import {
   SnapshotMetadata,
   DocumentReference,
   DocumentSnapshot,
-  QueryDocumentSnapshot
+  QueryDocumentSnapshot,
+  setDoc
 } from '@firebase/firestore';
 import { untrack } from 'svelte';
 import { description, serialized } from '$lib/utils/object';
@@ -262,6 +263,45 @@ export abstract class Base<O extends BaseSubscribableOptions> extends BaseSubscr
   dependencies = [];
 }
 
+type DebounceOptions = {
+  delay: number;
+  commit: () => Promise<void>;
+};
+
+class Debounce {
+  options: DebounceOptions;
+  private id?: number;
+
+  constructor(options: DebounceOptions) {
+    this.options = options;
+  }
+
+  cancel() {
+    const id = this.id;
+    if (id !== undefined) {
+      this.id = undefined;
+      window.clearTimeout(id);
+      return true;
+    }
+    return false;
+  }
+
+  private async commit() {
+    await this.options.commit();
+  }
+
+  schedule() {
+    this.cancel();
+    this.id = window.setTimeout(() => this.commit(), this.options.delay);
+  }
+
+  force() {
+    if (this.cancel()) {
+      this.commit();
+    }
+  }
+}
+
 export type DocumentOptions = {
   ref: DocumentReference | undefined;
 } & BaseSubscribableOptions;
@@ -290,12 +330,17 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
     const ref = this.ref;
     this.onWillSubscribe(!!ref);
     if (ref) {
-      return onSnapshot(
+      const cancel = onSnapshot(
         ref,
         { includeMetadataChanges: true },
         (snapshot) => this.onSnapshot(snapshot),
         (error) => this.onError(error)
       );
+      return () => {
+        // TODO: this.debounce.force() needs last ref
+        this.debounce.cancel();
+        cancel();
+      };
     }
   }
 
@@ -306,6 +351,24 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
       this.data = snapshot.data({ serverTimestamps: 'estimate' }) as T;
     }
     this.onDidLoad(snapshot.metadata);
+  }
+
+  async save(): Promise<void> {
+    const ref = this.ref;
+    if (ref) {
+      // TODO: isSaving & error checking
+      await setDoc(ref, this.data, { merge: true });
+    }
+  }
+
+  debounce = new Debounce({
+    delay: 300,
+    commit: () => this.save()
+  });
+
+  scheduleSave() {
+    // TODO: do a queue
+    this.debounce.schedule();
   }
 
   serialized = $derived.by(() => serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error']));

@@ -2,6 +2,7 @@ import type { ResizeEvent } from '$components/workspace/content/model.svelte';
 import { Model, type Document } from '$lib/firebase/firestore.svelte';
 import type { Point } from '$lib/types/schema';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
+import { action } from '$lib/utils/action';
 import { serialized } from '$lib/utils/object';
 import type { ProjectAssetModel } from '../asset.svelte';
 import type { WorkspaceNodesModelOptions } from './nodes.svelte';
@@ -16,23 +17,37 @@ export type WorkspaceNodeModelOptions = {
 
 export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
   _doc = $derived(this.options.doc);
+  _data = $derived(this._doc.data!);
+
   id = $derived(this._doc.id);
   path = $derived(this._doc.path);
 
-  position = $derived(this._doc.data!.position);
-  pixel = $derived(this._doc.data!.pixel);
-  identifier = $derived(this._doc.data!.asset);
+  position = $derived(this._data.position);
+  pixel = $derived(this._data.pixel);
+  identifier = $derived(this._data.asset);
 
   asset = $derived(this.options.asset(this.identifier));
 
-  size = { width: 8, height: 8 };
-  step = 1;
+  // TODO: this can be removed from here. use node.asset
+  isResizable = $derived(this.asset?.isResizable ?? false);
+  size = $derived(this.asset?.size);
+  step = $derived(this.asset?.step);
 
+  @action
   onPosition(position: Point) {
-    console.log('onPosition', position);
+    this._data.position = position;
+    this._doc.scheduleSave();
   }
+
+  @action
   onResize(event: ResizeEvent) {
-    console.log('onResize', event);
+    this._data.position = event.position;
+    this._doc.scheduleSave();
+
+    const asset = this.asset;
+    if (asset && asset.isResizable) {
+      asset.onResize(event);
+    }
   }
 
   serialized = $derived(serialized(this, ['id', 'identifier', 'asset']));

@@ -23,14 +23,14 @@
   let position = $derived(node.position);
   let onResize = $derived(node.onResize);
   let onPosition = $derived(node.onPosition);
-  let size = $derived(node.size);
-  let step = $derived(node.step);
+  let size = $derived(node.size ?? { width: 0, height: 0 });
+  let step = $derived(node.step ?? 1);
 
   let isSelectedAndHasTools = (types: ToolType[]) => {
     return workspace.selected === node && types.includes(workspace.tool.type);
   };
 
-  let isResizable = $derived(isSelectedAndHasTools([ToolType.Resize]));
+  let isResizable = $derived(isSelectedAndHasTools([ToolType.Resize]) && node.isResizable);
   let isDraggable = $derived(isSelectedAndHasTools([ToolType.Idle, ToolType.Resize]));
 
   let onShouldStart = () => {
