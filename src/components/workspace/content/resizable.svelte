@@ -42,7 +42,7 @@
 
 <style lang="scss">
   .resizable {
-    border: 1px solid lighten(#ef476f, 10%);
+    border: 1px solid #e63946;
     transition: 0.15s ease-in-out border-color;
     position: relative;
     :global(> .pins) {

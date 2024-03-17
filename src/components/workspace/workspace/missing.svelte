@@ -1,23 +1,33 @@
 <script lang="ts">
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
+  import { getWorkspaceContext } from '../content/model.svelte';
 
-  let {}: { node: WorkspaceNodeModel } = $props();
+  let { node }: { node: WorkspaceNodeModel } = $props();
+  let workspace = getWorkspaceContext();
+
+  let size = $derived(workspace.pixel * 5);
 </script>
 
-<div class="missing">
-  <div class="message">Asset missing</div>
+<div class="missing" style:--size="{size * 3}px">
+  <div class="message">Asset "{node.identifier}" is missing</div>
 </div>
 
 <style lang="scss">
   .missing {
-    background: fade-out(red, 0.5);
+    background: #e63946;
     color: #fff;
-    font-weight: 600;
-    width: 120px;
-    height: 120px;
+    width: var(--size);
+    height: var(--size);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 10px;
+    > .message {
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 </style>
