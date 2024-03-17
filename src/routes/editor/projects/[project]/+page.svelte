@@ -12,7 +12,7 @@
 <div class="page">
   <div class="header">{project.identifier} workspaces</div>
   <Loadable model={project}>
-    {#each project.workspaces.query.content as workspace}
+    {#each project.workspaces._query.content as workspace}
       <a class="workspace" href="/editor/projects/{project.id}/{workspace.id}">
         {workspace.data?.identifier}
       </a>

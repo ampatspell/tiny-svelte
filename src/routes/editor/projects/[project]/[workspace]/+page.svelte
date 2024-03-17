@@ -3,6 +3,7 @@
   import Loadable from '$components/basic/loadable.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
   import type { WorkspaceModel } from '$lib/models/project.svelte';
+  import { setGlobal } from '$lib/utils/set-global';
 
   let { data }: { data: { workspace: WorkspaceModel } } = $props();
 
@@ -18,12 +19,19 @@
     <!-- <div class="left"></div> -->
 
     <div class="content">
-      {#each workspace.nodes.query.content as node}
+      {#each workspace.nodes._query.content as node}
         <div class="row">{node}</div>
       {/each}
     </div>
+
+    <!-- <div class="content">
+      {#each project.assets.all as node}
+        <div class="row">{node}</div>
+      {/each}
+    </div> -->
+
     <div class="content">
-      {#each workspace.nodes.all.content as node}
+      {#each workspace.nodes.all as node}
         <div class="row">{node}</div>
       {/each}
     </div>

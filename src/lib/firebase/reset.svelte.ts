@@ -27,15 +27,16 @@ const createWorkspace = async (workspacesRef: CollectionReference, identifier: s
     identifier
   });
 
-  await Promise.all(
-    boxes.map(async (box) => {
+  await Promise.all([
+    ...boxes.map(async (box) => {
       const nodeRef = doc(workspaceNodesRef);
       await setDoc(nodeRef, {
         asset: box.identifier,
         position: box.position
       });
-    })
-  );
+    }),
+    await setDoc(doc(workspaceNodesRef), { asset: 'missing', position: { x: 50, y: 30 } })
+  ]);
 };
 
 const createAssets = async (assetsRef: CollectionReference, boxes: Box[]) => {

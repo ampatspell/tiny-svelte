@@ -8,7 +8,7 @@
   let context = new WorkspaceContext();
 </script>
 
-{#each workspace.nodes.query.content as node (node)}
+{#each workspace.nodes._query.content as node (node)}
   <div class="row">{node}</div>
 {/each}
 

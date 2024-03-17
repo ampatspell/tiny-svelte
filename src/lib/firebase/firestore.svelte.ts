@@ -415,32 +415,36 @@ export class QueryAll<T extends DocumentData> extends BaseQuery<QueryAllOptions>
   serialized = $derived.by(() => serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error']));
 }
 
-export type ModelsOptions<I, O> = {
+export type ModelsOptions<I extends object, O extends object> = {
   source: I[];
-  model: (doc: I) => O;
-};
+  model: (doc: I) => O | undefined;
+} & BaseSubscribableOptions;
 
-export class Models<I, O> extends Model<ModelsOptions<I, O>> {
+export class Models<I extends object, O extends object> extends BaseSubscribable<ModelsOptions<I, O>> {
   private cache: Map<I, O> = new Map();
 
-  get source() {
+  private get source() {
     return this.options.source;
   }
 
-  model(source: I) {
+  private model(source: I) {
     return this.options.model(source);
   }
 
-  private create() {
+  private recreate() {
     const cache = this.cache;
     const next = new Map<I, O>();
 
     const findOrCreate = (source: I) => {
-      let target = cache.get(source);
-      if (!target) {
+      let target: O | undefined;
+      if (cache.has(source)) {
+        target = cache.get(source);
+      } else {
         target = this.model(source);
+        if (target) {
+          next.set(source, target);
+        }
       }
-      next.set(source, target);
       return target;
     };
 
@@ -449,5 +453,16 @@ export class Models<I, O> extends Model<ModelsOptions<I, O>> {
     return content;
   }
 
-  content = $derived.by(() => this.create());
+  content = $state<O[]>([]);
+
+  subscribe() {
+    return $effect.root(() => {
+      $effect(() => {
+        this.content = this.recreate();
+      });
+    });
+  }
+
+  subscribeDependencies = [];
+  dependencies = [];
 }

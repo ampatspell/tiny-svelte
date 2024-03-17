@@ -16,10 +16,13 @@ export type WorkspaceNodeModelOptions = {
 };
 
 export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
-  doc = $derived(this.options.doc);
-  id = $derived(this.doc.id);
-  position = $derived(this.doc.data!.position);
-  assetIdentifier = $derived(this.doc.data!.asset);
+  _doc = $derived(this.options.doc);
+  id = $derived(this._doc.id);
+  path = $derived(this._doc.path);
+
+  position = $derived(this._doc.data!.position);
+  assetIdentifier = $derived(this._doc.data!.asset);
+
   asset = $derived(this.options.asset(this.assetIdentifier));
 
   serialized = $derived(serialized(this, ['id', 'assetIdentifier', 'asset']));
@@ -31,31 +34,35 @@ export type WorkspaceNodesModelOptions = {
 
 export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOptions> {
   workspace = $derived(this.options.workspace);
-  ref = $derived(collection(this.workspace.ref, 'nodes'));
+  project = $derived(this.workspace.project);
+  assets = $derived(this.project.assets);
 
-  query = new QueryAll<WorkspaceNodeData>(
+  ref = $derived(collection(this.workspace.ref, 'nodes'));
+  path = $derived(this.ref.path);
+
+  _query = new QueryAll<WorkspaceNodeData>(
     options({
       ref: getter(() => this.ref)
     })
   );
 
-  assetByIdentifier(identifier: string) {
-    return this.workspace.project.assets.all.content.find((asset) => asset?.identifier === identifier);
-  }
-
-  all = new Models(
+  _all = new Models(
     options({
-      source: getter(() => this.query.content),
+      source: getter(() => this._query.content),
       model: (doc: Document<WorkspaceNodeData>) =>
         new WorkspaceNodeModel({
           nodes: this,
           doc,
-          asset: (identifier) => this.assetByIdentifier(identifier)
+          asset: (identifier) => this.assets.assetByIdentifier(identifier)
         })
     })
   );
 
-  dependencies = [this.query];
+  all = $derived(this._all.content);
+
+  dependencies = [this._query, this._all];
+
+  serialized = $derived(serialized(this, ['path']));
 }
 
 export type WorkspaceModelOptions = {
@@ -65,8 +72,10 @@ export type WorkspaceModelOptions = {
 
 export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
   project = $derived(this.options.project);
+
   id = $derived(this.options.id);
   ref = $derived(doc(collection(this.project.ref, 'workspaces'), this.id));
+  path = $derived(this.ref.path);
 
   nodes = new WorkspaceNodesModel({
     workspace: this
@@ -82,17 +91,19 @@ export type WorkspacesModelOptions = {
 };
 
 export class WorkspacesModel extends ActivatableModel<WorkspacesModelOptions> {
-  ref = $derived(collection(this.options.project.ref, 'workspaces'));
+  project = $derived(this.options.project);
+  ref = $derived(collection(this.project.ref, 'workspaces'));
   path = $derived(this.ref.path);
 
-  query = new QueryAll<WorkspaceData>(
+  _query = new QueryAll<WorkspaceData>(
     options({
       ref: getter(() => this.ref)
     })
   );
 
   serialized = $derived(serialized(this, ['path']));
-  dependencies = [this.query];
+
+  dependencies = [this._query];
 }
 
 //
@@ -103,9 +114,13 @@ export type ProjectAssetModelOptions<D extends DocumentData> = {
 };
 
 export class ProjectAssetModel<D extends DocumentData = DocumentData> extends Model<ProjectAssetModelOptions<D>> {
-  doc = $derived(this.options.doc);
-  id = $derived(this.doc.id);
-  identifier = $derived(this.doc.data?.identifier);
+  _doc = $derived(this.options.doc);
+  _data = $derived(this._doc.data);
+
+  id = $derived(this._doc.id);
+  path = $derived(this._doc.path);
+
+  identifier = $derived(this._data?.identifier);
 
   serialized = $derived(serialized(this, ['id', 'identifier']));
 }
@@ -120,34 +135,41 @@ export type ProjectAssetsModelOptions = {
 
 export class ProjectAssetsModel extends ActivatableModel<ProjectAssetsModelOptions> {
   project = $derived(this.options.project);
+
   ref = $derived(collection(this.project.ref, 'assets'));
+  id = $derived(this.ref.id);
   path = $derived(this.ref.path);
 
-  query = new QueryAll<AssetData>(
+  _query = new QueryAll<AssetData>(
     options({
       ref: getter(() => this.ref)
     })
   );
 
-  all = new Models(
+  _all = new Models<Document<AssetData>, ProjectAssetModel<AssetData>>(
     options({
-      source: getter(() => this.query.content),
+      source: getter(() => this._query.content),
       model: (doc: Document<AssetData>) => {
         const type = doc.data?.type;
-        if (!type) {
-          return;
+        if (type) {
+          if (type === 'box') {
+            return new ProjectBoxAssetModel({ assets: this, doc });
+          }
+          throw new Error(`unsupported asset type '${type}'`);
         }
-        if (type === 'box') {
-          return new ProjectBoxAssetModel({ assets: this, doc });
-        }
-        throw new Error(`unsupported asset type '${type}'`);
       }
     })
   );
 
-  dependencies = [this.query];
+  all = $derived(this._all.content);
 
-  serialized = $derived(serialized(this, ['path']));
+  assetByIdentifier(identifier: string) {
+    return this.all.find((asset) => asset?.identifier === identifier);
+  }
+
+  dependencies = [this._query, this._all];
+
+  serialized = $derived(serialized(this, ['id']));
 }
 
 export type ProjectModelOptions = {
@@ -157,14 +179,15 @@ export type ProjectModelOptions = {
 export class ProjectModel extends ActivatableModel<ProjectModelOptions> {
   id = $derived(this.options.id);
   ref = $derived(doc(collection(firebase.firestore, 'projects'), this.id));
+  path = $derived(this.ref.path);
 
-  doc = new Document<ProjectData>(
+  _doc = new Document<ProjectData>(
     options({
       ref: getter(() => this.ref)
     })
   );
 
-  identifier = $derived(this.doc.data?.identifier);
+  identifier = $derived(this._doc.data?.identifier);
 
   workspaces = new WorkspacesModel({
     project: this
@@ -176,5 +199,5 @@ export class ProjectModel extends ActivatableModel<ProjectModelOptions> {
 
   serialized = $derived(serialized(this, ['id', 'identifier']));
 
-  dependencies = [this.doc, this.workspaces, this.assets];
+  dependencies = [this._doc, this.workspaces, this.assets];
 }

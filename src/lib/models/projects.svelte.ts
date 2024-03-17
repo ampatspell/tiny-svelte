@@ -22,15 +22,15 @@ export class ProjectsModel extends ActivatableModel<EmptyObject> {
   collection = $derived(collection(firebase.firestore, 'projects'));
   direction = $state<'asc' | 'desc'>('asc');
 
-  query = new QueryAll<ProjectData>(
+  _query = new QueryAll<ProjectData>(
     options({
       ref: getter(() => query(this.collection, orderBy('identifier', this.direction)))
     })
   );
 
-  all = new Models(
+  _all = new Models(
     options({
-      source: getter(() => this.query.content),
+      source: getter(() => this._query.content),
       model: (doc: Document<ProjectData>) =>
         new ProjectModel({
           projects: this,
@@ -39,9 +39,11 @@ export class ProjectsModel extends ActivatableModel<EmptyObject> {
     })
   );
 
+  all = $derived(this._all.content);
+
   toggle() {
     this.direction = this.direction === 'asc' ? 'desc' : 'asc';
   }
 
-  dependencies = [this.query];
+  dependencies = [this._query, this._all];
 }

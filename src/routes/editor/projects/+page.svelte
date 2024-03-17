@@ -10,7 +10,7 @@
 <div class="page">
   <div class="header">All projects</div>
   <Loadable model={projects}>
-    {#each projects.all.content as project}
+    {#each projects.all as project}
       <a class="project" href="/editor/projects/{project.id}">
         {project.identifier}
       </a>
