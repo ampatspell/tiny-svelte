@@ -1,4 +1,4 @@
-import { WorkspaceModel } from '$lib/models/project.svelte';
+import { WorkspaceModel } from '$lib/models/project/workspace.svelte';
 import type { LayoutLoad } from './$types';
 
 export const load: LayoutLoad = async (event) => {

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { WorkspaceContext } from '$components/workspace/model.svelte';
   import Workspace from '$components/workspace/workspace.svelte';
-  import type { WorkspaceModel } from '$lib/models/project.svelte';
+  import type { WorkspaceModel } from '$lib/models/project/workspace.svelte';
 
   let { workspace }: { workspace: WorkspaceModel } = $props();
 

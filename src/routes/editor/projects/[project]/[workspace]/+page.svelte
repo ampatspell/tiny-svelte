@@ -1,9 +1,8 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
-  import type { WorkspaceModel } from '$lib/models/project.svelte';
 
-  let { data }: { data: { workspace: WorkspaceModel } } = $props();
+  let { data } = $props();
 
   let workspace = $derived(data.workspace);
   $effect(() => activate(workspace));

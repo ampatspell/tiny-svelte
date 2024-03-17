@@ -1,7 +1,7 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
   import { activate } from '$lib/firebase/firestore.svelte.js';
-  import type { ProjectModel } from '$lib/models/project.svelte';
+  import type { ProjectModel } from '$lib/models/project/project.svelte';
 
   let { data }: { data: { project: ProjectModel } } = $props();
   let project = $derived(data.project);

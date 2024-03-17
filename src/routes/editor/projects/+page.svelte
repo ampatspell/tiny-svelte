@@ -1,10 +1,11 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
-  import { ProjectsModel } from '$lib/models/projects.svelte';
 
-  let projects = new ProjectsModel({});
-  activate(projects);
+  let { data } = $props();
+  let projects = $derived(data.projects);
+
+  $effect(() => activate(projects));
 </script>
 
 <div class="page">
