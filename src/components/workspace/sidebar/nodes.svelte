@@ -17,7 +17,7 @@
             {node.asset.identifier}
           </div>
         {:else}
-          <div class="row">Missing</div>
+          <div class="row">"{node.identifier}" missing</div>
         {/if}
         {#if node}
           <div class="row">{node.position.x},{node.position.y} @ {node.pixel}px</div>
