@@ -348,7 +348,8 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
     this.exists = snapshot.exists();
     if (this.exists) {
       // TODO: diff deep-equal
-      this.data = snapshot.data({ serverTimestamps: 'estimate' }) as T;
+      const next = snapshot.data({ serverTimestamps: 'estimate' }) as T;
+      this.data = next;
     }
     this.onDidLoad(snapshot.metadata);
   }

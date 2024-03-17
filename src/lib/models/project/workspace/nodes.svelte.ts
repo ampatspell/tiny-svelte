@@ -40,10 +40,6 @@ export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOpt
 
   all = $derived(this._all.content);
 
-  orphans = $derived.by(() => {
-    return this.all.filter((node) => !node.asset);
-  });
-
   nodeForAsset(asset: ProjectAssetModel) {
     return this.all.find((node) => node.asset === asset);
   }
