@@ -17,16 +17,10 @@
     <!-- <div class="left"></div> -->
 
     <div class="content">
-      {#each workspace.nodes._query.content as node}
-        <div class="row">{node}</div>
+      {#each project.assets.all as asset}
+        <div class="row">{asset}</div>
       {/each}
     </div>
-
-    <!-- <div class="content">
-      {#each project.assets.all as node}
-        <div class="row">{node}</div>
-      {/each}
-    </div> -->
 
     <div class="content">
       {#each workspace.nodes.all as node}
