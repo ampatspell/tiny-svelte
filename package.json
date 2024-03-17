@@ -37,10 +37,10 @@
     "firebase": "^10.8.1",
     "@firebase/firestore": "^4.4.3",
     "@firebase/auth": "^1.6.1",
-    "color": "^4.2.3",
     "@types/color": "^3.0.6"
   },
   "dependencies": {
+    "color": "^4.2.3",
     "zod": "^3.22.4"
   },
   "type": "module"
