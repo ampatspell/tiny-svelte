@@ -19,6 +19,6 @@
     width: var(--width);
     height: var(--height);
     background: var(--color);
-    opacity: 0.1;
+    opacity: 1;
   }
 </style>

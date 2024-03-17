@@ -23,6 +23,7 @@ export type WorkspaceContextOptions = {
   workspace: WorkspaceModel;
 };
 
+// TODO: replace with WorkspaceModel
 export class WorkspaceContext {
   options: WorkspaceContextOptions;
 
