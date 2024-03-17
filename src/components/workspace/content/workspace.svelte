@@ -70,5 +70,6 @@
     background: fade-out(#000, 0.97);
     position: relative;
     overflow: hidden;
+    user-select: none;
   }
 </style>

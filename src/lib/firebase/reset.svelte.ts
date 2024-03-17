@@ -2,7 +2,6 @@ import { CollectionReference, DocumentReference, collection, deleteDoc, doc, get
 import { firebase } from './firebase.svelte';
 import type { Point, Size } from '$lib/types/schema';
 import Color from 'color';
-import { setGlobal } from '$lib/utils/set-global';
 
 type Box = {
   identifier: string;
@@ -71,7 +70,7 @@ const createProject = async (projectRef: DocumentReference) => {
 
   const boxes = [
     { identifier: 'red', position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: color('#ffafcc') },
-    { identifier: 'green', position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: color('#a2d2ff') }
+    { identifier: 'blue', position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: color('#a2d2ff') }
   ];
 
   await Promise.all([
