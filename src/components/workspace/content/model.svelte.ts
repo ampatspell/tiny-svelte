@@ -32,7 +32,7 @@ export class WorkspaceContext {
   }
 
   position = $state<Point>({ x: 0, y: 0 }); // derive from options.workspace
-  pixel = $state<number>(8); // derive from options.workspace
+  pixel = $state<number>(2); // derive from options.workspace
 
   isBound = $state(false);
   size = $state<Size>({ width: 0, height: 0 });

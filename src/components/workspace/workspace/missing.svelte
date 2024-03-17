@@ -16,13 +16,14 @@
   .missing {
     background: #e63946;
     color: #fff;
+    min-width: 200px;
     width: var(--size);
     height: var(--size);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 10px;
+    padding: 0 10px;
     > .message {
       max-width: 100%;
       white-space: nowrap;

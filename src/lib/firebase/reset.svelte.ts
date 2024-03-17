@@ -69,8 +69,8 @@ const createProject = async (projectRef: DocumentReference) => {
   const color = (name: string) => new Color(name).lighten(0.1).rgb().string();
 
   const boxes = [
-    { identifier: 'red', position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: color('#ffafcc') },
-    { identifier: 'blue', position: { x: 10, y: 10 }, size: { width: 8, height: 8 }, color: color('#a2d2ff') }
+    { identifier: 'red', position: { x: 3, y: 5 }, size: { width: 8, height: 8 }, color: color('#ffafcc') },
+    { identifier: 'blue', position: { x: 3, y: 45 }, size: { width: 8, height: 8 }, color: color('#a2d2ff') }
   ];
 
   await Promise.all([
