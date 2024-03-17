@@ -28,12 +28,13 @@ export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOpt
   _all = new Models(
     options({
       source: getter(() => this._query.content),
-      model: (doc: Document<WorkspaceNodeData>) =>
-        new WorkspaceNodeModel({
+      model: (doc: Document<WorkspaceNodeData>) => {
+        return new WorkspaceNodeModel({
           nodes: this,
           doc,
           asset: (identifier) => this.assets.assetByIdentifier(identifier)
-        })
+        });
+      }
     })
   );
 
