@@ -20,11 +20,13 @@
   let nodePixel = $derived(node.pixel);
   let identifier = $derived(node.identifier);
   let description = $derived(node.description);
+
   let position = $derived(node.position);
-  let onResize = $derived(node.onResize);
   let onPosition = $derived(node.onPosition);
+
   let size = $derived(node.size ?? { width: 0, height: 0 });
   let resizeStep = $derived(node.resizeStep ?? 1);
+  let onResize = $derived(node.onResize);
 
   let isSelectedAndHasTools = (types: ToolType[]) => {
     return workspace.selected === node && types.includes(workspace.tool.type);

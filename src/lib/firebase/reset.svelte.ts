@@ -70,7 +70,7 @@ const createProject = async (projectRef: DocumentReference) => {
 
   const boxes = [
     { identifier: 'red', position: { x: 3, y: 3 }, size: { width: 8, height: 8 }, color: color('#ffafcc') },
-    { identifier: 'blue', position: { x: 30, y: 10 }, size: { width: 8, height: 8 }, color: color('#a2d2ff') }
+    { identifier: 'blue', position: { x: 10, y: 10 }, size: { width: 8, height: 8 }, color: color('#a2d2ff') },
   ];
 
   await Promise.all([
