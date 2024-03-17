@@ -22,7 +22,7 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
 
   abstract isResizable: boolean;
   abstract size?: Size;
-  abstract step: number;
+  abstract resizeStep: number;
   abstract onResize(event: ResizeEvent): void;
 
   serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
@@ -33,7 +33,7 @@ export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
   color = $derived(this._data.color);
 
   isResizable = true;
-  step = 1;
+  resizeStep = 1;
 
   onResize(event: ResizeEvent): void {
     this._data.size = event.size;

@@ -24,7 +24,7 @@
   let onResize = $derived(node.onResize);
   let onPosition = $derived(node.onPosition);
   let size = $derived(node.size ?? { width: 0, height: 0 });
-  let step = $derived(node.step ?? 1);
+  let resizeStep = $derived(node.resizeStep ?? 1);
 
   let isSelectedAndHasTools = (types: ToolType[]) => {
     return workspace.selected === node && types.includes(workspace.tool.type);
@@ -74,7 +74,7 @@
   </div>
   <Resizable
     pixel={workspacePixel * nodePixel}
-    {step}
+    step={resizeStep}
     {position}
     {size}
     {isResizable}
