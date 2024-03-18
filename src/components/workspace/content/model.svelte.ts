@@ -39,7 +39,7 @@ export class WorkspaceContext {
 
   tool = new Tool();
 
-  selected = $state<WorkspaceNodeModel>(); // wrap in existing
+  selected = $derived.by(() => this.options.workspace.selectedNode.node);
   dragging = $state<WorkspaceNodeModel>(); // wrap in existing
   resizing = $state<WorkspaceNodeModel>(); // wrap in existing
 
@@ -48,7 +48,7 @@ export class WorkspaceContext {
       return;
     }
     this.tool.set(ToolType.Idle);
-    this.selected = node;
+    this.options.workspace.selectNode(node);
   }
 
   @action

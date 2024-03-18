@@ -1,4 +1,4 @@
-import { ActivatableModel, Document, Models, QueryAll } from '$lib/firebase/firestore.svelte';
+import { ActivatableModel, Document, Model, Models, QueryAll } from '$lib/firebase/firestore.svelte';
 import { collection } from '@firebase/firestore';
 import type { WorkspaceModel } from './workspace.svelte';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
@@ -6,6 +6,36 @@ import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { WorkspaceNodeModel } from './node.svelte';
 import type { ProjectAssetModel } from '../asset.svelte';
+
+export type WorkspaceNodeSelectorOptions<I> = {
+  nodes: WorkspaceNodesModel;
+  value: I | undefined;
+  select: (model: WorkspaceNodeModel, value: I) => boolean;
+};
+
+export class WorkspaceNodeSelector<I> extends Model<WorkspaceNodeSelectorOptions<I>> {
+  value = $derived(this.options.value);
+
+  node = $derived.by(() => {
+    const value = this.value;
+    if (!value) {
+      return;
+    }
+    const {
+      options: { nodes, select }
+    } = this;
+    const node = nodes.all.find((node) => select(node, value));
+    if (!node) {
+      return;
+    }
+    if (!node.exists) {
+      return;
+    }
+    return node;
+  });
+
+  serialized = $derived(serialized(this, ['value', 'node']));
+}
 
 export type WorkspaceNodesModelOptions = {
   workspace: WorkspaceModel;

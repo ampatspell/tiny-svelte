@@ -21,6 +21,7 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
 
   id = $derived(this._doc.id);
   path = $derived(this._doc.path);
+  exists = $derived(this._doc.exists);
 
   position = $derived(this._data.position);
   pixel = $derived(this._data.pixel);

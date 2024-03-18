@@ -1,11 +1,11 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
+  import Details from '$components/workspace/details/details.svelte';
   import Sidebar from '$components/workspace/sidebar/sidebar.svelte';
   import Workspace from '$components/workspace/workspace/workspace.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
 
   let { data } = $props();
-
   let workspace = $derived(data.workspace);
   $effect(() => activate(workspace));
 </script>
@@ -17,6 +17,9 @@
     </div>
     <div class="section content">
       <Workspace {workspace} />
+    </div>
+    <div class="section right">
+      <Details {workspace} />
     </div>
   </div>
 </Loadable>

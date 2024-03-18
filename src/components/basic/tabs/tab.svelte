@@ -10,7 +10,7 @@
   }: {
     id: string;
     name: string;
-    children: Snippet;
+    children?: Snippet;
   } = $props();
 
   let context = getTabsContext();
@@ -28,6 +28,6 @@
   let isSelected = $derived(context.selected === tab);
 </script>
 
-{#if isSelected}
+{#if isSelected && children}
   {@render children()}
 {/if}
