@@ -42,14 +42,17 @@
     > .header {
       display: flex;
       flex-direction: row;
-      background: fade-out(#000, 0.98);
       border-bottom: 1px solid fade-out(#000, 0.95);
       user-select: none;
+      padding: 5px;
       > .tab {
-        padding: 8px 12px;
+        padding: 5px 10px;
         text-align: center;
+        color: fade-out(#000, 0.5);
+        border-radius: 3px;
         &.selected {
-          background: fade-out(#000, 0.95);
+          background: fade-out(#000, 0.96);
+          color: #000;
         }
       }
     }
