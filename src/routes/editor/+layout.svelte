@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createSidebarItems } from '$components/basic/sidebar/model';
-  import Sidebar from '$components/basic/sidebar/sidebar.svelte';
+  import { createVerticalMenuItems } from '$components/basic/vertical-menu/model';
+  import VerticalMenu from '$components/basic/vertical-menu/sidebar.svelte';
   import type { Snippet } from 'svelte';
   import Home from '$icons/mingcute-left-fill.svelte';
   import Editor from '$icons/mingcute-game-2-line.svelte';
@@ -10,7 +10,7 @@
 
   let { children }: { children: Snippet } = $props();
 
-  let top = createSidebarItems([
+  let top = createVerticalMenuItems([
     { icon: Home, route: '/' },
     { icon: Editor, route: '/editor' },
     { icon: Mushroom, route: '/editor/projects' }
@@ -21,11 +21,11 @@
     activated = !activated;
   };
 
-  let bottom = createSidebarItems([{ icon: CodeLine, onClick: onActivated }]);
+  let bottom = createVerticalMenuItems([{ icon: CodeLine, onClick: onActivated }]);
 </script>
 
 <div class="layout">
-  <Sidebar {top} {bottom} />
+  <VerticalMenu {top} {bottom} />
   <div class="content">
     {@render children()}
   </div>

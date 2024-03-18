@@ -43,6 +43,6 @@ export class Items {
   }
 }
 
-export const createSidebarItems = (items: ItemOptions[]) => {
+export const createVerticalMenuItems = (items: ItemOptions[]) => {
   return new Items(items.map((item) => new Item(item)));
 };

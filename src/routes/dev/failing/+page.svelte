@@ -1,12 +1,12 @@
 <script lang="ts">
-  import Button from "$components/basic/button.svelte";
+  import Button from '$components/basic/button.svelte';
   import { untrack } from 'svelte';
   import { browser } from '$app/environment';
 
   type ModelProps = {
     name: string;
     source: string;
-  }
+  };
 
   class Model {
     data = $state<ModelProps>();
@@ -22,18 +22,16 @@
     }
   }
 
-  let array = $state<Model[]>([
-    new Model({ name: 'zeeba', source: 'initial' })
-  ]);
+  let array = $state<Model[]>([new Model({ name: 'zeeba', source: 'initial' })]);
 
   let addModel = (source: string) => {
     array.push(new Model({ name: 'zeeba', source }));
-  }
+  };
 
   let needsInsert = $state(false);
 
   $effect(() => {
-    if(needsInsert) {
+    if (needsInsert) {
       addModel('effect');
       untrack(() => {
         needsInsert = false;
@@ -47,13 +45,13 @@
 
   let insertDirectly = () => {
     addModel('direct');
-  }
+  };
 
   let toggle = () => {
-    array.forEach(model => model.toggle());
-  }
+    array.forEach((model) => model.toggle());
+  };
 
-  if(browser) {
+  if (browser) {
     (window as any).array = array;
   }
 
@@ -62,9 +60,9 @@
 
 <div class="page">
   <div class="section">
-    <div class="row"><Button value="Add model in effect" onClick={insertWithEffect}/></div>
-    <div class="row"><Button value="Add model" onClick={insertDirectly}/></div>
-    <div class="row"><Button value="Toggle name" onClick={toggle}/></div>
+    <div class="row"><Button value="Add model in effect" onClick={insertWithEffect} /></div>
+    <div class="row"><Button value="Add model" onClick={insertDirectly} /></div>
+    <div class="row"><Button value="Toggle name" onClick={toggle} /></div>
   </div>
   <div class="section">
     {#each array as model}
