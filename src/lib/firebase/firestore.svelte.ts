@@ -183,7 +183,10 @@ export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extend
     this.cancel = $effect.root(() => {
       const cancel = _activators.registerSubscribed(this);
       $effect(() => {
-        return this.subscribe();
+        this.subscribeDependencies;
+        return untrack(() => {
+          return this.subscribe();
+        });
       });
       return () => cancel();
     });
@@ -197,13 +200,13 @@ export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extend
     }
   }
 
-  refresh() {
-    this.subscribeDependencies;
-    if (this.isActivatedUntracked) {
-      this._unsubscribe();
-      this._subscribe();
-    }
-  }
+  // refresh() {
+  //   this.subscribeDependencies;
+  //   if (this.isActivatedUntracked) {
+  //     this._unsubscribe();
+  //     this._subscribe();
+  //   }
+  // }
 
   activate() {
     this._subscribe();
@@ -518,12 +521,16 @@ export class Models<I extends object, O extends object> extends BaseSubscribable
     return content;
   }
 
+  // TODO: this could be just $derived as well
   content = $state<O[]>([]);
 
   subscribe() {
     return $effect.root(() => {
       $effect(() => {
-        this.content = this.recreate();
+        const content = this.recreate();
+        untrack(() => {
+          this.content = content;
+        });
       });
     });
   }
