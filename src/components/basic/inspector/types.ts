@@ -9,3 +9,8 @@ export type HasMutablePosition = {
   position: Point;
   onPosition: (position: Point) => void;
 };
+
+export type HasIdentifier = {
+  identifier: string;
+  onIdentifier: (identifier: string) => void;
+};

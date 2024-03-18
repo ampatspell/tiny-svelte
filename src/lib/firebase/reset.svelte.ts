@@ -25,7 +25,8 @@ const createWorkspace = async (workspacesRef: CollectionReference, identifier: s
   await clearCollection(workspaceNodesRef);
 
   await setDoc(workspaceRef, {
-    identifier
+    identifier,
+    pixel: 2
   });
 
   await Promise.all([

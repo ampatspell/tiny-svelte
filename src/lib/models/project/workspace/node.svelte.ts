@@ -29,6 +29,11 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
 
   asset = $derived(this.options.asset(this.identifier));
 
+  onIdentifier(identifier: string) {
+    this._data.asset = identifier;
+    this._doc.scheduleSave();
+  }
+
   onPixel(pixel: number) {
     this._data.pixel = pixel;
     this._doc.scheduleSave();

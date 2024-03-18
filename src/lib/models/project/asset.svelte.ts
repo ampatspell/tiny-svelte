@@ -26,6 +26,11 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   abstract onResize(event: ResizeEvent): void;
 
   serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
+
+  onIdentifier(identifier: string) {
+    this._data.identifier = identifier;
+    this._doc.scheduleSave();
+  }
 }
 
 export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {

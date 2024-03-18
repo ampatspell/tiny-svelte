@@ -1,6 +1,7 @@
 <script lang="ts">
   import Inspector from '$components/basic/inspector/inspector.svelte';
   import Item from '$components/basic/inspector/item.svelte';
+  import Identifier from '$components/basic/inspector/item/identifier.svelte';
   import Pixel from '$components/basic/inspector/item/pixel.svelte';
   import Position from '$components/basic/inspector/item/position.svelte';
   import Section from '$components/basic/inspector/section.svelte';
@@ -17,13 +18,8 @@
 
 <Inspector>
   <Section>
-    <Item title="Identifier">
-      {node.identifier}
-    </Item>
+    <Identifier model={node} />
     <Position model={node} />
-    <Item title="Position">
-      {node.position.x}, {node.position.y}
-    </Item>
     <Pixel model={node} />
     {#if asset}
       <Item title="Asset">

@@ -14,6 +14,7 @@ import {
 import { untrack } from 'svelte';
 import { description, serialized } from '$lib/utils/object';
 import type { OptionalVoidCallback, VoidCallback } from '$lib/types/types';
+import { browser } from '$app/environment';
 
 export type HasDescriptionAndSerialized = {
   description?: string;
@@ -297,13 +298,28 @@ class Debounce {
   }
 }
 
+const createToken = () => {
+  if (browser) {
+    return window.crypto.randomUUID().replaceAll('-', '');
+  }
+  return null;
+};
+
 export type DocumentOptions = {
   ref: DocumentReference | undefined;
 } & BaseSubscribableOptions;
 
+const TOKEN = '_token';
+
 export class Document<T extends DocumentData = DocumentData> extends Base<DocumentOptions> {
+  token: string | null;
   exists = $state<boolean>();
   data = $state<T>();
+
+  constructor(options: DocumentOptions) {
+    super(options);
+    this.token = createToken();
+  }
 
   get ref() {
     return this.options.ref;
@@ -344,7 +360,9 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
     if (this.exists) {
       // TODO: diff deep-equal
       const next = snapshot.data({ serverTimestamps: 'estimate' }) as T;
-      this.data = next;
+      if (next[TOKEN] !== this.token) {
+        this.data = next;
+      }
     }
     this.onDidLoad(snapshot.metadata);
   }
@@ -352,8 +370,9 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
   async save(): Promise<void> {
     const ref = this.ref;
     if (ref) {
+      const data = Object.assign({}, this.data, { [TOKEN]: this.token });
       // TODO: isSaving & error checking
-      await setDoc(ref, this.data, { merge: true });
+      await setDoc(ref, data, { merge: true });
     }
   }
 
