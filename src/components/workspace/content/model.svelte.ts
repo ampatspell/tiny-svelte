@@ -31,11 +31,11 @@ export class WorkspaceContext {
     this.options = options;
   }
 
-  position = $state<Point>({ x: 0, y: 0 }); // derive from options.workspace
-  pixel = $state<number>(2); // derive from options.workspace
-
   isBound = $state(false);
   size = $state<Size>({ width: 0, height: 0 });
+
+  position = $state<Point>({ x: 0, y: 0 });
+  pixel = $derived.by(() => this.options.workspace.pixel);
 
   tool = new Tool();
 

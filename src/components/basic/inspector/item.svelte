@@ -5,13 +5,15 @@
     title,
     children
   }: {
-    title: string;
+    title?: string;
     children: Snippet;
   } = $props();
 </script>
 
 <div class="item">
-  <div class="title">{title}</div>
+  {#if title}
+    <div class="title">{title}</div>
+  {/if}
   <div class="content">
     {@render children()}
   </div>

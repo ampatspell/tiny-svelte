@@ -28,6 +28,12 @@ export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
 
   _data = $derived(this._doc.data!);
   identifier = $derived(this._data.identifier);
+  pixel = $derived(this._data.pixel);
+
+  onPixel(pixel: number) {
+    this._data.pixel = pixel;
+    this._doc.scheduleSave();
+  }
 
   nodes = new WorkspaceNodesModel({ workspace: this });
   assets = new WorkspaceAssetsModel(options({ workspace: this, assets: getter(() => this.project.assets) }));

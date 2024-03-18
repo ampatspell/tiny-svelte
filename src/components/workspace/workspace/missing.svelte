@@ -17,6 +17,7 @@
     background: #e63946;
     color: #fff;
     min-width: 200px;
+    min-height: 30px;
     width: var(--size);
     height: var(--size);
     display: flex;

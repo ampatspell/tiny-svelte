@@ -1,6 +1,6 @@
 <script lang="ts">
   import Inspector from '$components/basic/inspector/inspector.svelte';
-  import Item from '$components/basic/inspector/item.svelte';
+  import Pixel from '$components/basic/inspector/item/pixel.svelte';
   import Section from '$components/basic/inspector/section.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
 
@@ -13,8 +13,6 @@
 
 <Inspector>
   <Section>
-    <Item title="Identifier">
-      {workspace.identifier}
-    </Item>
+    <Pixel omitTitle={true} model={workspace} />
   </Section>
 </Inspector>

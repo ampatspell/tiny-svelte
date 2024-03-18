@@ -1,6 +1,7 @@
 <script lang="ts">
   import Inspector from '$components/basic/inspector/inspector.svelte';
   import Item from '$components/basic/inspector/item.svelte';
+  import Pixel from '$components/basic/inspector/item/pixel.svelte';
   import Section from '$components/basic/inspector/section.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
 
@@ -21,9 +22,7 @@
     <Item title="Position">
       {node.position.x}, {node.position.y}
     </Item>
-    <Item title="Pixel">
-      {node.pixel}
-    </Item>
+    <Pixel model={node} />
     {#if asset}
       <Item title="Asset">
         {asset}

@@ -3,6 +3,7 @@
   import Tab from '$components/basic/tabs/tab.svelte';
   import Tabs from '$components/basic/tabs/tabs.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
+  import Footer from './footer.svelte';
   import Node from './node.svelte';
   import Project from './project.svelte';
   import Workspace from './workspace.svelte';
@@ -21,20 +22,25 @@
 </script>
 
 <div class="details">
-  <Sidebar>
-    <Tabs {selected} {onSelect}>
-      <Tab id="selected" name="Selected">
-        {#if node}
-          <Node {node} />
-        {:else}
-          <Workspace {workspace} />
-        {/if}
-      </Tab>
-      <Tab id="project" name="Project">
-        <Project {project} />
-      </Tab>
-    </Tabs>
-  </Sidebar>
+  <div class="sidebar">
+    <Sidebar>
+      <Tabs {selected} {onSelect}>
+        <Tab id="selected" name="Selected">
+          {#if node}
+            <Node {node} />
+          {:else}
+            <Workspace {workspace} />
+          {/if}
+        </Tab>
+        <Tab id="project" name="Project">
+          <Project {project} />
+        </Tab>
+      </Tabs>
+    </Sidebar>
+  </div>
+  <div class="footer">
+    <Footer {workspace} />
+  </div>
 </div>
 
 <style lang="scss">
@@ -42,5 +48,13 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    > .sidebar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    > .footer {
+      border-top: 1px solid fade-out(#000, 0.97);
+    }
   }
 </style>

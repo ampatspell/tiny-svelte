@@ -29,6 +29,11 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
 
   asset = $derived(this.options.asset(this.identifier));
 
+  onPixel(pixel: number) {
+    this._data.pixel = pixel;
+    this._doc.scheduleSave();
+  }
+
   @action
   onPosition(position: Point) {
     this._data.position = position;
