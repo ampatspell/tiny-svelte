@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Item from '$components/basic/list/item.svelte';
+  import List from '$components/basic/list/list.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
   import type { WorkspacesModel } from '$lib/models/project/workspaces/workspaces.svelte';
 
@@ -11,24 +13,10 @@
   } = $props();
 </script>
 
-<div class="workspaces">
+<List>
   {#each workspaces.all as workspace}
-    <a href="/editor/projects/{workspaces.project.id}/{workspace.id}" class:selected={workspace.id === selected.id}>{workspace.id}</a>
+    <Item route="/editor/projects/{workspaces.project.id}/{workspace.id}" isSelected={workspace.id === selected.id}>
+      {workspace.id}
+    </Item>
   {/each}
-</div>
-
-<style lang="scss">
-  .workspaces {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    > a {
-      display: flex;
-      text-decoration: none;
-      &.selected {
-        font-weight: 600;
-      }
-    }
-  }
-</style>
+</List>

@@ -1,4 +1,7 @@
 <script lang="ts">
+  import Sidebar from '$components/basic/sidebar/sidebar.svelte';
+  import Tab from '$components/basic/tabs/tab.svelte';
+  import Tabs from '$components/basic/tabs/tabs.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
   import Assets from './assets.svelte';
   import Nodes from './nodes.svelte';
@@ -12,34 +15,31 @@
 
   let project = $derived(workspace.project);
   let workspaces = $derived(project.workspaces);
+
+  let selected = $state('nodes');
+  let onSelect = (next: string) => (selected = next);
 </script>
 
 <div class="sidebar">
-  <div class="section">
-    <div class="title">Workspaces</div>
-    <Workspaces {workspaces} selected={workspace} />
-  </div>
-  <div class="section">
-    <div class="title">Assets</div>
-    <Assets assets={workspace.assets} />
-  </div>
-  <div class="section">
-    <div class="title">Nodes</div>
-    <Nodes nodes={workspace.nodes} />
-  </div>
+  <Sidebar>
+    <Tabs {selected} {onSelect}>
+      <Tab id="nodes" name="Nodes">
+        <Nodes nodes={workspace.nodes} />
+      </Tab>
+      <Tab id="assets" name="Assets">
+        <Assets assets={workspace.assets} />
+      </Tab>
+      <Tab id="workspaces" name="Workspaces">
+        <Workspaces {workspaces} selected={workspace} />
+      </Tab>
+    </Tabs>
+  </Sidebar>
 </div>
 
 <style lang="scss">
   .sidebar {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    > .section {
-      > .title {
-        padding: 10px;
-        font-weight: 600;
-        border-bottom: 1px solid fade-out(#000, 0.95);
-      }
-    }
   }
 </style>

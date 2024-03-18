@@ -11,7 +11,7 @@
   } = $props();
 </script>
 
-<div class="sidebar">
+<div class="menu">
   <div class="items top">
     {#each top.all as item (item)}
       <Item {item} />
@@ -25,7 +25,7 @@
 </div>
 
 <style lang="scss">
-  .sidebar {
+  .menu {
     background: fade-out(#000, 0.98);
     border-right: 1px solid fade-out(#000, 0.95);
     display: flex;

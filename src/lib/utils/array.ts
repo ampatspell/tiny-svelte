@@ -32,6 +32,13 @@ export const removeObjectAt = <T>(array: T[], index: number) => {
   }
 };
 
+export const addObject = <T>(array: T[], entry: T) => {
+  if (array.includes(entry)) {
+    return;
+  }
+  array.push(entry);
+};
+
 export const removeObject = <T>(array: T[], entry: T) => {
   const index = array.indexOf(entry);
   removeObjectAt(array, index);

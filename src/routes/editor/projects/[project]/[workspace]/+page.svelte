@@ -12,10 +12,10 @@
 
 <Loadable model={workspace}>
   <div class="page">
-    <div class="left">
+    <div class="section left">
       <Sidebar {workspace} />
     </div>
-    <div class="content">
+    <div class="section content">
       <Workspace {workspace} />
     </div>
   </div>
@@ -26,18 +26,20 @@
     flex: 1;
     display: flex;
     flex-direction: row;
-    > .left {
-      width: 250px;
-      border-right: 1px solid fade-out(#000, 0.95);
-    }
-    > .content {
-      flex: 1;
+    > .section {
       display: flex;
       flex-direction: column;
-    }
-    > .right {
-      width: 250px;
-      border-left: 1px solid fade-out(#000, 0.95);
+      &.left {
+        width: 250px;
+        border-right: 1px solid fade-out(#000, 0.95);
+      }
+      &.content {
+        flex: 1;
+      }
+      &.right {
+        width: 250px;
+        border-left: 1px solid fade-out(#000, 0.95);
+      }
     }
   }
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createVerticalMenuItems } from '$components/basic/vertical-menu/model';
-  import VerticalMenu from '$components/basic/vertical-menu/sidebar.svelte';
+  import VerticalMenu from '$components/basic/vertical-menu/menu.svelte';
   import type { Snippet } from 'svelte';
   import Home from '$icons/mingcute-left-fill.svelte';
   import Editor from '$icons/mingcute-game-2-line.svelte';
