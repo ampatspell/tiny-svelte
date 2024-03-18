@@ -28,11 +28,6 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
 
   asset = $derived(this.options.asset(this.identifier));
 
-  // TODO: this can be removed from here. use node.asset
-  isResizable = $derived(this.asset?.isResizable ?? false);
-  size = $derived(this.asset?.size);
-  resizeStep = $derived(this.asset?.resizeStep);
-
   @action
   onPosition(position: Point) {
     this._data.position = position;
