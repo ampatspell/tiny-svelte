@@ -8,4 +8,12 @@
   } = $props();
 </script>
 
-{workspace}
+<div class="workspace">
+  {workspace}
+</div>
+
+<style lang="scss">
+  .workspace {
+    flex: 1;
+  }
+</style>

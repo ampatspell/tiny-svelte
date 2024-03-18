@@ -58,6 +58,8 @@
     }
     > .content {
       flex: 1;
+      display: flex;
+      flex-flow: column;
     }
   }
 </style>

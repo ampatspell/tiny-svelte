@@ -37,7 +37,7 @@ const createWorkspace = async (workspacesRef: CollectionReference, identifier: s
         pixel: 4
       });
     }),
-    await setDoc(doc(workspaceNodesRef), { asset: 'missing', position: { x: 50, y: 30 } })
+    await setDoc(doc(workspaceNodesRef), { asset: 'missing', position: { x: 50, y: 30 }, pixel: 1 })
   ]);
 };
 
