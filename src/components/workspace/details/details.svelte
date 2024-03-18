@@ -3,6 +3,9 @@
   import Tab from '$components/basic/tabs/tab.svelte';
   import Tabs from '$components/basic/tabs/tabs.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
+  import Node from './node.svelte';
+  import Project from './project.svelte';
+  import Workspace from './workspace.svelte';
 
   let {
     workspace
@@ -10,20 +13,25 @@
     workspace: WorkspaceModel;
   } = $props();
 
-  let project = $derived(workspace.project);
-
   let selected = $state('selected');
   let onSelect = (next: string) => (selected = next);
+
+  let project = $derived(workspace.project);
+  let node = $derived(workspace.selectedNode.node);
 </script>
 
 <div class="details">
   <Sidebar>
     <Tabs {selected} {onSelect}>
       <Tab id="selected" name="Selected">
-        {workspace.selectedNode || workspace}
+        {#if node}
+          <Node {node} />
+        {:else}
+          <Workspace {workspace} />
+        {/if}
       </Tab>
       <Tab id="project" name="Project">
-        {project}
+        <Project {project} />
       </Tab>
     </Tabs>
   </Sidebar>
