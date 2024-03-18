@@ -162,7 +162,7 @@ class Activator {
 }
 
 export const activate = <T extends HasActivator>(model: T): void => {
-  $effect(() => {
+  $effect.pre(() => {
     return untrack(() => {
       return model.activator.increment();
     });
@@ -182,7 +182,7 @@ export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extend
   _subscribe() {
     this.cancel = $effect.root(() => {
       const cancel = _activators.registerSubscribed(this);
-      $effect(() => {
+      $effect.pre(() => {
         this.subscribeDependencies;
         return untrack(() => {
           return this.subscribe();
@@ -199,14 +199,6 @@ export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extend
       this.cancel = undefined;
     }
   }
-
-  // refresh() {
-  //   this.subscribeDependencies;
-  //   if (this.isActivatedUntracked) {
-  //     this._unsubscribe();
-  //     this._subscribe();
-  //   }
-  // }
 
   activate() {
     this._subscribe();
@@ -526,7 +518,7 @@ export class Models<I extends object, O extends object> extends BaseSubscribable
 
   subscribe() {
     return $effect.root(() => {
-      $effect(() => {
+      $effect.pre(() => {
         const content = this.recreate();
         untrack(() => {
           this.content = content;

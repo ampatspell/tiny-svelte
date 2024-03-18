@@ -12,7 +12,7 @@
   let color = $derived(asset.color);
 </script>
 
-<div class="box" style:--width="{size.width}px" style:--height="{size.height}px" style:--color={color}>{node._data.position.x} {node.position.x}</div>
+<div class="box" style:--width="{size.width}px" style:--height="{size.height}px" style:--color={color}></div>
 
 <style lang="scss">
   .box {
