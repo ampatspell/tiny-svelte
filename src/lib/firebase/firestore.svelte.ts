@@ -1,14 +1,14 @@
 import { insertObjectAt, isTruthy, removeObject, removeObjectAt } from '$lib/utils/array';
 import {
-  FirestoreError,
-  Query,
-  QuerySnapshot,
+  type FirestoreError,
+  type Query,
+  type QuerySnapshot,
   onSnapshot,
   type DocumentData,
-  SnapshotMetadata,
-  DocumentReference,
-  DocumentSnapshot,
-  QueryDocumentSnapshot,
+  type SnapshotMetadata,
+  type DocumentReference,
+  type DocumentSnapshot,
+  type QueryDocumentSnapshot,
   setDoc
 } from '@firebase/firestore';
 import { untrack } from 'svelte';

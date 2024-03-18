@@ -1,6 +1,12 @@
 import { PUBLIC_FIREBASE } from '$env/static/public';
 import { getApps, initializeApp, type FirebaseOptions } from 'firebase/app';
-import { DocumentReference, Firestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+import {
+  type DocumentReference,
+  type Firestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager
+} from 'firebase/firestore';
 import { initializeAuth, type Auth, browserLocalPersistence } from 'firebase/auth';
 import { setGlobal } from '$lib/utils/set-global';
 import { Session } from './session.svelte';
