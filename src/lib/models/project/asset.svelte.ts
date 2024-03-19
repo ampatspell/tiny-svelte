@@ -23,8 +23,8 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
 
   abstract humanType: string;
   abstract isResizable: boolean;
-  abstract size?: Size;
-  abstract resizeStep: number;
+  abstract size?: Size; // TODO: this should be only for some assets
+  abstract resizeStep: number; // TODO: this should be only for some assets
   abstract onResize(event: ResizeEvent): void;
 
   serialized = $derived(serialized(this, ['id', 'identifier', 'type']));

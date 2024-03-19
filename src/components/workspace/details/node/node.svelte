@@ -26,11 +26,12 @@
     <Position model={node} />
     <Pixel model={node} />
     {#if asset}
-      <Item title="Asset">
-        {asset}
-      </Item>
       {#if asset.type === 'box'}
         <Box {node} />
+      {:else}
+        <Item title="Asset">
+          {asset}
+        </Item>
       {/if}
     {/if}
     <Delete model={node} />
