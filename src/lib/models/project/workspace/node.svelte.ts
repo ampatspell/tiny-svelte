@@ -56,5 +56,9 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
     }
   }
 
+  async delete(): Promise<void> {
+    await this._doc.delete();
+  }
+
   serialized = $derived(serialized(this, ['id', 'identifier', 'asset']));
 }

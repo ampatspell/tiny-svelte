@@ -4,7 +4,7 @@
   import Tabs from '$components/basic/tabs/tabs.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
   import Footer from './footer.svelte';
-  import Node from './node.svelte';
+  import Node from './node/node.svelte';
   import Project from './project.svelte';
   import Workspace from './workspace.svelte';
 

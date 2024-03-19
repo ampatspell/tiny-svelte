@@ -38,6 +38,8 @@
   .button {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
     gap: 5px;
     padding: 6px 10px;
     border-radius: 3px;

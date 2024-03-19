@@ -1,7 +1,6 @@
 <script lang="ts">
-  import Input from '$components/basic/input.svelte';
-  import Item from '../item.svelte';
   import type { HasIdentifier } from '../types';
+  import String from './string.svelte';
 
   let {
     model
@@ -9,15 +8,8 @@
     model: HasIdentifier;
   } = $props();
 
-  let onEnter = (value: string) => {
-    value = value.trim();
-    if (!value.length) {
-      return false;
-    }
-    model.onIdentifier(value);
-  };
+  let value = $derived(model.identifier);
+  let onValue = (value: string) => model.onIdentifier(value);
 </script>
 
-<Item title="Identifier">
-  <Input value={model.identifier} {onEnter} />
-</Item>
+<String title="Identifier" {value} {onValue} />

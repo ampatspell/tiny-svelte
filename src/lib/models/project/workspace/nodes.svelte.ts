@@ -1,11 +1,12 @@
 import { ActivatableModel, Document, Model, Models, QueryAll } from '$lib/firebase/firestore.svelte';
-import { collection } from '@firebase/firestore';
+import { collection, doc, setDoc } from '@firebase/firestore';
 import type { WorkspaceModel } from './workspace.svelte';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { WorkspaceNodeModel } from './node.svelte';
 import type { ProjectAssetModel } from '../asset.svelte';
+import type { AssetType } from '$lib/types/assets';
 
 export type WorkspaceNodeSelectorOptions<I> = {
   nodes: WorkspaceNodesModel;
@@ -72,6 +73,22 @@ export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOpt
 
   nodeForAsset(asset: ProjectAssetModel) {
     return this.all.find((node) => node.asset === asset);
+  }
+
+  async createNewAsset(type?: AssetType) {
+    let asset: ProjectAssetModel | undefined;
+    if (type) {
+      asset = await this.project.assets.create(type);
+    }
+    // TODO: new Document().save()
+    const ref = doc(this.ref);
+    const data: WorkspaceNodeData = {
+      pixel: 2,
+      position: { x: 10, y: 10 },
+      asset: asset?.identifier ?? ''
+    };
+    await setDoc(ref, data);
+    return await this._all.waitFor((model) => model.id === ref.id);
   }
 
   dependencies = [this._query, this._all];

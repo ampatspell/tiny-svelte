@@ -45,3 +45,4 @@ export type LoopAssetData = z.infer<typeof LoopAssetDataSchema>;
 export const AssetDataSchema = z.discriminatedUnion('type', [BoxAssetDataSchema]);
 
 export type AssetData = z.infer<typeof AssetDataSchema>;
+export type AssetType = AssetData['type'];

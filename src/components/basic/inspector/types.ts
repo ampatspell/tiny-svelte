@@ -14,3 +14,7 @@ export type HasIdentifier = {
   identifier: string;
   onIdentifier: (identifier: string) => void;
 };
+
+export type HasDelete = {
+  delete(): Promise<void>;
+};

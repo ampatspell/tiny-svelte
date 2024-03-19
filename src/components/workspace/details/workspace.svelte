@@ -1,6 +1,6 @@
 <script lang="ts">
   import Inspector from '$components/basic/inspector/inspector.svelte';
-  import Item from '$components/basic/inspector/item.svelte';
+  import CreateNode from '$components/basic/inspector/item/create-node.svelte';
   import Identifier from '$components/basic/inspector/item/identifier.svelte';
   import Identity from '$components/basic/inspector/item/identity.svelte';
   import Section from '$components/basic/inspector/section.svelte';
@@ -17,5 +17,6 @@
   <Section>
     <Identity title="Workspace" />
     <Identifier model={workspace} />
+    <CreateNode model={workspace} />
   </Section>
 </Inspector>

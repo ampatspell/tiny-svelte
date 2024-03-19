@@ -1,7 +1,7 @@
 import { ActivatableModel, Document, Models, QueryAll } from '$lib/firebase/firestore.svelte';
-import { collection } from '@firebase/firestore';
+import { collection, doc, setDoc } from '@firebase/firestore';
 import type { ProjectModel } from './project.svelte';
-import type { AssetData } from '$lib/types/assets';
+import type { AssetData, BoxAssetData } from '$lib/types/assets';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { ProjectBoxAssetModel, type ProjectAssetModel } from './asset.svelte';
@@ -42,6 +42,21 @@ export class ProjectAssetsModel extends ActivatableModel<ProjectAssetsModelOptio
 
   assetByIdentifier(identifier: string) {
     return this.all.find((asset) => asset?.identifier === identifier);
+  }
+
+  async create(type: 'box') {
+    if (type === 'box') {
+      // TODO: new Document().save()
+      const data: BoxAssetData = {
+        identifier: 'new',
+        type: 'box',
+        size: { width: 8, height: 8 },
+        color: 'white'
+      };
+      const ref = doc(this.ref);
+      await setDoc(ref, data);
+      return this._all.waitFor((model) => model.id === ref.id);
+    }
   }
 
   dependencies = [this._query, this._all];

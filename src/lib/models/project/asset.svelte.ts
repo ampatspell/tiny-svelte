@@ -4,6 +4,7 @@ import type { AssetData, BoxAssetData } from '$lib/types/assets';
 import { serialized } from '$lib/utils/object';
 import type { ResizeEvent } from '$components/workspace/content/model.svelte';
 import type { Size } from '$lib/types/schema';
+import { action } from '$lib/utils/action';
 
 export type ProjectAssetModelOptions<D extends AssetData> = {
   assets: ProjectAssetsModel;
@@ -42,6 +43,12 @@ export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
 
   isResizable = true;
   resizeStep = 1;
+
+  @action
+  onColor(color: string) {
+    this._data.color = color;
+    this._doc.scheduleSave();
+  }
 
   onResize(event: ResizeEvent): void {
     this._data.size = event.size;

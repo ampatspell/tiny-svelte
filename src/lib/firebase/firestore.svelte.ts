@@ -9,7 +9,8 @@ import {
   type DocumentReference,
   type DocumentSnapshot,
   type QueryDocumentSnapshot,
-  setDoc
+  setDoc,
+  deleteDoc
 } from '@firebase/firestore';
 import { untrack } from 'svelte';
 import { description, serialized } from '$lib/utils/object';
@@ -372,7 +373,18 @@ export class Document<T extends DocumentData = DocumentData> extends Base<Docume
     if (ref) {
       const data = Object.assign({}, this.data, { [TOKEN]: this.token });
       // TODO: isSaving & error checking
+      // TODO: proper merge
       await setDoc(ref, data, { merge: true });
+    }
+  }
+
+  async delete(): Promise<void> {
+    const ref = this.ref;
+    if (ref) {
+      this.debounce.cancel();
+      // TODO: isSaving & error checking
+      await deleteDoc(ref);
+      this.exists = false;
     }
   }
 
@@ -541,6 +553,21 @@ export class Models<I extends object, O extends object> extends BaseSubscribable
         const content = this.recreate();
         untrack(() => {
           this.content = content;
+        });
+      });
+    });
+  }
+
+  async waitFor(fn: (model: O) => boolean): Promise<O> {
+    return new Promise<O>((resolve) => {
+      // TODO: timeout
+      const cancel = $effect.root(() => {
+        $effect(() => {
+          const model = this.content.find(fn);
+          if (model) {
+            cancel();
+            resolve(model);
+          }
         });
       });
     });
