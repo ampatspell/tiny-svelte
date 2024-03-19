@@ -19,7 +19,7 @@
 
   let nodePixel = $derived(node.pixel);
   let identifier = $derived(node.identifier);
-  let description = $derived(node.description);
+  let description = $derived(node.asset?.humanShortDescription);
 
   let position = $derived(node.position);
   let onPosition = $derived(node.onPosition);
@@ -72,7 +72,7 @@
   <div class="header">
     <div class="name">{identifier}</div>
     {#if description}
-      <div class="description">{description}</div>
+      <div class="description" title={description}>{description}</div>
     {/if}
   </div>
   <Resizable

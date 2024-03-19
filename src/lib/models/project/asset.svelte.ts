@@ -22,6 +22,7 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   identifier = $derived(this._data!.identifier);
 
   abstract humanType: string;
+  abstract humanShortDescription?: string;
   abstract isResizable: boolean;
   abstract size?: Size; // TODO: this should be only for some assets
   abstract resizeStep: number; // TODO: this should be only for some assets
@@ -40,6 +41,8 @@ export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
 
   size = $derived(this._data.size);
   color = $derived(this._data.color);
+
+  humanShortDescription = $derived(this.color ?? 'No color');
 
   isResizable = true;
   resizeStep = 1;
