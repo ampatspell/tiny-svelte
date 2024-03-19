@@ -73,13 +73,19 @@ export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> implem
   step = 1;
 
   @action
+  onSize(size: Size) {
+    this._data.size = size;
+    this._doc.scheduleSave();
+  }
+
+  @action
   onColor(color: string) {
     this._data.color = color;
     this._doc.scheduleSave();
   }
 
   @action
-  onResize(event: ResizeEvent): void {
+  onResize(event: ResizeEvent) {
     this._data.size = event.size;
     this._doc.scheduleSave();
   }

@@ -18,14 +18,14 @@
 </script>
 
 <Item title="Position">
-  <div class="position">
+  <div class="content">
     <IntegerInput value={model.position.x} onChange={(value: number) => onChange('x', value)} />
     <IntegerInput value={model.position.y} onChange={(value: number) => onChange('y', value)} />
   </div>
 </Item>
 
 <style lang="scss">
-  .position {
+  .content {
     display: flex;
     flex-direction: row;
     gap: 10px;

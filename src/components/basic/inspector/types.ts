@@ -1,4 +1,4 @@
-import type { Point } from '$lib/types/schema';
+import type { Point, Size } from '$lib/types/schema';
 
 export type HasMutablePixel = {
   pixel: number;
@@ -10,9 +10,14 @@ export type HasMutablePosition = {
   onPosition: (position: Point) => void;
 };
 
-export type HasIdentifier = {
+export type HasMutableIdentifier = {
   identifier: string;
   onIdentifier: (identifier: string) => void;
+};
+
+export type HasMutableSize = {
+  size: Size;
+  onSize: (size: Size) => void;
 };
 
 export type HasDelete = {

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { HasIdentifier } from '../types';
+  import type { HasMutableIdentifier } from '../types';
   import String from './string.svelte';
 
   let {
     model
   }: {
-    model: HasIdentifier;
+    model: HasMutableIdentifier;
   } = $props();
 
   let value = $derived(model.identifier);
