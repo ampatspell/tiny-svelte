@@ -33,13 +33,12 @@ export type WithResizableAssetModelCallback<T extends ProjectAssetModel, R> = (m
 
 export const asResizableAssetModel = <T extends ProjectAssetModel, R>(
   model: T | undefined,
-  cb: WithResizableAssetModelCallback<T, R>,
-  fallback: () => R
-): R => {
+  cb: WithResizableAssetModelCallback<T, R>
+): R | undefined => {
   if (model && isResizableAssetModel(model)) {
     return cb(model);
   }
-  return fallback();
+  return undefined;
 };
 
 export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends Model<ProjectAssetModelOptions<D>> {

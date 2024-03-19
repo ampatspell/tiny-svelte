@@ -2,9 +2,15 @@
   import type { Snippet } from 'svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import { getWorkspaceContext, ToolType } from './model.svelte';
-  import { asResizableAssetModel, type ProjectAssetModel, type WithResizableAssetModelCallback } from '$lib/models/project/asset.svelte';
+  import {
+    asResizableAssetModel,
+    isResizableAssetModel,
+    type ProjectAssetModel,
+    type WithResizableAssetModelCallback
+  } from '$lib/models/project/asset.svelte';
   import { zeroSize } from '$lib/utils/math';
   import Resizable from '$components/basic/resizable/resizable.svelte';
+  import type { ResizeEvent } from '$lib/types/types';
 
   let {
     node,
@@ -24,40 +30,31 @@
 
   let asset = $derived(node.asset);
 
-  let asResizable = <R,>(cb: WithResizableAssetModelCallback<ProjectAssetModel, R>, fallback: () => R): R => {
-    return asResizableAssetModel<ProjectAssetModel, R>(asset, cb, fallback);
+  let asResizable = <R,>(cb: WithResizableAssetModelCallback<ProjectAssetModel, R>): R | undefined => {
+    return asResizableAssetModel<ProjectAssetModel, R>(asset, cb);
   };
 
-  let isAssetResizable = $derived(
-    asResizable(
-      (asset) => asset.isResizable,
-      () => false
-    )
-  );
+  let isAssetResizable = $derived.by(() => {
+    return asResizable((asset) => asset.isResizable) ?? false;
+  });
 
-  let size = $derived(
-    asResizable(
-      (asset) => asset.size,
-      () => zeroSize()
-    )
-  );
+  let size = $derived.by(() => {
+    return asResizable((asset) => asset.size) ?? zeroSize();
+  });
 
-  let step = $derived(
-    asResizable(
-      (asset) => asset.step,
-      () => 1
-    )
-  );
+  let step = $derived.by(() => {
+    return asResizable((asset) => asset.step) ?? 1;
+  });
 
-  let onResize = $derived(
-    asResizable(
-      (asset) => asset.onResize,
-      () => () => {}
-    )
-  );
+  let onResize = (event: ResizeEvent) => {
+    node.onPosition(event.position);
+    if (asset && isResizableAssetModel(asset)) {
+      asset.onResize(event);
+    }
+  };
 
-  let isSelectedWithResize = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Resize]));
-  let isResizable = $derived(isSelectedWithResize && isAssetResizable);
+  let isSelectedWithResizeTool = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Resize]));
+  let isResizable = $derived(isSelectedWithResizeTool && isAssetResizable);
 
   let onStart = () => (workspace.resizing = node);
   let onEnd = () => (workspace.resizing = undefined);

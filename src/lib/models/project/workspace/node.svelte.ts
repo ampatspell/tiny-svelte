@@ -1,10 +1,9 @@
 import { Model, type Document } from '$lib/firebase/firestore.svelte';
 import type { Point } from '$lib/types/schema';
-import type { ResizeEvent } from '$lib/types/types';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { action } from '$lib/utils/action';
 import { serialized } from '$lib/utils/object';
-import { isResizableAssetModel, type ProjectAssetModel } from '../asset.svelte';
+import { type ProjectAssetModel } from '../asset.svelte';
 import type { WorkspaceNodesModelOptions } from './nodes.svelte';
 
 type AssetByIdentifier = (identifier: string) => ProjectAssetModel | undefined;
@@ -43,19 +42,6 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
   onPosition(position: Point) {
     this._data.position = position;
     this._doc.scheduleSave();
-  }
-
-  @action
-  onResize(event: ResizeEvent) {
-    this._data.position = event.position;
-    this._doc.scheduleSave();
-
-    // TODO: split this into two calls
-    // no reason to do both saves here
-    const asset = this.asset;
-    if (asset && isResizableAssetModel(asset) && asset.isResizable) {
-      asset.onResize(event);
-    }
   }
 
   async delete(): Promise<void> {
