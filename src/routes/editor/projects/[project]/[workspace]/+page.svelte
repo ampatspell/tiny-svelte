@@ -1,6 +1,6 @@
 <script lang="ts">
   import Loadable from '$components/basic/loadable.svelte';
-  import Details from '$components/workspace/details/details.svelte';
+  import Details from '$components/workspace/inspector/inspector.svelte';
   import Sidebar from '$components/workspace/sidebar/sidebar.svelte';
   import Workspace from '$components/workspace/workspace/workspace.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
