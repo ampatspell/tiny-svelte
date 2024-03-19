@@ -224,14 +224,14 @@ export const isLoadable = (model: HasActivator): model is HasActivator & Loadabl
   return loadable[LoadableToken] === true;
 };
 
-export const selectLoadableActivators = (models: HasActivator[]) => {
+export const filterLoadableActivators = (models: HasActivator[]) => {
   models.filter((dep): dep is HasActivator & Loadable => {
     return isLoadable(dep);
   });
 };
 
 export const allLoadableDependencies = (model: HasActivator) => {
-  return selectLoadableActivators(model.activator.allDependencies);
+  return filterLoadableActivators(model.activator.allDependencies);
 };
 
 export abstract class Base<O extends BaseSubscribableOptions> extends BaseSubscribable<O> implements Loadable {
