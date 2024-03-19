@@ -1,7 +1,6 @@
 <script lang="ts">
   import Button from '$components/basic/button.svelte';
   import { untrack } from 'svelte';
-  import { browser } from '$app/environment';
 
   type ModelProps = {
     name: string;
@@ -51,11 +50,7 @@
     array.forEach((model) => model.toggle());
   };
 
-  if (browser) {
-    (window as any).array = array;
-  }
-
-  $inspect(array);
+  // $inspect(array);
 </script>
 
 <div class="page">

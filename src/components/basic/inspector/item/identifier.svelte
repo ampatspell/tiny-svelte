@@ -1,7 +1,7 @@
 <script lang="ts">
   import Input from '$components/basic/input.svelte';
   import Item from '../item.svelte';
-  import type { HasIdentifier, HasMutablePosition } from '../types';
+  import type { HasIdentifier } from '../types';
 
   let {
     model
