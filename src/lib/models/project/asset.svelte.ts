@@ -23,10 +23,7 @@ export interface ProjectResizableAssetModel {
 
 export const isResizableAssetModel = <T extends ProjectAssetModel>(model: ProjectAssetModel): model is T & ProjectResizableAssetModel => {
   const resizable = model as unknown as T & ProjectResizableAssetModel;
-  if (resizable[ProjectResizableAssetToken] === true) {
-    return true;
-  }
-  return false;
+  return resizable[ProjectResizableAssetToken] === true;
 };
 
 export type WithResizableAssetModelCallback<T extends ProjectAssetModel, R> = (model: T & ProjectResizableAssetModel) => R;

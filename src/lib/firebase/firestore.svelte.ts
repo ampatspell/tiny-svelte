@@ -210,25 +210,32 @@ export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extend
   }
 }
 
-export const isLoadable: unique symbol = Symbol('Loadable');
+const LoadableToken: unique symbol = Symbol('LoadableToken');
 
 export interface Loadable {
-  [isLoadable]: boolean; // TODO: this is marker to cast to loadable
+  [LoadableToken]: boolean;
   isLoading: boolean;
   isLoaded: boolean;
   error: unknown;
 }
 
-// Cast from HasActivator to Loadable is messed up
+export const isLoadable = (model: HasActivator): model is HasActivator & Loadable => {
+  const loadable = model as unknown as HasActivator & Loadable;
+  return loadable[LoadableToken] === true;
+};
+
+export const selectLoadableActivators = (models: HasActivator[]) => {
+  models.filter((dep): dep is HasActivator & Loadable => {
+    return isLoadable(dep);
+  });
+};
+
 export const allLoadableDependencies = (model: HasActivator) => {
-  return model.activator.allDependencies.filter((dep) => {
-    const loadable = dep as unknown as Loadable;
-    return loadable[isLoadable];
-  }) as unknown as Loadable[];
+  return selectLoadableActivators(model.activator.allDependencies);
 };
 
 export abstract class Base<O extends BaseSubscribableOptions> extends BaseSubscribable<O> implements Loadable {
-  [isLoadable] = true;
+  [LoadableToken] = true;
 
   isLoading = $state(false);
   isLoaded = $state(false);
