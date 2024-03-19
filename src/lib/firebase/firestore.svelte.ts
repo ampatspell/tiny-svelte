@@ -210,7 +210,7 @@ export abstract class BaseSubscribable<O extends BaseSubscribableOptions> extend
   }
 }
 
-export const isLoadable: unique symbol = Symbol('loadable');
+export const isLoadable: unique symbol = Symbol('Loadable');
 
 export interface Loadable {
   [isLoadable]: boolean; // TODO: this is marker to cast to loadable

@@ -2,13 +2,44 @@ import type { ProjectAssetsModel } from './assets.svelte';
 import { Model, type Document } from '$lib/firebase/firestore.svelte';
 import type { AssetData, BoxAssetData } from '$lib/types/assets';
 import { serialized } from '$lib/utils/object';
-import type { ResizeEvent } from '$components/workspace/content/model.svelte';
 import type { Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
+import type { ResizeEvent } from '$lib/types/types';
 
 export type ProjectAssetModelOptions<D extends AssetData> = {
   assets: ProjectAssetsModel;
   doc: Document<D>;
+};
+
+const ProjectResizableAssetToken: unique symbol = Symbol('ResizableAssetToken');
+
+export interface ProjectResizableAssetModel {
+  [ProjectResizableAssetToken]: boolean;
+  isResizable: boolean;
+  size: Size;
+  step: number;
+  onResize(event: ResizeEvent): void;
+}
+
+export const isResizableAssetModel = <T extends ProjectAssetModel>(model: ProjectAssetModel): model is T & ProjectResizableAssetModel => {
+  const resizable = model as unknown as T & ProjectResizableAssetModel;
+  if (resizable[ProjectResizableAssetToken] === true) {
+    return true;
+  }
+  return false;
+};
+
+export type WithResizableAssetModelCallback<T extends ProjectAssetModel, R> = (model: T & ProjectResizableAssetModel) => R;
+
+export const asResizableAssetModel = <T extends ProjectAssetModel, R>(
+  model: T | undefined,
+  cb: WithResizableAssetModelCallback<T, R>,
+  fallback: () => R
+): R => {
+  if (model && isResizableAssetModel(model)) {
+    return cb(model);
+  }
+  return fallback();
 };
 
 export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends Model<ProjectAssetModelOptions<D>> {
@@ -23,10 +54,6 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
 
   abstract humanType: string;
   abstract humanShortDescription?: string;
-  abstract isResizable: boolean;
-  abstract size?: Size; // TODO: this should be only for some assets
-  abstract resizeStep: number; // TODO: this should be only for some assets
-  abstract onResize(event: ResizeEvent): void;
 
   serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
 
@@ -36,7 +63,9 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   }
 }
 
-export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
+export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> implements ProjectResizableAssetModel {
+  [ProjectResizableAssetToken] = true;
+
   humanType = 'Box';
 
   size = $derived(this._data.size);
@@ -45,7 +74,7 @@ export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
   humanShortDescription = $derived(this.color ?? 'No color');
 
   isResizable = true;
-  resizeStep = 1;
+  step = 1;
 
   @action
   onColor(color: string) {
@@ -53,6 +82,7 @@ export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
     this._doc.scheduleSave();
   }
 
+  @action
   onResize(event: ResizeEvent): void {
     this._data.size = event.size;
     this._doc.scheduleSave();

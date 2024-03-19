@@ -1,56 +1,72 @@
 <script lang="ts">
-  import { classes, type Classes } from '$lib/utils/classes';
   import type { Snippet } from 'svelte';
-  import Pins from './pins.svelte';
-  import type { ResizeCallback } from './model.svelte';
-  import type { VoidCallback } from '$lib/types/types';
-  import type { Point, Size } from '$lib/types/schema';
+  import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
+  import { getWorkspaceContext, ToolType } from './model.svelte';
+  import { asResizableAssetModel, type ProjectAssetModel, type WithResizableAssetModelCallback } from '$lib/models/project/asset.svelte';
+  import { zeroSize } from '$lib/utils/math';
+  import Resizable from '$components/basic/resizable/resizable.svelte';
 
   let {
-    class: _class,
-    pixel,
-    step,
-    position,
-    size,
-    isResizable,
-    onResize,
-    onStart,
-    onEnd,
+    node,
+    onIsResizable,
     children
   }: {
-    class?: Classes;
-    pixel: number;
-    step: number;
-    position: Point;
-    size: Size;
-    isResizable: boolean;
-    onResize: ResizeCallback;
-    onStart: VoidCallback;
-    onEnd: VoidCallback;
-    children?: Snippet;
+    node: WorkspaceNodeModel;
+    onIsResizable: (next: boolean) => void;
+    children: Snippet;
   } = $props();
+
+  let workspace = getWorkspaceContext();
+  let workspacePixel = $derived(workspace.pixel);
+  let nodePixel = $derived(node.pixel);
+  let pixel = $derived(workspacePixel * nodePixel);
+  let position = $derived(node.position);
+
+  let asset = $derived(node.asset);
+
+  let asResizable = <R,>(cb: WithResizableAssetModelCallback<ProjectAssetModel, R>, fallback: () => R): R => {
+    return asResizableAssetModel<ProjectAssetModel, R>(asset, cb, fallback);
+  };
+
+  let isAssetResizable = $derived(
+    asResizable(
+      (asset) => asset.isResizable,
+      () => false
+    )
+  );
+
+  let size = $derived(
+    asResizable(
+      (asset) => asset.size,
+      () => zeroSize()
+    )
+  );
+
+  let step = $derived(
+    asResizable(
+      (asset) => asset.step,
+      () => 1
+    )
+  );
+
+  let onResize = $derived(
+    asResizable(
+      (asset) => asset.onResize,
+      () => () => {}
+    )
+  );
+
+  let isSelectedWithResize = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Resize]));
+  let isResizable = $derived(isSelectedWithResize && isAssetResizable);
+
+  let onStart = () => (workspace.resizing = node);
+  let onEnd = () => (workspace.resizing = undefined);
+
+  $effect.pre(() => {
+    onIsResizable(isResizable);
+  });
 </script>
 
-<div class={classes('resizable', _class)}>
-  <Pins {pixel} {step} {position} {size} {onResize} {isResizable} {onStart} {onEnd} />
-  <div class="content">
-    {#if children}
-      {@render children()}
-    {/if}
-  </div>
-</div>
-
-<style lang="scss">
-  .resizable {
-    border: 1px solid #e63946;
-    transition: 0.15s ease-in-out border-color;
-    position: relative;
-    :global(> .pins) {
-      position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-    }
-  }
-</style>
+<Resizable {pixel} {step} {position} {size} {isResizable} {onResize} {onStart} {onEnd}>
+  {@render children()}
+</Resizable>

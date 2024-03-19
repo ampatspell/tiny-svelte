@@ -3,8 +3,8 @@
   import { getWorkspaceContext, ToolType } from './model.svelte';
   import { addPoints, multiplyPoint } from '$lib/utils/math';
   import { draggable } from '$lib/utils/use-draggable.svelte';
-  import Resizable from './resizable.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
+  import Resizable from './resizable.svelte';
 
   let {
     node,
@@ -17,24 +17,14 @@
   let workspace = getWorkspaceContext();
   let workspacePixel = $derived(workspace.pixel);
 
-  let nodePixel = $derived(node.pixel);
   let identifier = $derived(node.identifier);
-  let description = $derived(node.asset?.humanShortDescription);
-
   let position = $derived(node.position);
   let onPosition = $derived(node.onPosition);
 
   let asset = $derived(node.asset);
-  let size = $derived(asset?.size ?? { width: 0, height: 0 });
-  let resizeStep = $derived(asset?.resizeStep ?? 1);
-  let onResize = $derived(node.onResize);
+  let description = $derived(asset?.humanShortDescription);
 
-  let isSelectedAndHasTools = (types: ToolType[]) => {
-    return workspace.selected === node && types.includes(workspace.tool.type);
-  };
-
-  let isResizable = $derived(isSelectedAndHasTools([ToolType.Resize]) && !!asset?.isResizable);
-  let isDraggable = $derived(isSelectedAndHasTools([ToolType.Idle, ToolType.Resize]));
+  let isDraggable = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Idle, ToolType.Resize]));
 
   let onShouldStart = () => {
     if ([ToolType.Idle, ToolType.Resize].includes(workspace.tool.type)) {
@@ -43,16 +33,16 @@
     return isDraggable;
   };
 
-  let onDragStart = () => (workspace.dragging = node);
-  let onDragEnd = () => (workspace.dragging = undefined);
-
-  let onResizeStart = () => (workspace.resizing = node);
-  let onResizeEnd = () => (workspace.resizing = undefined);
+  let onStart = () => (workspace.dragging = node);
+  let onEnd = () => (workspace.dragging = undefined);
 
   let translate = $derived.by(() => {
     let point = multiplyPoint(addPoints(workspace.position, position), workspacePixel);
     return `${point.x}px ${point.y}px`;
   });
+
+  let isResizable = $state(false);
+  let onIsResizable = (next: boolean) => (isResizable = next);
 </script>
 
 <div
@@ -65,8 +55,8 @@
     pixel: workspacePixel,
     position,
     onPosition,
-    onStart: onDragStart,
-    onEnd: onDragEnd
+    onStart,
+    onEnd
   }}
 >
   <div class="header">
@@ -75,16 +65,7 @@
       <div class="description" title={description}>{description}</div>
     {/if}
   </div>
-  <Resizable
-    pixel={workspacePixel * nodePixel}
-    step={resizeStep}
-    {position}
-    {size}
-    {isResizable}
-    {onResize}
-    onStart={onResizeStart}
-    onEnd={onResizeEnd}
-  >
+  <Resizable {node} {onIsResizable}>
     {@render children()}
   </Resizable>
 </div>

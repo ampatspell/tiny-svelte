@@ -43,3 +43,5 @@ export const addSizes = (a: Size, b: Size): Size => calcSizes(a, b, (a, b) => a 
 export const subtractSizes = (a: Size, b: Size): Size => calcSizes(a, b, (a, b) => a - b);
 
 export const multiplySize = (a: Size, value: number): Size => calcSize(a, (a) => a * value);
+
+export const zeroSize = (): Size => ({ width: 0, height: 0 });

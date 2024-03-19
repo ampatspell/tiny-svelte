@@ -47,8 +47,12 @@ export class WorkspaceContext {
     if (this.selected === node) {
       return;
     }
-    this.tool.set(ToolType.Idle);
+    this.tool.set(ToolType.Resize);
     this.options.workspace.selectNode(node);
+  }
+
+  isSelectedAndHasTools(model: WorkspaceNodeModel, types: ToolType[]) {
+    return this.selected === model && types.includes(this.tool.type);
   }
 
   @action
@@ -69,24 +73,3 @@ export const setWorkspaceContext = (model: WorkspaceContext) => {
 export const getWorkspaceContext = () => {
   return getContext('workspace') as WorkspaceContext;
 };
-
-export enum Horizontal {
-  Left = 'left',
-  Center = 'center',
-  Right = 'right'
-}
-
-export enum Vertical {
-  Top = 'top',
-  Center = 'center',
-  Bottom = 'bottom'
-}
-
-export type ResizeEvent = {
-  horizontal: Horizontal;
-  vertical: Vertical;
-  position: Point;
-  size: Size;
-};
-
-export type ResizeCallback = (event: ResizeEvent) => void;

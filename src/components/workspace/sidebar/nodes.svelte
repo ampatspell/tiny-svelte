@@ -20,7 +20,7 @@
         {/if}
         {#if node}
           <div class="row">
-            {node.asset?.size?.width}x{node.asset?.size?.height}, [{node.position.x},{node.position.y}] @ {node.pixel}px
+            [{node.position.x},{node.position.y}] @ {node.pixel}px
           </div>
         {/if}
       </div>

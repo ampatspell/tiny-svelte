@@ -1,10 +1,9 @@
 <script lang="ts">
   import { classes, type Classes } from '$lib/utils/classes';
-  import { Horizontal, Vertical } from './model.svelte';
   import { draggable, DraggableAxis } from '$lib/utils/use-draggable.svelte';
   import { stepPoint } from '$lib/utils/math';
   import type { Point, Size } from '$lib/types/schema';
-  import type { VoidCallback } from '$lib/types/types';
+  import { Horizontal, Vertical, type VoidCallback } from '$lib/types/types';
 
   let {
     horizontal,

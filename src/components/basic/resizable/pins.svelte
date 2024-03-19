@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Point, Size } from '$lib/types/schema';
-  import type { VoidCallback } from '$lib/types/types';
-  import { Horizontal, Vertical, type ResizeCallback } from './model.svelte';
+  import { Horizontal, Vertical, type ResizeCallback, type VoidCallback } from '$lib/types/types';
   import Pin from './pin.svelte';
 
   let {
