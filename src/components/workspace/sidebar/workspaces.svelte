@@ -16,7 +16,7 @@
 <List>
   {#each workspaces.all as workspace}
     <Item route="/editor/projects/{workspaces.project.id}/{workspace.id}" isSelected={workspace.id === selected.id}>
-      {workspace.id}
+      {workspace.identifier}
     </Item>
   {/each}
 </List>

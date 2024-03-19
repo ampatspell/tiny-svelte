@@ -2,6 +2,7 @@
   import Inspector from '$components/basic/inspector/inspector.svelte';
   import Item from '$components/basic/inspector/item.svelte';
   import Identifier from '$components/basic/inspector/item/identifier.svelte';
+  import NodeIdentity from '$components/basic/inspector/item/node-identity.svelte';
   import Pixel from '$components/basic/inspector/item/pixel.svelte';
   import Position from '$components/basic/inspector/item/position.svelte';
   import Section from '$components/basic/inspector/section.svelte';
@@ -18,6 +19,7 @@
 
 <Inspector>
   <Section>
+    <NodeIdentity model={node} />
     <Identifier model={node} />
     <Position model={node} />
     <Pixel model={node} />

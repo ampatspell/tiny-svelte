@@ -30,6 +30,11 @@ export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
   identifier = $derived(this._data.identifier);
   pixel = $derived(this._data.pixel);
 
+  onIdentifier(identifier: string) {
+    this._data.identifier = identifier;
+    this._doc.scheduleSave();
+  }
+
   onPixel(pixel: number) {
     this._data.pixel = pixel;
     this._doc.scheduleSave();

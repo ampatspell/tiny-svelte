@@ -11,8 +11,11 @@ export type WorkspacesWorkspaceModelOptions = {
 export class WorkspacesWorkspaceModel extends Model<WorkspacesWorkspaceModelOptions> {
   workspaces = $derived(this.options.workspaces);
   _doc = $derived(this.options.doc);
+  _data = $derived(this._doc.data!);
+
   id = $derived(this._doc.id);
   path = $derived(this._doc.path);
+  identifier = $derived(this._data.identifier);
 
   serialized = $derived(serialized(this, ['id']));
 }

@@ -20,6 +20,7 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   type = $derived(this._data!.type);
   identifier = $derived(this._data!.identifier);
 
+  abstract humanType: string;
   abstract isResizable: boolean;
   abstract size?: Size;
   abstract resizeStep: number;
@@ -34,6 +35,8 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
 }
 
 export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> {
+  humanType = 'Box';
+
   size = $derived(this._data.size);
   color = $derived(this._data.color);
 
