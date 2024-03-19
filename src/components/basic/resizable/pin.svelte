@@ -46,6 +46,7 @@
     if (horizontal == Horizontal.Right) {
       width += delta.x;
     } else if (horizontal === Horizontal.Left) {
+      // instead of 2, this should be node pixel (?)
       x += 2 * delta.x;
       width -= delta.x;
     }
