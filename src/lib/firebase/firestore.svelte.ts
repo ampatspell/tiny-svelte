@@ -225,7 +225,7 @@ export const isLoadable = (model: HasActivator): model is HasActivator & Loadabl
 };
 
 export const filterLoadableActivators = (models: HasActivator[]) => {
-  models.filter((dep): dep is HasActivator & Loadable => {
+  return models.filter((dep): dep is HasActivator & Loadable => {
     return isLoadable(dep);
   });
 };
