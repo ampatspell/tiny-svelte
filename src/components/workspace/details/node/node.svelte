@@ -24,7 +24,6 @@
     <NodeIdentity model={node} />
     <Identifier model={node} />
     <Position model={node} />
-    <Pixel model={node} />
     {#if asset}
       {#if asset.type === 'box'}
         <Box {node} />
@@ -34,6 +33,7 @@
         </Item>
       {/if}
     {/if}
+    <Pixel model={node} />
     <Delete model={node} />
   </Section>
 </Inspector>
