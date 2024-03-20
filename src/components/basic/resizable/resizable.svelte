@@ -7,7 +7,8 @@
 
   let {
     class: _class,
-    pixel,
+    externalPixel,
+    internalPixel,
     step,
     position,
     size,
@@ -18,7 +19,8 @@
     children
   }: {
     class?: Classes;
-    pixel: number;
+    externalPixel: number;
+    internalPixel: number;
     step: number;
     position: Point;
     size: Size;
@@ -31,7 +33,7 @@
 </script>
 
 <div class={classes('resizable', _class)}>
-  <Pins {pixel} {step} {position} {size} {onResize} {isResizable} {onStart} {onEnd} />
+  <Pins {externalPixel} {internalPixel} {step} {position} {size} {onResize} {isResizable} {onStart} {onEnd} />
   <div class="content">
     {#if children}
       {@render children()}

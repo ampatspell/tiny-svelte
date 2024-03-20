@@ -4,7 +4,8 @@
   import Pin from './pin.svelte';
 
   let {
-    pixel,
+    externalPixel,
+    internalPixel,
     step,
     position,
     size,
@@ -13,7 +14,8 @@
     onStart,
     onEnd
   }: {
-    pixel: number;
+    externalPixel: number;
+    internalPixel: number;
     step: number;
     position: Point;
     size: Size;
@@ -65,7 +67,8 @@
       onResize={pin.onResize}
       {onStart}
       {onEnd}
-      {pixel}
+      {externalPixel}
+      {internalPixel}
       {step}
     />
   {/each}

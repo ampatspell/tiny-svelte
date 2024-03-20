@@ -24,9 +24,8 @@
   } = $props();
 
   let workspace = getWorkspaceContext();
-  let workspacePixel = $derived(workspace.pixel);
-  let nodePixel = $derived(node.pixel);
-  let pixel = $derived(workspacePixel * nodePixel);
+  let externalPixel = $derived(workspace.pixel);
+  let internalPixel = $derived(node.pixel);
   let position = $derived(node.position);
 
   let asset = $derived(node.asset);
@@ -65,6 +64,6 @@
   });
 </script>
 
-<Resizable {pixel} {step} {position} {size} {isResizable} {onResize} {onStart} {onEnd}>
+<Resizable {externalPixel} {internalPixel} {step} {position} {size} {isResizable} {onResize} {onStart} {onEnd}>
   {@render children()}
 </Resizable>

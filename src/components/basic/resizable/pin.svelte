@@ -10,7 +10,8 @@
     vertical,
     pin,
     class: _class,
-    pixel,
+    externalPixel,
+    internalPixel,
     step,
     position,
     size,
@@ -23,7 +24,8 @@
     pin: number;
     horizontal: Horizontal;
     vertical: Vertical;
-    pixel: number;
+    externalPixel: number;
+    internalPixel: number;
     position: Point;
     size: Size;
     step: number;
@@ -32,6 +34,8 @@
     onEnd: VoidCallback;
     onResize: (position: Point, size: Size) => void;
   } = $props();
+
+  let pixel = $derived(externalPixel * internalPixel);
 
   let resizing = $state<{ position: Point; size: Size }>();
 
@@ -46,13 +50,12 @@
     if (horizontal == Horizontal.Right) {
       width += delta.x;
     } else if (horizontal === Horizontal.Left) {
-      // instead of 2, this should be node pixel (?)
-      x += 2 * delta.x;
+      x += internalPixel * delta.x;
       width -= delta.x;
     }
 
     if (vertical === Vertical.Top) {
-      y += 2 * delta.y;
+      y += internalPixel * delta.y;
       height -= delta.y;
     } else if (vertical === Vertical.Bottom) {
       height += delta.y;
