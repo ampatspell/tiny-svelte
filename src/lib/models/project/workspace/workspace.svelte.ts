@@ -8,6 +8,21 @@ import { getter, options } from '$lib/utils/args';
 import type { WorkspaceData } from '$lib/types/workspace';
 import type { WorkspaceNodeModel } from './node.svelte';
 
+export enum ToolType {
+  WorkspaceDrag = 'workspace-drag',
+  Idle = 'idle',
+  Resize = 'resize',
+  Edit = 'edit'
+}
+
+export class Tool {
+  type = $state(ToolType.Idle);
+
+  set(type: ToolType) {
+    this.type = type;
+  }
+}
+
 export type WorkspaceModelOptions = {
   project: ProjectModel;
   id: string;
@@ -43,6 +58,16 @@ export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
   nodes = new WorkspaceNodesModel({ workspace: this });
   assets = new WorkspaceAssetsModel(options({ workspace: this, assets: getter(() => this.project.assets) }));
 
+  //
+
+  tool = new Tool();
+
+  selectTool(tool: ToolType) {
+    this.tool.set(tool);
+  }
+
+  //
+
   selectedNodeId = $state<string>();
   selectedNode = new WorkspaceNodeSelector(
     options({
@@ -52,9 +77,19 @@ export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
     })
   );
 
-  selectNode(model?: WorkspaceNodeModel) {
-    this.selectedNodeId = model?.id;
+  selectNode(node?: WorkspaceNodeModel) {
+    if (this.selectedNode.node === node) {
+      return;
+    }
+    this.tool.set(ToolType.Idle);
+    this.selectedNodeId = node?.id;
   }
+
+  isNodeSelectedAndHasTools(model: WorkspaceNodeModel, types: ToolType[]) {
+    return this.selectedNode.node === model && types.includes(this.tool.type);
+  }
+
+  //
 
   serialized = $derived(serialized(this, ['id', 'identifier']));
 

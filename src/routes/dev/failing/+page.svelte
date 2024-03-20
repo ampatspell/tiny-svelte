@@ -1,5 +1,4 @@
 <script lang="ts">
-  import Button from '$components/basic/button.svelte';
   import { untrack } from 'svelte';
 
   type ModelProps = {
@@ -55,9 +54,9 @@
 
 <div class="page">
   <div class="section">
-    <div class="row"><Button value="Add model in effect" onClick={insertWithEffect} /></div>
-    <div class="row"><Button value="Add model" onClick={insertDirectly} /></div>
-    <div class="row"><Button value="Toggle name" onClick={toggle} /></div>
+    <div class="row"><button onclick={insertWithEffect}>Add model in effect</button></div>
+    <div class="row"><button onclick={insertDirectly}>Add model</button></div>
+    <div class="row"><button onclick={toggle}>Toggle name</button></div>
   </div>
   <div class="section">
     {#each array as model}

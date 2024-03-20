@@ -3,9 +3,10 @@
   import { resize } from '$lib/utils/use-resize.svelte';
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import type { Snippet } from 'svelte';
-  import { setWorkspaceContext, WorkspaceContext, ToolType } from './model.svelte';
+  import { setWorkspaceContext, WorkspaceContext } from './model.svelte';
   import { space } from '$lib/utils/use-space.svelte';
   import type { OptionalVoidCallback } from '$lib/types/types';
+  import { ToolType } from '$lib/models/project/workspace/workspace.svelte';
 
   let {
     class: _class,
@@ -23,7 +24,7 @@
   let pixel = $derived(context.pixel);
   let onResize = $derived(context.onResize);
   let onPosition = $derived(context.onPosition);
-  let onClick = () => context.select(undefined);
+  let onClick = () => context.selectNode(undefined);
 
   let cancelDrag: OptionalVoidCallback;
   let onSpaceDown = () => {

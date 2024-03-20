@@ -2,6 +2,7 @@
   import Loadable from '$components/basic/loadable.svelte';
   import Details from '$components/workspace/inspector/inspector.svelte';
   import Sidebar from '$components/workspace/sidebar/sidebar.svelte';
+  import Toolbar from '$components/workspace/toolbar/toolbar.svelte';
   import Workspace from '$components/workspace/workspace/workspace.svelte';
   import { activate } from '$lib/firebase/firestore.svelte';
 
@@ -16,7 +17,12 @@
       <Sidebar {workspace} />
     </div>
     <div class="section content">
-      <Workspace {workspace} />
+      <div class="toolbar">
+        <Toolbar {workspace} />
+      </div>
+      <div class="workspace">
+        <Workspace {workspace} />
+      </div>
     </div>
     <div class="section right">
       <Details {workspace} />
@@ -38,6 +44,13 @@
       }
       &.content {
         flex: 1;
+        display: flex;
+        flex-direction: column;
+        > .workspace {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
       }
       &.right {
         width: 250px;

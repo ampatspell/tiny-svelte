@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
-  import { getWorkspaceContext, ToolType } from './model.svelte';
+  import { getWorkspaceContext } from './model.svelte';
   import {
     asResizableAssetModel,
     isResizableAssetModel,
@@ -11,6 +11,7 @@
   import { zeroSize } from '$lib/utils/math';
   import Resizable from '$components/basic/resizable/resizable.svelte';
   import type { ResizeEvent } from '$lib/types/types';
+  import { ToolType } from '$lib/models/project/workspace/workspace.svelte';
 
   let {
     node,

@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
-  import { getWorkspaceContext, ToolType } from './model.svelte';
+  import { getWorkspaceContext } from './model.svelte';
   import { addPoints, multiplyPoint } from '$lib/utils/math';
   import { draggable } from '$lib/utils/use-draggable.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import Resizable from './resizable.svelte';
+  import { ToolType } from '$lib/models/project/workspace/workspace.svelte';
 
   let {
     node,
@@ -28,7 +29,7 @@
 
   let onShouldStart = () => {
     if ([ToolType.Idle, ToolType.Resize].includes(workspace.tool.type)) {
-      workspace.select(node);
+      workspace.selectNode(node);
     }
     return isDraggable;
   };

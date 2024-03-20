@@ -2,6 +2,8 @@
   import type { Snippet } from 'svelte';
   import { setTabsContext, TabsContext } from './model.svelte';
   import { getter, options } from '$lib/utils/args';
+  import Segmented from '../segmented/segmented.svelte';
+  import Segment from '../segmented/segment.svelte';
 
   let {
     selected,
@@ -46,7 +48,7 @@
       user-select: none;
       padding: 5px;
       > .tab {
-        padding: 5px 10px;
+        padding: 6px 10px;
         text-align: center;
         color: fade-out(#000, 0.5);
         border-radius: 3px;
