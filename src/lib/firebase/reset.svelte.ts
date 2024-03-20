@@ -1,4 +1,12 @@
-import { CollectionReference, DocumentReference, collection, deleteDoc, doc, getDocs, setDoc } from '@firebase/firestore';
+import {
+  CollectionReference,
+  DocumentReference,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  setDoc
+} from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 import type { Point, Size } from '$lib/types/schema';
 import Color from 'color';

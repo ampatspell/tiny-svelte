@@ -24,7 +24,11 @@
 
   <Segmented width={45}>
     {#each model.directions as direction}
-      <Segment value={direction} isSelected={model.direction === direction} onClick={() => model.onDirection(direction)} />
+      <Segment
+        value={direction}
+        isSelected={model.direction === direction}
+        onClick={() => model.onDirection(direction)}
+      />
     {/each}
   </Segmented>
 </div>

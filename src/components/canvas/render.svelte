@@ -2,7 +2,12 @@
   import type { Point } from '$lib/types/schema';
 
   import { getStageContext } from './contexts/stage.svelte';
-  import { getRenderContext, RenderContext, setRenderContext, type RenderContextDrawFunction } from './contexts/render.svelte';
+  import {
+    getRenderContext,
+    RenderContext,
+    setRenderContext,
+    type RenderContextDrawFunction
+  } from './contexts/render.svelte';
   import type { Snippet } from 'svelte';
 
   let {
