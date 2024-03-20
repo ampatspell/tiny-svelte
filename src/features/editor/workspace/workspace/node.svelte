@@ -2,7 +2,7 @@
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import Box from './box.svelte';
   import Missing from './missing.svelte';
-  import Node from './content/node.svelte';
+  import Node from './base/node.svelte';
 
   let { node }: { node: WorkspaceNodeModel } = $props();
 
