@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { InputState } from './input-model.svelte';
+  import type { InputState } from './model.svelte';
 
   let {
     value,

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Input from '$components/basic/input.svelte';
+  import Input from '$components/basic/input/input.svelte';
   import Item from '../item.svelte';
 
   let {
