@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
-  import { getWorkspaceContext } from '../content/model.svelte';
+  import { getWorkspaceContext } from './content/model.svelte';
 
   let { node }: { node: WorkspaceNodeModel } = $props();
   let workspace = getWorkspaceContext();

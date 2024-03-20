@@ -2,7 +2,7 @@
   import type { ProjectBoxAssetModel } from '$lib/models/project/asset.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import { multiplySize } from '$lib/utils/math';
-  import { getWorkspaceContext } from '../content/model.svelte';
+  import { getWorkspaceContext } from './content/model.svelte';
 
   let { node }: { node: WorkspaceNodeModel } = $props();
   let asset = $derived(node.asset as ProjectBoxAssetModel);

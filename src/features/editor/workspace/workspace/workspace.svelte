@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
-  import { WorkspaceContext } from '../content/model.svelte';
-  import Workspace from '../content/workspace.svelte';
+  import { WorkspaceContext } from './content/model.svelte';
   import Node from './node.svelte';
+  import Workspace from './content/workspace.svelte';
 
   let {
     workspace
