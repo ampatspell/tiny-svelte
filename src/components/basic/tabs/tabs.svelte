@@ -2,8 +2,6 @@
   import type { Snippet } from 'svelte';
   import { setTabsContext, TabsContext } from './model.svelte';
   import { getter, options } from '$lib/utils/args';
-  import Segmented from '../segmented/segmented.svelte';
-  import Segment from '../segmented/segment.svelte';
 
   let {
     selected,
