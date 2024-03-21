@@ -7,6 +7,7 @@ import { serialized } from '$lib/utils/object';
 import { WorkspaceNodeModel } from './node.svelte';
 import type { ProjectAssetModel } from '../asset.svelte';
 import type { AssetType } from '$lib/types/assets';
+import { ExistingSelector } from '$lib/models/selector.svelte';
 
 export type WorkspaceNodeSelectorOptions<I> = {
   nodes: WorkspaceNodesModel;
@@ -15,25 +16,21 @@ export type WorkspaceNodeSelectorOptions<I> = {
 };
 
 export class WorkspaceNodeSelector<I> extends Model<WorkspaceNodeSelectorOptions<I>> {
-  value = $derived(this.options.value);
+  selector: ExistingSelector<I, WorkspaceNodeModel>;
 
-  node = $derived.by(() => {
-    const value = this.value;
-    if (!value) {
-      return;
-    }
-    const {
-      options: { nodes, select }
-    } = this;
-    const node = nodes.all.find((node) => select(node, value));
-    if (!node) {
-      return;
-    }
-    if (!node.exists) {
-      return;
-    }
-    return node;
-  });
+  constructor(_options: WorkspaceNodeSelectorOptions<I>) {
+    super(_options);
+    this.selector = new ExistingSelector(
+      options({
+        models: getter(() => _options.nodes.all),
+        value: getter(() => _options.value),
+        select: getter(() => _options.select)
+      })
+    );
+  }
+
+  value = $derived.by(() => this.selector.value);
+  node = $derived.by(() => this.selector.model);
 
   serialized = $derived(serialized(this, ['value', 'node']));
 }

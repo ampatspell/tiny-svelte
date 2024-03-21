@@ -21,6 +21,9 @@
 
 <Inspector>
   <Section>
+    <Item>
+      exists: {node.exists}
+    </Item>
     <NodeIdentity model={node} />
     <Identifier model={node} />
     <Position model={node} />

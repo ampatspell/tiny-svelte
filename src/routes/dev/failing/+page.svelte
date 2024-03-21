@@ -1,67 +1,86 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
-
-  type ModelProps = {
-    name: string;
-    source: string;
-  };
+  import { getter, options } from '$lib/utils/args';
 
   class Model {
-    data = $state<ModelProps>();
-    constructor(data: ModelProps) {
-      this.data = data;
-    }
-
-    name = $derived(this.data!.name);
-    source = $derived(this.data!.source);
-
-    toggle() {
-      this.data!.name = this.name === 'zeeba' ? 'neighba' : 'zeeba';
+    id = $state<string>()!;
+    exists = $state(true);
+    constructor(id: string) {
+      this.id = id;
     }
   }
 
-  let array = $state<Model[]>([new Model({ name: 'zeeba', source: 'initial' })]);
+  class Collection {
+    content = $state<Model[]>([]);
+  }
 
-  let addModel = (source: string) => {
-    array.push(new Model({ name: 'zeeba', source }));
-  };
-
-  let needsInsert = $state(false);
+  let collection = new Collection();
+  let three = new Model('three');
 
   $effect(() => {
-    if (needsInsert) {
-      addModel('effect');
-      untrack(() => {
-        needsInsert = false;
-      });
+    collection.content = [new Model('one'), new Model('two'), three];
+  });
+
+  //
+
+  type FilterOptions = {
+    array: Model[];
+    id: string;
+  };
+
+  class Filter {
+    options: FilterOptions;
+    constructor(options: FilterOptions) {
+      this.options = options;
+    }
+
+    array = $derived.by(() => this.options.array);
+    id = $derived.by(() => this.options.id);
+
+    _model = $derived.by(() => {
+      return this.array.find((model) => model.id === this.id);
+    });
+
+    model = $derived.by(() => {
+      let model = this._model;
+      if (model?.exists) {
+        return model;
+      }
+    });
+  }
+
+  let filter = new Filter(
+    options({
+      array: getter(() => collection.content),
+      id: 'three'
+    })
+  );
+
+  let remove = $state(false);
+
+  $effect(() => {
+    if (remove) {
+      remove = false;
+      collection.content = [];
     }
   });
 
-  let insertWithEffect = () => {
-    needsInsert = true;
+  let onclick = () => {
+    remove = true;
   };
-
-  let insertDirectly = () => {
-    addModel('direct');
-  };
-
-  let toggle = () => {
-    array.forEach((model) => model.toggle());
-  };
-
-  // $inspect(array);
 </script>
 
 <div class="page">
   <div class="section">
-    <div class="row"><button onclick={insertWithEffect}>Add model in effect</button></div>
-    <div class="row"><button onclick={insertDirectly}>Add model</button></div>
-    <div class="row"><button onclick={toggle}>Toggle name</button></div>
+    <button type="button" {onclick}>Remove 1st</button>
   </div>
   <div class="section">
-    {#each array as model}
+    {filter.model?.id}
+  </div>
+  <div class="section">
+    {#each collection.content as model}
       <div class="row">
-        name={model.name} data.name={model.data!.name} source={model.source}
+        {model.id}
+        {model.exists}
       </div>
     {/each}
   </div>

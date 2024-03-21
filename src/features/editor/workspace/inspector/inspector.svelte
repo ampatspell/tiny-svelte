@@ -3,6 +3,7 @@
   import Tab from '$components/basic/tabs/tab.svelte';
   import Tabs from '$components/basic/tabs/tabs.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
+  import { setGlobal } from '$lib/utils/set-global';
   import Footer from './footer.svelte';
   import Node from './node/node.svelte';
   import Project from './project.svelte';
@@ -19,6 +20,8 @@
 
   let project = $derived(workspace.project);
   let node = $derived(workspace.selectedNode.node);
+
+  setGlobal({ workspace });
 </script>
 
 <div class="details">

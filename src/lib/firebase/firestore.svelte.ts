@@ -503,6 +503,8 @@ export class QueryAll<T extends DocumentData> extends BaseQuery<QueryAllOptions>
           insertObjectAt(current, newIndex, doc);
         }
       } else if (type === 'removed') {
+        const doc = current[oldIndex];
+        doc.onSnapshot(snapshot);
         removeObjectAt(current, oldIndex);
       }
     });
