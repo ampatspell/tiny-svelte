@@ -2,7 +2,7 @@
   import Button from '$components/basic/button.svelte';
   import Json from '$components/basic/json.svelte';
   import { Thing } from '$lib/firebase/fire-play.svelte';
-  import { subscribe } from '$lib/firebase/fire.svelte';
+  import { subscribe } from '$lib/firebase/fire/subscriber.svelte';
 
   let thing = new Thing({});
 

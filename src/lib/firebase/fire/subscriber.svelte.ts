@@ -24,7 +24,7 @@ export class Subscriber {
   _subscribe() {
     const children = this._dependencies.map((child) => child.subscriber.subscribe());
     const self = this._model.subscribe();
-    const stat = stats.registerSubscribed(this._model);
+    const stat = stats._registerSubscribed(this._model);
     return () => {
       self?.();
       children.forEach((child) => child());

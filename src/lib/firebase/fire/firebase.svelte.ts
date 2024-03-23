@@ -40,12 +40,12 @@ export abstract class FirebaseModel<O extends FirebaseModelOptions = FirebaseMod
     this.promises._onDidLoad(this, metadata.fromCache ? 'cached' : 'remote');
   }
 
-  abstract subscribeNonPassive(): VoidCallback;
+  abstract _subscribeActive(): VoidCallback;
 
   subscribe() {
     if (this.options.isPassive) {
       return;
     }
-    return this.subscribeNonPassive();
+    return this._subscribeActive();
   }
 }

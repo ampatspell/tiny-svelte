@@ -9,7 +9,7 @@ import {
   deleteDoc,
   setDoc
 } from '@firebase/firestore';
-import { FirebaseModel, type FirebaseModelOptions } from './firebase-model.svelte';
+import { FirebaseModel, type FirebaseModelOptions } from './firebase.svelte';
 import type { OptionsInput } from '$lib/utils/args';
 import type { VoidCallback } from '$lib/types/types';
 import { untrack } from 'svelte';
@@ -25,7 +25,7 @@ const createToken = () => {
   return null;
 };
 
-const TOKEN = '_token';
+export const TOKEN = '_token';
 
 export type DocumentLoadSource = 'cached' | 'remote' | undefined;
 
@@ -59,12 +59,13 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
 
   data = $state<T>();
   exists = $state<boolean>();
+  isSaving = $state(false);
 
   ref = $derived(this.options.ref);
   id = $derived(this.ref?.id);
   path = $derived(this.ref?.path);
 
-  subscribeNonPassive() {
+  _subscribeActive() {
     return $effect.root(() => {
       $effect.pre(() => {
         const ref = this.ref;
@@ -74,7 +75,8 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
         let cancel: VoidCallback | undefined;
         if (ref) {
           const snapshot = onSnapshot(ref, { includeMetadataChanges: true }, (snapshot) => this.onSnapshot(snapshot));
-          const listening = stats.registerListening(this as unknown as FirebaseModel);
+          // TODO: why this cast?
+          const listening = stats._registerListening(this as unknown as FirebaseModel);
           cancel = () => {
             snapshot();
             listening();
@@ -102,6 +104,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
   }
 
   async load(options: DocumentLoadOptions = {}): Promise<void> {
+    // TODO: maybe check for options.source and decide if loaded
     if (this.isLoaded && !options.force) {
       return;
     }
@@ -124,9 +127,16 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
     const ref = this.ref;
     if (ref) {
       const data = Object.assign({}, this.data, { [TOKEN]: this.token });
-      // TODO: isSaving & error checking
+      // TODO: queue
       // TODO: proper merge
-      await setDoc(ref, data, { merge: true });
+      this.isSaving = true;
+      try {
+        await setDoc(ref, data, { merge: true });
+      } catch(err) {
+        this.onError(err);
+      } finally {
+        this.isSaving = false;
+      }
     }
   }
 
@@ -134,9 +144,15 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
     const ref = this.ref;
     if (ref) {
       this.debounce.cancel();
-      // TODO: isSaving & error checking
-      await deleteDoc(ref);
-      this.exists = false;
+      // TODO: queue
+      try {
+        await deleteDoc(ref);
+        this.exists = false;
+      } catch(err) {
+        this.onError(err);
+      } finally {
+        this.isSaving = false;
+      }
     }
   }
 

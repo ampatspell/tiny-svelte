@@ -1,13 +1,13 @@
 import { untrack } from 'svelte';
-import type { FirebaseModel, FirebaseModelOptions } from './firebase-model.svelte';
+import type { FirebaseModel, FirebaseModelOptions } from './firebase.svelte';
 import type { HasSubscriber } from './subscriber.svelte';
 import { removeObject } from '$lib/utils/array';
 
-class Stats {
+export class Stats {
   subscribed = $state<HasSubscriber[]>([]);
   listening = $state<FirebaseModel<FirebaseModelOptions>[]>([]);
 
-  registerSubscribed(model: HasSubscriber) {
+  _registerSubscribed(model: HasSubscriber) {
     untrack(() => {
       this.subscribed.push(model);
     });
@@ -18,7 +18,7 @@ class Stats {
     };
   }
 
-  registerListening(model: FirebaseModel<FirebaseModelOptions>) {
+  _registerListening(model: FirebaseModel<FirebaseModelOptions>) {
     untrack(() => {
       this.listening.push(model);
     });
