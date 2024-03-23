@@ -21,6 +21,8 @@ export class Deferred<T, E> {
 
 const deferred = <T, E>() => new Deferred<T, E>();
 
+export type LoadPromiseType = 'cached' | 'remote';
+
 export class LoadPromises<T, E> {
   _cached = $state(deferred());
   _remote = $state(deferred());
@@ -30,7 +32,7 @@ export class LoadPromises<T, E> {
     this._remote = deferred();
   }
 
-  _onDidLoad(model: T, type: 'cached' | 'remote') {
+  _onDidLoad(model: T, type: LoadPromiseType) {
     this._cached.resolve(model);
     if (type === 'remote') {
       this._remote.resolve(model);

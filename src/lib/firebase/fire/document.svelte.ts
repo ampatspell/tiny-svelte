@@ -132,7 +132,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
       this.isSaving = true;
       try {
         await setDoc(ref, data, { merge: true });
-      } catch(err) {
+      } catch (err) {
         this.onError(err);
       } finally {
         this.isSaving = false;
@@ -148,7 +148,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
       try {
         await deleteDoc(ref);
         this.exists = false;
-      } catch(err) {
+      } catch (err) {
         this.onError(err);
       } finally {
         this.isSaving = false;

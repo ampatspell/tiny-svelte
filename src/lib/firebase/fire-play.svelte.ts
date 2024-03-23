@@ -1,11 +1,13 @@
 import type { EmptyObject } from '$lib/types/types';
 import { getter } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
-import { doc } from '@firebase/firestore';
+import { collection, doc } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
 import { setGlobal } from '$lib/utils/set-global';
 import { Model } from './fire/model.svelte';
 import { Document } from './fire/document.svelte';
+import { QueryAll, QueryFirst } from './fire/query.svelte';
+import { load } from './fire/firebase.svelte';
 
 type NestedOptions = {
   id: string;
@@ -13,19 +15,28 @@ type NestedOptions = {
 
 export class Nested extends Model<NestedOptions> {
   id = $derived(this.options.id);
-  ref = $derived(doc(firebase.firestore, `projects/${this.id}`));
+  coll = $derived(collection(firebase.firestore, 'projects'));
+  ref = $derived(doc(this.coll, this.id));
 
   doc = new Document({
     ref: getter(() => this.ref)
   });
 
+  query = new QueryAll({
+    ref: getter(() => this.coll)
+  });
+
+  first = new QueryFirst({
+    ref: getter(() => this.coll)
+  });
+
   serialized = $derived(serialized(this, ['id']));
 
-  dependencies = [this.doc];
+  dependencies = [this.doc, this.query, this.first];
 
   async load() {
     setGlobal({ nested: this });
-    await this.doc.promises.cached;
+    await load(this.dependencies, 'remote');
   }
 }
 
