@@ -93,6 +93,10 @@ export class WorkspaceModel extends Model<WorkspaceModelOptions> {
   dependencies = [this._doc, this.project, this.nodes, this.assets];
 
   async load() {
-    await Promise.all([this._doc.promises.cached, this.project.load(), this.nodes.load(), this.assets.load()]);
+    const doc = this._doc.promises.cached;
+    const project = this.project.load();
+    const nodes = this.nodes.load();
+    const assets = this.assets.load();
+    await Promise.all([doc, project, nodes, assets]);
   }
 }

@@ -38,6 +38,9 @@ export class ProjectModel extends Model<ProjectModelOptions> {
   dependencies = [this._doc, this.workspaces, this.assets];
 
   async load() {
-    await Promise.all([this._doc.promises.cached, this.workspaces.load(), this.assets.load()]);
+    const doc = this._doc.promises.cached;
+    const workspaces = this.workspaces.load();
+    const assets = this.assets.load();
+    await Promise.all([doc, workspaces, assets]);
   }
 }
