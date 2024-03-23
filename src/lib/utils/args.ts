@@ -12,7 +12,7 @@ class OptionsGetter<T> {
 
 export const getter = <T>(fn: () => T) => new OptionsGetter<T>(fn);
 
-type OptionsInput<T> = {
+export type OptionsInput<T> = {
   [K in keyof T]: T[K] | OptionsGetter<T[K]>;
 };
 
