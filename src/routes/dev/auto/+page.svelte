@@ -1,5 +1,6 @@
 <script lang="ts">
   import Button from '$components/basic/button.svelte';
+  import { stats } from '$lib/firebase/fire/stats.svelte';
   import Content from './content.svelte';
 
   let show = $state(true);
@@ -15,6 +16,16 @@
     {#if show}
       <Content />
     {/if}
+  </div>
+  <div class="row">
+    {#each stats.subscribed as model}
+      <div class="row">{model}</div>
+    {/each}
+  </div>
+  <div class="row">
+    {#each stats.listening as model}
+      <div class="row">{model}</div>
+    {/each}
   </div>
 </div>
 
