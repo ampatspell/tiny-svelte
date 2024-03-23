@@ -32,6 +32,16 @@
     <div class="row">{thing.nested.doc.isLoading}</div>
     <div class="row"><Json value={thing.nested.doc.data} /></div>
   </div>
+
+  <div class="section">
+    {#each thing.nested.models.content as model}
+      <div class="row">{model}</div>
+    {/each}
+  </div>
+
+  <div class="section">
+    <div class="row">{thing.nested.model.content}</div>
+  </div>
 </div>
 
 <style lang="scss">

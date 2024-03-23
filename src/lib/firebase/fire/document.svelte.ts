@@ -45,16 +45,26 @@ export type DocumentLoadOptions = {
   source?: DocumentLoadSource;
 };
 
-export type DocumentOptions = {
+export type DocumentOptions<T> = {
   ref?: DocumentReference;
+  data?: T;
 } & FirebaseModelOptions;
 
-export class Document<T extends DocumentData = DocumentData> extends FirebaseModel<DocumentOptions> {
+export class Document<T extends DocumentData = DocumentData> extends FirebaseModel<DocumentOptions<T>> {
   token: string | null;
 
-  constructor(options: OptionsInput<DocumentOptions>) {
+  _debounce = new Debounce({
+    delay: 300,
+    commit: () => this.save()
+  });
+
+  constructor(options: OptionsInput<DocumentOptions<T>>) {
     super(options);
     this.token = createToken();
+    const data = this.options.data;
+    if (data) {
+      this.data = data;
+    }
   }
 
   data = $state<T>();
@@ -70,13 +80,21 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
       $effect.pre(() => {
         const ref = this.ref;
 
-        untrack(() => this.onWillLoad(!!ref));
+        untrack(() => this._onWillLoad(!!ref));
 
         let cancel: VoidCallback | undefined;
         if (ref) {
-          const snapshot = onSnapshot(ref, { includeMetadataChanges: true }, (snapshot) => this.onSnapshot(snapshot));
-          // TODO: why this cast?
-          const listening = stats._registerListening(this as unknown as FirebaseModel);
+          const snapshot = onSnapshot(
+            ref,
+            { includeMetadataChanges: true },
+            (snapshot) => {
+              this._onSnapshot(snapshot);
+            },
+            (error) => {
+              this._onError(error);
+            }
+          );
+          const listening = stats._registerListening(this);
           cancel = () => {
             snapshot();
             listening();
@@ -85,14 +103,14 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
 
         return () => {
           // TODO: this.debounce.force() needs last ref
-          this.debounce.cancel();
+          this._debounce.cancel();
           cancel?.();
         };
       });
     });
   }
 
-  onSnapshot(snapshot: DocumentSnapshot) {
+  _onSnapshot(snapshot: DocumentSnapshot) {
     const exists = snapshot.exists();
     // TODO: diff deep-equal
     const next = snapshot.data({ serverTimestamps: 'estimate' }) as T;
@@ -100,7 +118,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
       this.data = next;
     }
     this.exists = exists;
-    this.onDidLoad(snapshot.metadata);
+    this._onDidLoad(snapshot.metadata);
   }
 
   async load(options: DocumentLoadOptions = {}): Promise<void> {
@@ -115,9 +133,9 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
     this.isLoading = true;
     try {
       const snapshot = await getDocBySource(ref, options.source);
-      this.onSnapshot(snapshot);
+      this._onSnapshot(snapshot);
     } catch (err) {
-      this.onError(err);
+      this._onError(err);
     } finally {
       this.isLoading = false;
     }
@@ -133,7 +151,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
       try {
         await setDoc(ref, data, { merge: true });
       } catch (err) {
-        this.onError(err);
+        this._onError(err);
       } finally {
         this.isSaving = false;
       }
@@ -143,27 +161,22 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
   async delete(): Promise<void> {
     const ref = this.ref;
     if (ref) {
-      this.debounce.cancel();
+      this._debounce.cancel();
       // TODO: queue
       try {
         await deleteDoc(ref);
         this.exists = false;
       } catch (err) {
-        this.onError(err);
+        this._onError(err);
       } finally {
         this.isSaving = false;
       }
     }
   }
 
-  debounce = new Debounce({
-    delay: 300,
-    commit: () => this.save()
-  });
-
   scheduleSave() {
     // TODO: do a queue
-    this.debounce.schedule();
+    this._debounce.schedule();
   }
 
   serialized = $derived(serialized(this, ['path', 'isLoading', 'isLoaded', 'error']));

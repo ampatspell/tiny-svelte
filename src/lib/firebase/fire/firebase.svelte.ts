@@ -23,7 +23,7 @@ export abstract class FirebaseModel<O extends FirebaseModelOptions = FirebaseMod
   metadata = $state<SnapshotMetadata>();
   promises = new LoadPromises<typeof this, unknown>();
 
-  onWillLoad(subscribe: boolean) {
+  _onWillLoad(subscribe: boolean) {
     this.promises._onWillLoad();
     this.error = undefined;
     this.metadata = undefined;
@@ -33,14 +33,14 @@ export abstract class FirebaseModel<O extends FirebaseModelOptions = FirebaseMod
     }
   }
 
-  onError(error: unknown) {
+  _onError(error: unknown) {
     this.isLoading = false;
     this.error = error;
     this.metadata = undefined;
     this.promises._onError(error);
   }
 
-  onDidLoad(metadata: SnapshotMetadata) {
+  _onDidLoad(metadata: SnapshotMetadata) {
     this.isLoading = false;
     this.isLoaded = true;
     this.error = undefined;

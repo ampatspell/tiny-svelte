@@ -5,7 +5,8 @@ import {
   QuerySnapshot,
   QueryDocumentSnapshot,
   query,
-  limit
+  limit,
+  getDocs
 } from '@firebase/firestore';
 import { FirebaseModel, type FirebaseModelOptions } from './firebase.svelte';
 import type { VoidCallback } from '$lib/types/types';
@@ -38,12 +39,12 @@ export class QueryBase<
 
   private _createDocument(snapshot: QueryDocumentSnapshot) {
     const doc = new Document<T>({ ref: snapshot.ref, isPassive: true });
-    doc.onSnapshot(snapshot);
+    doc._onSnapshot(snapshot);
     return doc;
   }
 
-  onWillLoad(subscribe: boolean) {
-    super.onWillLoad(subscribe);
+  _onWillLoad(subscribe: boolean) {
+    super._onWillLoad(subscribe);
     if (subscribe) {
       this.needsContentReset = true;
     } else {
@@ -51,7 +52,7 @@ export class QueryBase<
     }
   }
 
-  private maybeResetContent() {
+  _maybeResetContent() {
     const content = this._content;
     if (this.needsContentReset) {
       this._content = [];
@@ -65,13 +66,20 @@ export class QueryBase<
       $effect.pre(() => {
         const ref = this.ref;
 
-        untrack(() => this.onWillLoad(!!ref));
+        untrack(() => this._onWillLoad(!!ref));
 
         let cancel: VoidCallback | undefined;
         if (ref) {
           const normalized = this._normalizeRef(ref);
-          const snapshot = onSnapshot(normalized, { includeMetadataChanges: true }, (snapshot) =>
-            this.onSnapshot(snapshot)
+          const snapshot = onSnapshot(
+            normalized,
+            { includeMetadataChanges: true },
+            (snapshot) => {
+              this._onSnapshot(snapshot);
+            },
+            (error) => {
+              this._onError(error);
+            }
           );
           const listening = stats._registerListening(this);
           cancel = () => {
@@ -91,8 +99,8 @@ export class QueryBase<
     return ref;
   }
 
-  onSnapshot(querySnapshot: QuerySnapshot) {
-    const previous = this.maybeResetContent();
+  _onSnapshot(querySnapshot: QuerySnapshot) {
+    const previous = this._maybeResetContent();
     const findOrCreate = (snapshot: QueryDocumentSnapshot) => {
       let doc = previous.find((doc) => doc.path === snapshot.ref.path);
       if (!doc) {
@@ -109,19 +117,38 @@ export class QueryBase<
         insertObjectAt(current, newIndex, doc);
       } else if (type === 'modified') {
         const doc = current[oldIndex];
-        doc.onSnapshot(snapshot);
+        doc._onSnapshot(snapshot);
         if (oldIndex !== newIndex) {
           removeObjectAt(current, oldIndex);
           insertObjectAt(current, newIndex, doc);
         }
       } else if (type === 'removed') {
         const doc = current[oldIndex];
-        doc.onSnapshot(snapshot);
+        doc._onSnapshot(snapshot);
         removeObjectAt(current, oldIndex);
       }
     });
 
-    this.onDidLoad(querySnapshot.metadata);
+    this._onDidLoad(querySnapshot.metadata);
+  }
+
+  async load() {
+    // todo queue and parallel subscription + load
+    this.isLoading = true;
+    try {
+      const ref = this.ref;
+      if (!ref) {
+        return;
+      }
+      const normalized = this._normalizeRef(ref);
+      const snapshot = await getDocs(normalized);
+      this.needsContentReset = true;
+      this._onSnapshot(snapshot);
+    } catch (err) {
+      this._onError(err);
+    } finally {
+      this.isLoading = false;
+    }
   }
 }
 

@@ -24,6 +24,6 @@ export abstract class Model<O> implements HasDescriptionAndSerialized, HasSubscr
   description = $derived.by(() => description(this, this.serialized));
 
   toString() {
-    return this.description ?? description(this, this.serialized);
+    return this.description;
   }
 }
