@@ -46,8 +46,18 @@ export type DocumentLoadOptions = {
 };
 
 export type DocumentOptions<T> = {
+  /**
+   * Defaults to false
+   */
   ref?: DocumentReference;
+  /**
+   * Optional initial data
+   */
   data?: T;
+  /**
+   * Defaults to true
+   */
+  isNew?: boolean;
 } & FirebaseModelOptions;
 
 export class Document<T extends DocumentData = DocumentData> extends FirebaseModel<DocumentOptions<T>> {
@@ -61,6 +71,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
   constructor(options: OptionsInput<DocumentOptions<T>>) {
     super(options);
     this.token = createToken();
+    this.isNew = this.options.isNew ?? true;
     const data = this.options.data;
     if (data) {
       this.data = data;
@@ -69,6 +80,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
 
   data = $state<T>();
   exists = $state<boolean>();
+  isNew = $state<boolean>()!;
   isSaving = $state(false);
 
   ref = $derived(this.options.ref);
@@ -179,5 +191,5 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
     this._debounce.schedule();
   }
 
-  serialized = $derived(serialized(this, ['path', 'isLoading', 'isLoaded', 'error']));
+  serialized = $derived(serialized(this, ['path', 'isLoading', 'isLoaded', 'error', 'isSubscribed']));
 }

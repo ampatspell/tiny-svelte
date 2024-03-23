@@ -21,7 +21,7 @@ export class Foof extends Model<FoofOptions> {
   id = $derived(this.doc.id);
   identifier = $derived(this.doc.data!.identifier);
 
-  serialized = $derived(serialized(this, ['id', 'identifier']));
+  serialized = $derived(serialized(this, ['id', 'identifier', 'isSubscribed']));
 }
 
 type NestedOptions = {
@@ -79,7 +79,7 @@ export class Nested extends Model<NestedOptions> {
     await Promise.all(q.content.map((doc) => doc.delete()));
   }
 
-  serialized = $derived(serialized(this, ['id']));
+  serialized = $derived(serialized(this, ['id', 'isSubscribed']));
 }
 
 export class Thing extends Model<EmptyObject> {
@@ -95,5 +95,5 @@ export class Thing extends Model<EmptyObject> {
     await this.nested.load();
   }
 
-  serialized = $derived(serialized(this, ['id']));
+  serialized = $derived(serialized(this, ['id', 'isSubscribed']));
 }

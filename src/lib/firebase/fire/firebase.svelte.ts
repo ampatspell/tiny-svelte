@@ -2,6 +2,7 @@ import type { VoidCallback } from '$lib/types/types';
 import type { SnapshotMetadata } from '@firebase/firestore';
 import { Model } from './model.svelte';
 import { LoadPromises, type LoadPromiseType } from './deferred.svelte';
+import type { OptionsInput } from '$lib/utils/args';
 
 export type FirebaseModelOptions = {
   isPassive?: boolean;
@@ -22,6 +23,12 @@ export abstract class FirebaseModel<O extends FirebaseModelOptions = FirebaseMod
   isError = $derived.by(() => !!this.error);
   metadata = $state<SnapshotMetadata>();
   promises = new LoadPromises<typeof this, unknown>();
+  isPassive: boolean;
+
+  constructor(options: OptionsInput<O>) {
+    super(options);
+    this.isPassive = this.options.isPassive ?? false;
+  }
 
   _onWillLoad(subscribe: boolean) {
     this.promises._onWillLoad();
@@ -51,7 +58,7 @@ export abstract class FirebaseModel<O extends FirebaseModelOptions = FirebaseMod
   abstract _subscribeActive(): VoidCallback;
 
   subscribe() {
-    if (this.options.isPassive) {
+    if (this.isPassive) {
       return;
     }
     return this._subscribeActive();

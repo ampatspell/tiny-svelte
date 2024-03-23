@@ -16,8 +16,13 @@ export abstract class Model<O> implements HasDescriptionAndSerialized, HasSubscr
     this.options = options(opts);
   }
 
+  isSubscribed = $derived.by(() => this.subscriber.isSubscribed);
+
   subscribe() {}
 
+  /**
+   * Dependencies must be stable
+   */
   dependencies: HasSubscriber[] = [];
 
   declare serialized?: Record<string, unknown>;

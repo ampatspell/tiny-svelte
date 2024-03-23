@@ -11,7 +11,9 @@ export type HasSubscriber = {
 export class Subscriber {
   _model: HasSubscriber;
   _subscribers = 0;
-  _cancel?: VoidCallback;
+  _cancel = $state<VoidCallback>();
+
+  isSubscribed = $derived(!!this._cancel);
 
   constructor(model: HasSubscriber) {
     this._model = model;
@@ -23,10 +25,10 @@ export class Subscriber {
 
   _subscribe() {
     const children = this._dependencies.map((child) => child.subscriber.subscribe());
-    const self = this._model.subscribe();
+    const model = this._model.subscribe();
     const stat = stats._registerSubscribed(this._model);
     return () => {
-      self?.();
+      model?.();
       children.forEach((child) => child());
       stat();
     };

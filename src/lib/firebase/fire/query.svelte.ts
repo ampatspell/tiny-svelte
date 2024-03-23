@@ -38,7 +38,7 @@ export class QueryBase<
   _content = $state<Document<T>[]>([]);
 
   private _createDocument(snapshot: QueryDocumentSnapshot) {
-    const doc = new Document<T>({ ref: snapshot.ref, isPassive: true });
+    const doc = new Document<T>({ ref: snapshot.ref, isNew: false, isPassive: true });
     doc._onSnapshot(snapshot);
     return doc;
   }
@@ -158,7 +158,9 @@ export class QueryAll<T extends DocumentData = DocumentData> extends QueryBase<T
   content = $derived(this._content);
   size = $derived(this.content.length);
 
-  serialized = $derived.by(() => serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'size']));
+  serialized = $derived.by(() =>
+    serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'isSubscribed', 'size'])
+  );
 }
 
 export type QueryFirstOptions = QueryBaseOptions;
@@ -176,5 +178,7 @@ export class QueryFirst<T extends DocumentData = DocumentData> extends QueryBase
     return query(ref, limit(1));
   }
 
-  serialized = $derived.by(() => serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'exists']));
+  serialized = $derived.by(() =>
+    serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'isSubscribed', 'exists'])
+  );
 }
