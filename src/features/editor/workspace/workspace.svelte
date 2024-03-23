@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Loadable from '$components/basic/loadable.svelte';
   import Details from '$features/editor/workspace/inspector/inspector.svelte';
   import Sidebar from '$features/editor/workspace/sidebar/sidebar.svelte';
   import Toolbar from '$features/editor/workspace/toolbar/toolbar.svelte';
   import Workspace from './workspace/workspace.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
+  import Loadable from '$components/basic/loadable.svelte';
 
   let { workspace }: { workspace: WorkspaceModel } = $props();
 </script>

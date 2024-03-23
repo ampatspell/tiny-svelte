@@ -1,10 +1,11 @@
 import type { ProjectAssetsModel } from './assets.svelte';
-import { Model, type Document } from '$lib/firebase/firestore.svelte';
 import type { AssetData, BoxAssetData } from '$lib/types/assets';
 import { serialized } from '$lib/utils/object';
 import type { Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
 import type { ResizeEvent } from '$lib/types/types';
+import { Model } from '$lib/firebase/fire/model.svelte';
+import type { Document } from '$lib/firebase/fire/document.svelte';
 
 export type ProjectAssetModelOptions<D extends AssetData> = {
   assets: ProjectAssetsModel;

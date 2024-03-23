@@ -1,4 +1,5 @@
-import { Model, type Document } from '$lib/firebase/firestore.svelte';
+import type { Document } from '$lib/firebase/fire/document.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
 import type { Point } from '$lib/types/schema';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { action } from '$lib/utils/action';

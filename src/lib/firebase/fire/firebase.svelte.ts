@@ -12,6 +12,10 @@ export type HasLoadPromises<T, E> = {
   promises: LoadPromises<T, E>;
 };
 
+export type HasLoad<T = unknown> = {
+  load: () => Promise<T>;
+};
+
 export const load = async (models: HasLoadPromises<unknown, unknown>[], key: LoadPromiseType) => {
   await Promise.all(models.map((model) => model.promises[key]));
 };

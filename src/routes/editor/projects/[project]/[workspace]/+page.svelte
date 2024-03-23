@@ -1,10 +1,10 @@
 <script lang="ts">
   import Workspace from '$features/editor/workspace/workspace.svelte';
-  import { activate } from '$lib/firebase/firestore.svelte';
+  import { subscribe } from '$lib/firebase/fire/subscriber.svelte.js';
 
   let { data } = $props();
   let workspace = $derived(data.workspace);
-  $effect(() => activate(workspace));
+  $effect(() => subscribe(workspace));
 </script>
 
 <Workspace {workspace} />
