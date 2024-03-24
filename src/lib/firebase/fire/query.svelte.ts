@@ -115,7 +115,7 @@ export class QueryBase<
     const findOrCreate = (snapshot: QueryDocumentSnapshot) => {
       let doc = previous.find((doc) => doc.path === snapshot.ref.path);
       if (!doc) {
-        doc = new Document<T>({ ref: snapshot.ref, isNew: false, isPassive: true })
+        doc = new Document<T>({ ref: snapshot.ref, isNew: false, isPassive: true });
       }
       return doc;
     };

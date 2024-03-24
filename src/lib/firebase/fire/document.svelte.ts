@@ -124,9 +124,9 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
 
   _onSnapshot(snapshot: DocumentSnapshot) {
     const exists = snapshot.exists();
-    // TODO: diff deep-equal
     const next = snapshot.data({ serverTimestamps: 'estimate' }) as T;
     if (next[TOKEN] !== this.token) {
+      // TODO: diff deep-equal
       this.data = next;
     }
     this.exists = exists;
