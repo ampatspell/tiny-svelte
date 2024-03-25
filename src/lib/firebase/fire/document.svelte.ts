@@ -60,6 +60,20 @@ export type DocumentOptions<T> = {
   isNew?: boolean;
 } & FirebaseModelOptions;
 
+// export const toData = (input: any): any => {
+//   if(Array.isArray(input)) {
+//     return input.map(entry => toData(entry));
+//   } else if(typeof input === 'object') {
+//     const out: any = {};
+//     for(const key in input) {
+//       out[key] = toData(input[key]);
+//     }
+//     return out;
+//   } else {
+//     return input;
+//   }
+// }
+
 export class Document<T extends DocumentData = DocumentData> extends FirebaseModel<DocumentOptions<T>> {
   token: string | null;
 
@@ -124,9 +138,9 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
 
   _onSnapshot(snapshot: DocumentSnapshot) {
     const exists = snapshot.exists();
-    // TODO: diff deep-equal
     const next = snapshot.data({ serverTimestamps: 'estimate' }) as T;
     if (next[TOKEN] !== this.token) {
+      // TODO: diff deep-equal
       this.data = next;
     }
     this.exists = exists;

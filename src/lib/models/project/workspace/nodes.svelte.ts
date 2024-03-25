@@ -1,13 +1,16 @@
-import { ActivatableModel, Document, Model, Models, QueryAll } from '$lib/firebase/firestore.svelte';
 import { collection, doc, setDoc } from '@firebase/firestore';
 import type { WorkspaceModel } from './workspace.svelte';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
-import { getter, options } from '$lib/utils/args';
+import { getter, options, type OptionsInput } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { WorkspaceNodeModel } from './node.svelte';
 import type { ProjectAssetModel } from '../asset.svelte';
 import type { AssetType } from '$lib/types/assets';
 import { ExistingSelector } from '$lib/models/selector.svelte';
+import { QueryAll } from '$lib/firebase/fire/query.svelte';
+import { MapModels } from '$lib/firebase/fire/models.svelte';
+import type { Document } from '$lib/firebase/fire/document.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
 
 export type WorkspaceNodeSelectorOptions<I> = {
   nodes: WorkspaceNodesModel;
@@ -18,15 +21,13 @@ export type WorkspaceNodeSelectorOptions<I> = {
 export class WorkspaceNodeSelector<I> extends Model<WorkspaceNodeSelectorOptions<I>> {
   selector: ExistingSelector<I, WorkspaceNodeModel>;
 
-  constructor(_options: WorkspaceNodeSelectorOptions<I>) {
-    super(_options);
-    this.selector = new ExistingSelector(
-      options({
-        models: getter(() => _options.nodes.all),
-        value: getter(() => _options.value),
-        select: getter(() => _options.select)
-      })
-    );
+  constructor(opts: OptionsInput<WorkspaceNodeSelectorOptions<I>>) {
+    super(opts);
+    this.selector = new ExistingSelector({
+      models: getter(() => this.options.nodes.all),
+      value: getter(() => this.options.value),
+      select: getter(() => this.options.select)
+    });
   }
 
   value = $derived.by(() => this.selector.value);
@@ -39,7 +40,7 @@ export type WorkspaceNodesModelOptions = {
   workspace: WorkspaceModel;
 };
 
-export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOptions> {
+export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
   workspace = $derived(this.options.workspace);
   project = $derived(this.workspace.project);
   assets = $derived(this.project.assets);
@@ -53,10 +54,10 @@ export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOpt
     })
   );
 
-  _all = new Models(
+  _all = new MapModels(
     options({
       source: getter(() => this._query.content),
-      model: (doc: Document<WorkspaceNodeData>) => {
+      target: (doc: Document<WorkspaceNodeData>) => {
         return new WorkspaceNodeModel({
           nodes: this,
           doc,
@@ -88,7 +89,11 @@ export class WorkspaceNodesModel extends ActivatableModel<WorkspaceNodesModelOpt
     return await this._all.waitFor((model) => model.id === ref.id);
   }
 
-  dependencies = [this._query, this._all];
+  dependencies = [this._query];
+
+  async load() {
+    await this._query.promises.cached;
+  }
 
   serialized = $derived(serialized(this, ['path']));
 }

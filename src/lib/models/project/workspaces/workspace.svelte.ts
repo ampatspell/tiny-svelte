@@ -1,4 +1,5 @@
-import { Model, type Document } from '$lib/firebase/firestore.svelte';
+import type { Document } from '$lib/firebase/fire/document.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
 import type { WorkspaceData } from '$lib/types/workspace';
 import { serialized } from '$lib/utils/object';
 import type { WorkspacesModel } from './workspaces.svelte';

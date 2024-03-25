@@ -1,4 +1,4 @@
-import { Model } from '$lib/firebase/firestore.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
 import { serialized } from '$lib/utils/object';
 
 export type HasExists = {

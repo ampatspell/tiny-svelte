@@ -74,6 +74,21 @@ export class MapModels<Source extends object, Target> extends BaseMap<
       return this._source.map((source) => findOrCreate(source)).filter(isTruthy);
     });
   });
+
+  async waitFor(fn: (model: Target) => boolean): Promise<Target> {
+    return new Promise<Target>((resolve) => {
+      // TODO: timeout
+      const cancel = $effect.root(() => {
+        $effect(() => {
+          const model = this.content.find(fn);
+          if (model) {
+            cancel();
+            resolve(model);
+          }
+        });
+      });
+    });
+  }
 }
 
 export type MapModelOptions<Source, Target> = {

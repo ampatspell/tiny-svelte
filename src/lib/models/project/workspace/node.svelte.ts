@@ -1,4 +1,5 @@
-import { Model, type Document } from '$lib/firebase/firestore.svelte';
+import type { Document } from '$lib/firebase/fire/document.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
 import type { Point } from '$lib/types/schema';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { action } from '$lib/utils/action';
@@ -21,7 +22,6 @@ export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
   id = $derived(this._doc.id);
   path = $derived(this._doc.path);
   exists = $derived(this._doc.exists);
-
   position = $derived(this._data.position);
   pixel = $derived(this._data.pixel);
   identifier = $derived(this._data.asset);

@@ -6,15 +6,32 @@ import {
   QueryDocumentSnapshot,
   query,
   limit,
-  getDocs
+  getDocs,
+  getDocsFromCache,
+  getDocsFromServer
 } from '@firebase/firestore';
 import { FirebaseModel, type FirebaseModelOptions } from './firebase.svelte';
 import type { VoidCallback } from '$lib/types/types';
-import { Document } from './document.svelte';
+import { Document, type DocumentLoadSource } from './document.svelte';
 import { untrack } from 'svelte';
 import { stats } from './stats.svelte';
 import { insertObjectAt, removeObjectAt } from '$lib/utils/array';
 import { serialized } from '$lib/utils/object';
+
+export type DocumentsLoadOptions = {
+  source?: DocumentLoadSource;
+};
+
+const getDocsBySource = (ref: Query, source: DocumentLoadSource) => {
+  if (source === 'cached') {
+    return getDocsFromCache(ref);
+  } else if (source === 'remote') {
+    return getDocsFromServer(ref);
+  } else if (source === undefined) {
+    return getDocs(ref);
+  }
+  throw new Error(`unsupported source ${source}`);
+};
 
 export type QueryBaseOptions = {
   ref: Query | undefined;
@@ -36,12 +53,6 @@ export class QueryBase<
 
   private needsContentReset = false;
   _content = $state<Document<T>[]>([]);
-
-  private _createDocument(snapshot: QueryDocumentSnapshot) {
-    const doc = new Document<T>({ ref: snapshot.ref, isNew: false, isPassive: true });
-    doc._onSnapshot(snapshot);
-    return doc;
-  }
 
   _onWillLoad(subscribe: boolean) {
     super._onWillLoad(subscribe);
@@ -104,7 +115,7 @@ export class QueryBase<
     const findOrCreate = (snapshot: QueryDocumentSnapshot) => {
       let doc = previous.find((doc) => doc.path === snapshot.ref.path);
       if (!doc) {
-        doc = this._createDocument(snapshot);
+        doc = new Document<T>({ ref: snapshot.ref, isNew: false, isPassive: true });
       }
       return doc;
     };
@@ -114,6 +125,7 @@ export class QueryBase<
     querySnapshot.docChanges().forEach(({ type, oldIndex, newIndex, doc: snapshot }) => {
       if (type === 'added') {
         const doc = findOrCreate(snapshot);
+        doc._onSnapshot(snapshot);
         insertObjectAt(current, newIndex, doc);
       } else if (type === 'modified') {
         const doc = current[oldIndex];
@@ -132,7 +144,7 @@ export class QueryBase<
     this._onDidLoad(querySnapshot.metadata);
   }
 
-  async load() {
+  async load(options: DocumentsLoadOptions) {
     // todo queue and parallel subscription + load
     this.isLoading = true;
     try {
@@ -141,7 +153,7 @@ export class QueryBase<
         return;
       }
       const normalized = this._normalizeRef(ref);
-      const snapshot = await getDocs(normalized);
+      const snapshot = await getDocsBySource(normalized, options.source);
       this.needsContentReset = true;
       this._onSnapshot(snapshot);
     } catch (err) {

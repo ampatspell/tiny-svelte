@@ -1,31 +1,25 @@
 <script lang="ts">
-  import { type HasActivator, allLoadableDependencies } from '$lib/firebase/firestore.svelte';
+  import type { HasLoad } from '$lib/firebase/fire/firebase.svelte';
   import type { Snippet } from 'svelte';
 
   let {
     model,
     children
   }: {
-    model: HasActivator;
+    model: HasLoad<unknown>;
     children?: Snippet;
   } = $props();
-
-  let loadable = $derived(allLoadableDependencies(model));
-
-  let isLoaded = $derived(!loadable.find((model) => !model.isLoaded));
-  let isLoading = $derived(!loadable.find((model) => !model.isLoading));
-  let error = $derived(loadable.find((model) => model.error));
 </script>
 
-{#if isLoaded}
+{#await model.load()}
+  <div class="loading">Loading…</div>
+{:then}
   {#if children}
     {@render children()}
   {/if}
-{:else if isLoading}
-  <div class="loading">Loading…</div>
-{:else if error}
+{:catch error}
   <div class="error">{error.error}</div>
-{/if}
+{/await}
 
 <style lang="scss">
   .loading,

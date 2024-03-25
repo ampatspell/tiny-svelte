@@ -1,12 +1,12 @@
 <script lang="ts">
   import Project from '$features/editor/project/project.svelte';
-  import { activate } from '$lib/firebase/firestore.svelte.js';
+  import { subscribe } from '$lib/firebase/fire/subscriber.svelte';
   import type { ProjectModel } from '$lib/models/project/project.svelte';
 
   let { data }: { data: { project: ProjectModel } } = $props();
   let project = $derived(data.project);
 
-  $effect(() => activate(project));
+  $effect(() => subscribe(project));
 </script>
 
 <Project {project} />

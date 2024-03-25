@@ -1,19 +1,20 @@
 <script lang="ts">
-  import { activators, type HasActivator, type HasDescriptionAndSerialized } from '$lib/firebase/firestore.svelte';
+  import { stats } from '$lib/firebase/fire/stats.svelte';
+  import type { HasSubscriber } from '$lib/firebase/fire/subscriber.svelte';
   import { setGlobal } from '$lib/utils/set-global';
 
-  let log = (model: HasActivator) => {
+  let log = (model: HasSubscriber) => {
     setGlobal({ model });
   };
 
-  let render = (model: HasActivator) => {
-    // TODO: mess
-    const description = (model as HasDescriptionAndSerialized).description;
+  let render = (model: HasSubscriber) => {
+    // TODO: fix any
+    const description = (model as any).description;
     return description ?? model.toString();
   };
 </script>
 
-{#snippet models(models: HasActivator[])}
+{#snippet models(models: HasSubscriber[])}
   <div class="models">
     {#each models as model}
       <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
@@ -28,12 +29,12 @@
 
 <div class="activated">
   <div class="section">
-    <div class="title">Activated</div>
-    {@render models(activators.activated)}
+    <div class="title">Subscribed</div>
+    {@render models(stats.subscribed)}
   </div>
   <div class="section">
-    <div class="title">Subscribed</div>
-    {@render models(activators.subscribed)}
+    <div class="title">Listening</div>
+    {@render models(stats.listening)}
   </div>
 </div>
 

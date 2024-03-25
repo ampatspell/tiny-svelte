@@ -1,12 +1,13 @@
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
 import { WorkspaceNodeSelector, WorkspaceNodesModel } from './nodes.svelte';
-import { ActivatableModel, Document } from '$lib/firebase/firestore.svelte';
 import type { ProjectModel } from '../project.svelte';
 import { WorkspaceAssetsModel } from './assets.svelte';
-import { getter, options } from '$lib/utils/args';
+import { getter } from '$lib/utils/args';
 import type { WorkspaceData } from '$lib/types/workspace';
 import type { WorkspaceNodeModel } from './node.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
+import { Document } from '$lib/firebase/fire/document.svelte';
 
 export enum ToolType {
   WorkspaceDrag = 'workspace-drag',
@@ -28,18 +29,16 @@ export type WorkspaceModelOptions = {
   id: string;
 };
 
-export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
+export class WorkspaceModel extends Model<WorkspaceModelOptions> {
   project = $derived(this.options.project);
 
   id = $derived(this.options.id);
   ref = $derived(doc(collection(this.project.ref, 'workspaces'), this.id));
   path = $derived(this.ref.path);
 
-  _doc = new Document<WorkspaceData>(
-    options({
-      ref: getter(() => this.ref)
-    })
-  );
+  _doc = new Document<WorkspaceData>({
+    ref: getter(() => this.ref)
+  });
 
   _data = $derived(this._doc.data!);
   identifier = $derived(this._data.identifier);
@@ -56,7 +55,7 @@ export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
   }
 
   nodes = new WorkspaceNodesModel({ workspace: this });
-  assets = new WorkspaceAssetsModel(options({ workspace: this, assets: getter(() => this.project.assets) }));
+  assets = new WorkspaceAssetsModel({ workspace: this, assets: getter(() => this.project.assets) });
 
   //
 
@@ -69,13 +68,11 @@ export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
   //
 
   selectedNodeId = $state<string>();
-  selectedNode = new WorkspaceNodeSelector(
-    options({
-      nodes: this.nodes,
-      value: getter(() => this.selectedNodeId),
-      select: (model: WorkspaceNodeModel, value: string) => model.id === value
-    })
-  );
+  selectedNode = new WorkspaceNodeSelector({
+    nodes: this.nodes,
+    value: getter(() => this.selectedNodeId),
+    select: (model: WorkspaceNodeModel, value: string) => model.id === value
+  });
 
   selectNode(node?: WorkspaceNodeModel) {
     if (this.selectedNode.node === node) {
@@ -94,4 +91,12 @@ export class WorkspaceModel extends ActivatableModel<WorkspaceModelOptions> {
   serialized = $derived(serialized(this, ['id', 'identifier']));
 
   dependencies = [this._doc, this.project, this.nodes, this.assets];
+
+  async load() {
+    const doc = this._doc.promises.cached;
+    const project = this.project.load();
+    const nodes = this.nodes.load();
+    const assets = this.assets.load();
+    await Promise.all([doc, project, nodes, assets]);
+  }
 }
