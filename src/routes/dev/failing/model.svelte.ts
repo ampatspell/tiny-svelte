@@ -10,9 +10,9 @@ export class Thing {
   data = $state<ThingData>();
   index = 0;
 
-  get _next() {
+  next() {
     const index = this.index++;
-    return {
+    this.data = {
       name: `Name #${index}`,
       position: {
         x: index * 5,
@@ -21,13 +21,9 @@ export class Thing {
     };
   }
 
-  next() {
-    this.data = this._next;
-  }
-
   subscribe() {
     const id = setInterval(() => {
-      this.data = this._next;
+      this.next();
     }, 1000);
 
     return () => {
