@@ -1,7 +1,10 @@
 <script lang="ts">
-  let { data } = $props();
-  let model = $derived(data.model);
+  import { Things } from '../model.svelte.js';
+
+  let model = new Things();
   $effect(() => model.subscribe());
 </script>
 
-name={model.data?.name}, position=[{model.position?.x}, {model.position?.y}]
+{#each model.content as thing}
+  <div class="row">name={thing.data?.name}, position=[{thing.position?.x}, {thing.position?.y}]</div>
+{/each}
