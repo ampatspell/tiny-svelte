@@ -22,13 +22,9 @@ export class Thing {
   }
 
   subscribe() {
-    const id = setInterval(() => {
+    setTimeout(() => {
       this.next();
-    }, 1000);
-
-    return () => {
-      clearInterval(id);
-    };
+    }, 0);
   }
 
   position = $derived(this.data?.position);
@@ -39,19 +35,11 @@ export class Things {
   content = $state<Thing[]>([]);
 
   subscribe() {
-    const content: (() => void)[] = [];
-
-    const id = setInterval(() => {
+    setTimeout(() => {
       const thing = new Thing();
       this.content.push(thing);
-      content.push(thing.subscribe());
-
+      thing.subscribe();
       this.content.map(e => e.position);
-    }, 1000);
-
-    return () => {
-      content.forEach(cancel => cancel());
-      clearInterval(id);
-    };
+    }, 0);
   }
 }
