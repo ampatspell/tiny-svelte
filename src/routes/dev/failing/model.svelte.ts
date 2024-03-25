@@ -7,26 +7,28 @@ export type ThingData = {
 }
 
 export class Thing {
-  data = $state<ThingData[]>([]);
+  data = $state<ThingData>();
   index = 0;
+
+  constructor() {
+  }
+
+  get _next() {
+    const index = this.index++;
+    return {
+      name: `Name #${index}`,
+      position: {
+        x: index * 5,
+        y: index * 5
+      }
+    };
+  }
 
   subscribe() {
     return $effect.root(() => {
       $effect.pre(() => {
         const id = setInterval(() => {
-          const index = this.index++;
-          const data = {
-            name: `Name #${index}`,
-            position: {
-              x: index * 5,
-              y: index * 5
-            }
-          };
-          if(this.data.length === 0) {
-            this.data.push(data);
-          } else {
-            this.data[0] = data;
-          }
+          this.data = this._next;
           console.log(this.data);
         }, 1000);
         return () => {
@@ -35,4 +37,7 @@ export class Thing {
       });
     });
   }
+
+  position = $derived(this.data?.position);
+
 }
