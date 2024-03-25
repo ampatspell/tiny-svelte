@@ -2,7 +2,7 @@
 
 > Work in progress.
 
-Similar to [Tiny (Ember.js)](https://github.com/ampatspell/tiny)
+Will be similar to [Tiny (Ember.js)](https://github.com/ampatspell/tiny)
 
 ```bash
 npm install
