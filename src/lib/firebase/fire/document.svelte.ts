@@ -17,7 +17,6 @@ import { stats } from './stats.svelte';
 import { Debounce } from './debounce.svelte';
 import { serialized } from '$lib/utils/object';
 import { browser } from '$app/environment';
-
 const createToken = () => {
   if (browser) {
     return window.crypto.randomUUID().replaceAll('-', '');
@@ -60,19 +59,20 @@ export type DocumentOptions<T> = {
   isNew?: boolean;
 } & FirebaseModelOptions;
 
-// export const toData = (input: any): any => {
-//   if(Array.isArray(input)) {
-//     return input.map(entry => toData(entry));
-//   } else if(typeof input === 'object') {
-//     const out: any = {};
-//     for(const key in input) {
-//       out[key] = toData(input[key]);
-//     }
-//     return out;
-//   } else {
-//     return input;
-//   }
-// }
+export const toData = (input: DocumentData): DocumentData => {
+  if(Array.isArray(input)) {
+    return input.map(entry => toData(entry));
+  } else if(typeof input === 'object') {
+    const out: Record<string, unknown> = {};
+    for(const key in input) {
+      const value = (input as DocumentData)[key] as DocumentData;
+      out[key] = toData(value);
+    }
+    return out;
+  } else {
+    return input;
+  }
+}
 
 export class Document<T extends DocumentData = DocumentData> extends FirebaseModel<DocumentOptions<T>> {
   token: string | null;
@@ -140,8 +140,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
     const exists = snapshot.exists();
     const next = snapshot.data({ serverTimestamps: 'estimate' }) as T;
     if (next[TOKEN] !== this.token) {
-      // TODO: diff deep-equal
-      this.data = next;
+      this.data = toData(next) as T;
     }
     this.exists = exists;
     this._onDidLoad(snapshot.metadata);
