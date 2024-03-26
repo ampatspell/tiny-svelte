@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Stage from '$components/pixel-editor/stage.svelte';
   import type { ProjectSpriteAssetModel } from '$lib/models/project/asset.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import { multiplySize } from '$lib/utils/math';
@@ -11,12 +12,4 @@
   let size = $derived(multiplySize(asset.size, context.pixel * node.pixel));
 </script>
 
-<div class="sprite">sprite</div>
-
-<style lang="scss">
-  .sprite {
-    width: 100px;
-    height: 100px;
-    background: red;
-  }
-</style>
+<Stage />

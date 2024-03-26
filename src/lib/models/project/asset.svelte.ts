@@ -107,6 +107,8 @@ export class ProjectBoxAssetModel extends ProjectResizableAssetModelImpl<BoxAsse
 }
 
 export class ProjectSpriteAssetModel extends ProjectResizableAssetModelImpl<SpriteAssetData> {
+  pixels = $derived(this._data.pixels);
+
   humanType = 'Sprite';
   humanShortDescription = $derived(`${this.size.width}x${this.size.height}`);
 
