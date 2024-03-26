@@ -9,7 +9,7 @@ import type { AssetType } from '$lib/types/assets';
 import { ExistingSelector } from '$lib/models/selector.svelte';
 import { QueryAll } from '$lib/firebase/fire/query.svelte';
 import { MapModels } from '$lib/firebase/fire/models.svelte';
-import type { Document } from '$lib/firebase/fire/document.svelte';
+import { Document } from '$lib/firebase/fire/document.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 
 export type WorkspaceNodeSelectorOptions<I> = {
@@ -78,15 +78,18 @@ export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
     if (type) {
       asset = await this.project.assets.create(type);
     }
-    // TODO: new Document().save()
-    const ref = doc(this.ref);
-    const data: WorkspaceNodeData = {
-      pixel: 2,
-      position: { x: 10, y: 10 },
-      asset: asset?.identifier ?? ''
-    };
-    await setDoc(ref, data);
-    return await this._all.waitFor((model) => model.id === ref.id);
+
+    const document = new Document<WorkspaceNodeData>({
+      ref: doc(this.ref),
+      data: {
+        pixel: 2,
+        position: { x: 10, y: 10 },
+        asset: asset?.identifier ?? ''
+      }
+    });
+
+    await document.save();
+    return await this._all.waitFor((model) => model.id === document.id);
   }
 
   dependencies = [this._query];

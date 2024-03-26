@@ -1,13 +1,13 @@
 import { collection, doc, setDoc } from '@firebase/firestore';
 import type { ProjectModel } from './project.svelte';
-import type { AssetData, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
+import type { AssetData, AssetType, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { ProjectBoxAssetModel, type ProjectAssetModel, ProjectSpriteAssetModel } from './asset.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import { MapModels } from '$lib/firebase/fire/models.svelte';
 import { QueryAll } from '$lib/firebase/fire/query.svelte';
-import type { Document } from '$lib/firebase/fire/document.svelte';
+import { Document } from '$lib/firebase/fire/document.svelte';
 import { load } from '$lib/firebase/fire/firebase.svelte';
 
 export type ProjectAssetsModelOptions = {
@@ -48,19 +48,36 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
     return this.all.find((asset) => asset?.identifier === identifier);
   }
 
-  async create(type: 'box') {
+  async create(type: AssetType) {
+    const ref = doc(this.ref);
+    let document: Document<AssetData>;
+
     if (type === 'box') {
-      // TODO: new Document().save()
-      const data: BoxAssetData = {
-        identifier: 'new',
-        type: 'box',
-        size: { width: 8, height: 8 },
-        color: 'white'
-      };
-      const ref = doc(this.ref);
-      await setDoc(ref, data);
-      return this._all.waitFor((model) => model.id === ref.id);
+      document = new Document<BoxAssetData>({
+        ref,
+        data: {
+          type: 'box',
+          identifier: 'new',
+          size: { width: 8, height: 8 },
+          color: 'white'
+        }
+      });
+    } else if (type === 'sprite') {
+      document = new Document<SpriteAssetData>({
+        ref,
+        data: {
+          type: 'sprite',
+          identifier: 'new',
+          size: { width: 8, height: 8 },
+          pixels: Array(8 * 8).fill(0)
+        }
+      });
+    } else {
+      throw new Error(`unsupported asset type ${type}`);
     }
+
+    await document.save();
+    return this._all.waitFor((model) => model.id === document.id);
   }
 
   dependencies = [this._query];

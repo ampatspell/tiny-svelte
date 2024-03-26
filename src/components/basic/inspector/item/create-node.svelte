@@ -19,12 +19,14 @@
   };
 
   let onBox = () => onCreate('box');
+  let onSprite = () => onCreate('sprite');
   let onBlank = () => onCreate();
 </script>
 
 <Item title="Add new">
   <div class="content">
     <Button value="Box" isDisabled={isBusy} onClick={onBox} />
+    <Button value="Sprite" isDisabled={isBusy} onClick={onSprite} />
     <Button value="Blank" isDisabled={isBusy} onClick={onBlank} />
   </div>
 </Item>

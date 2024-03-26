@@ -12,6 +12,8 @@
     onValue: (value: string) => void;
   } = $props();
 
+  let onBlur = () => false;
+
   let onEnter = (value: string) => {
     value = value.trim();
     if (!value.length) {
@@ -22,5 +24,5 @@
 </script>
 
 <Item {title}>
-  <Input {value} {onEnter} />
+  <Input {value} {onBlur} {onEnter} />
 </Item>
