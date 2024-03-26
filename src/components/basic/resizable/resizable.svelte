@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { classes, type Classes } from '$lib/utils/classes';
   import type { Snippet } from 'svelte';
   import type { ResizeCallback, VoidCallback } from '$lib/types/types';
   import type { Point, Size } from '$lib/types/schema';
   import Pins from './pins.svelte';
+  import { classes } from '$lib/utils/classes';
+  import type { Border } from './models.svelte';
 
   let {
-    class: _class,
+    border,
     externalPixel,
     internalPixel,
     step,
@@ -18,7 +19,7 @@
     onEnd,
     children
   }: {
-    class?: Classes;
+    border: Border;
     externalPixel: number;
     internalPixel: number;
     step: number;
@@ -32,7 +33,7 @@
   } = $props();
 </script>
 
-<div class={classes('resizable', _class)}>
+<div class={classes('resizable', `border-${border}`)}>
   <Pins {externalPixel} {internalPixel} {step} {position} {size} {onResize} {isResizable} {onStart} {onEnd} />
   <div class="content">
     {#if children}
@@ -43,7 +44,7 @@
 
 <style lang="scss">
   .resizable {
-    border: 1px solid #e63946;
+    border: 1px solid transparent;
     transition: 0.15s ease-in-out border-color;
     position: relative;
     :global(> .pins) {
@@ -52,6 +53,15 @@
       left: 0;
       bottom: 0;
       right: 0;
+    }
+    &.border-idle {
+      border-color: fade-out(#000, 0.9);
+    }
+    &.border-focus {
+      border-color: #00bbf9;
+    }
+    &.border-warning {
+      border-color: #f15bb5;
     }
   }
 </style>

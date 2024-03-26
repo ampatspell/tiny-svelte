@@ -116,12 +116,15 @@
   .pin {
     width: var(--size);
     height: var(--size);
-    background: lighten(#ef476f, 20%);
-    border: 1px solid lighten(#ef476f, 10%);
+    background: lighten(#f15bb5, 20%);
+    border: 1px solid lighten(#f15bb5, 10%);
+    transition:
+      0.15s ease-in-out border-color,
+      0.15s ease-in-out background-color;
     &:hover,
     &.resizing {
-      border-color: lighten(#ef476f, 0%);
-      background: lighten(#ef476f, 10%);
+      border-color: lighten(#f15bb5, 0%);
+      background: lighten(#f15bb5, 10%);
     }
     display: block;
     &.hidden {

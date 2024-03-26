@@ -6,6 +6,8 @@
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import Resizable from './resizable.svelte';
   import { ToolType } from '$lib/models/project/workspace/workspace.svelte';
+  import { asResizableAssetModel } from '$lib/models/project/asset.svelte';
+  import type { Border } from '$components/basic/resizable/models.svelte';
 
   let {
     node,
@@ -27,6 +29,12 @@
 
   let isDraggable = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Idle, ToolType.Resize]));
 
+  let isAssetResizable = $derived.by(() => {
+    return asResizableAssetModel(asset, (asset) => asset.isResizable) ?? false;
+  });
+  let isSelectedWithResizeTool = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Resize]));
+  let isResizable = $derived(isSelectedWithResizeTool && isAssetResizable);
+
   let onShouldStart = () => {
     if ([ToolType.Idle, ToolType.Resize].includes(workspace.tool.type)) {
       workspace.selectNode(node);
@@ -42,8 +50,14 @@
     return `${point.x}px ${point.y}px`;
   });
 
-  let isResizable = $state(false);
-  let onIsResizable = (next: boolean) => (isResizable = next);
+  let border: Border = $derived.by(() => {
+    if (isResizable) {
+      return 'warning';
+    } else if (isDraggable) {
+      return 'focus';
+    }
+    return 'idle';
+  });
 </script>
 
 <div
@@ -66,7 +80,7 @@
       <div class="description" title={description}>{description}</div>
     {/if}
   </div>
-  <Resizable {node} {onIsResizable}>
+  <Resizable {node} {border} {isResizable}>
     {@render children()}
   </Resizable>
 </div>

@@ -11,15 +11,17 @@
   import { zeroSize } from '$lib/utils/math';
   import Resizable from '$components/basic/resizable/resizable.svelte';
   import type { ResizeEvent } from '$lib/types/types';
-  import { ToolType } from '$lib/models/project/workspace/workspace.svelte';
+  import type { Border } from '$components/basic/resizable/models.svelte';
 
   let {
     node,
-    onIsResizable,
+    border,
+    isResizable,
     children
   }: {
     node: WorkspaceNodeModel;
-    onIsResizable: (next: boolean) => void;
+    border: Border;
+    isResizable: boolean;
     children: Snippet;
   } = $props();
 
@@ -33,10 +35,6 @@
   let asResizable = <R,>(cb: WithResizableAssetModelCallback<ProjectAssetModel, R>): R | undefined => {
     return asResizableAssetModel<ProjectAssetModel, R>(asset, cb);
   };
-
-  let isAssetResizable = $derived.by(() => {
-    return asResizable((asset) => asset.isResizable) ?? false;
-  });
 
   let size = $derived.by(() => {
     return asResizable((asset) => asset.size) ?? zeroSize();
@@ -53,17 +51,10 @@
     }
   };
 
-  let isSelectedWithResizeTool = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Resize]));
-  let isResizable = $derived(isSelectedWithResizeTool && isAssetResizable);
-
   let onStart = () => (workspace.resizing = node);
   let onEnd = () => (workspace.resizing = undefined);
-
-  $effect.pre(() => {
-    onIsResizable(isResizable);
-  });
 </script>
 
-<Resizable {externalPixel} {internalPixel} {step} {position} {size} {isResizable} {onResize} {onStart} {onEnd}>
+<Resizable {border} {externalPixel} {internalPixel} {step} {position} {size} {isResizable} {onResize} {onStart} {onEnd}>
   {@render children()}
 </Resizable>
