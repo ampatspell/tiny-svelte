@@ -35,7 +35,7 @@
   .content {
     width: 100%;
     display: grid;
-    grid-auto-columns: minmax(var(--segment-width), 1fr);
+    grid-auto-columns: 1fr;
     grid-auto-flow: column;
     gap: 5px;
   }
