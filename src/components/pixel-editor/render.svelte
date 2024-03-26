@@ -9,25 +9,25 @@
     position,
     pixel,
     size,
-    data,
-    onUpdated
+    pixels,
+    onUpdate
   }: {
     position?: Point;
     pixel: number;
     size: Size;
-    data: number[];
-    onUpdated: (data: number[]) => void;
+    pixels: number[];
+    onUpdate: (data: number[]) => void;
   } = $props();
 
   type Model = {
     pixel: number;
     size: Size;
     hover?: Point;
-    data: number[];
+    pixels: number[];
   };
 
   let hover = $state<Point>();
-  let model = $derived<Model>({ pixel, size, hover, data });
+  let model = $derived<Model>({ pixel, size, hover, pixels });
 
   let draw = (ctx: CanvasRenderingContext2D) => {
     let drawPixel = (position: Point, fillStyle: string) => {
@@ -36,7 +36,7 @@
     };
 
     for (let i = 0; i < size.width * size.height; i++) {
-      let value = data[i];
+      let value = pixels[i];
       let position = fromIndex(i, size);
       let fillStyle = value === 0 ? '#fff' : '#333';
       drawPixel(position, fillStyle);
@@ -66,15 +66,18 @@
 
   let update = (pixel: Point) => {
     let index = toIndex(pixel, size);
-    let next = [...data];
+    let next = [...pixels];
     next[index] = drawing!.color;
-    onUpdated(next);
+    onUpdate(next);
   };
 
   let onmousedown = (e: MouseEvent) => {
+    if (e.button !== 0) {
+      return;
+    }
     let pixel = toPixel(e);
     if (pixel) {
-      let color = data[toIndex(pixel, size)] === 0 ? 1 : 0;
+      let color = pixels[toIndex(pixel, size)] === 0 ? 1 : 0;
       drawing = { color };
       update(pixel);
     }
@@ -95,4 +98,4 @@
 
 <svelte:window on:mousemove={onmousemove} on:mousedown={onmousedown} on:mouseup={onmouseup} />
 
-<Render name="render" onCreated={(ctx) => (render = ctx)} {position} {model} {draw} />
+<Render name="pixel-editor-render" onCreated={(ctx) => (render = ctx)} {position} {model} {draw} />

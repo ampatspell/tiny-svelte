@@ -115,5 +115,10 @@ export class ProjectSpriteAssetModel extends ProjectResizableAssetModelImpl<Spri
   isResizable = true;
   step = 1;
 
+  onPixels(next: number[]) {
+    this._data.pixels = next;
+    this._doc.scheduleSave();
+  }
+
   serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
 }
