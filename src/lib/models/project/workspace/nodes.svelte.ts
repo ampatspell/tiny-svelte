@@ -1,4 +1,4 @@
-import { collection, doc, setDoc } from '@firebase/firestore';
+import { collection, doc } from '@firebase/firestore';
 import type { WorkspaceModel } from './workspace.svelte';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
 import { getter, options, type OptionsInput } from '$lib/utils/args';

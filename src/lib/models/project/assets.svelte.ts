@@ -1,4 +1,4 @@
-import { collection, doc, setDoc } from '@firebase/firestore';
+import { collection, doc } from '@firebase/firestore';
 import type { ProjectModel } from './project.svelte';
 import type { AssetData, AssetType, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
 import { getter, options } from '$lib/utils/args';
