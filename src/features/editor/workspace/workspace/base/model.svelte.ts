@@ -1,5 +1,6 @@
+import { asResizableAssetModel } from '$lib/models/project/asset.svelte';
 import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
-import type { ToolType, WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
+import { ToolType, type WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
 import type { Point, Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
 import { getContext, setContext } from 'svelte';
@@ -33,6 +34,24 @@ export class WorkspaceContext {
 
   isSelectedAndHasTools(model: WorkspaceNodeModel, types: ToolType[]) {
     return this.workspace.isNodeSelectedAndHasTools(model, types);
+  }
+
+  isDraggable(model: WorkspaceNodeModel) {
+    return this.isSelectedAndHasTools(model, [ToolType.Idle, ToolType.Resize]);
+  }
+
+  isEditing(model: WorkspaceNodeModel) {
+    return this.isSelectedAndHasTools(model, [ToolType.Edit]);
+  }
+
+  isResizable(model: WorkspaceNodeModel) {
+    if (!this.isSelectedAndHasTools(model, [ToolType.Resize])) {
+      return false;
+    }
+    if (!asResizableAssetModel(model.asset, (asset) => asset.isResizable)) {
+      return false;
+    }
+    return true;
   }
 
   @action

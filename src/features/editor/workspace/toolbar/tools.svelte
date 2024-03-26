@@ -17,7 +17,7 @@
       onSelect: () => workspace.selectTool(tool)
     });
 
-  let tools = [tool('Idle', ToolType.Idle), tool('Resize', ToolType.Resize)];
+  let tools = [tool('Idle', ToolType.Idle), tool('Resize', ToolType.Resize), tool('Edit', ToolType.Edit)];
 </script>
 
 <Segmented width={55}>

@@ -6,7 +6,6 @@
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import Resizable from './resizable.svelte';
   import { ToolType } from '$lib/models/project/workspace/workspace.svelte';
-  import { asResizableAssetModel } from '$lib/models/project/asset.svelte';
   import type { Border } from '$components/basic/resizable/models.svelte';
 
   let {
@@ -27,13 +26,9 @@
   let asset = $derived(node.asset);
   let description = $derived(asset?.humanShortDescription);
 
-  let isDraggable = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Idle, ToolType.Resize]));
-
-  let isAssetResizable = $derived.by(() => {
-    return asResizableAssetModel(asset, (asset) => asset.isResizable) ?? false;
-  });
-  let isSelectedWithResizeTool = $derived(workspace.isSelectedAndHasTools(node, [ToolType.Resize]));
-  let isResizable = $derived(isSelectedWithResizeTool && isAssetResizable);
+  let isDraggable = $derived(workspace.isDraggable(node));
+  let isEditable = $derived(workspace.isEditing(node));
+  let isResizable = $derived(workspace.isResizable(node));
 
   let onShouldStart = () => {
     if ([ToolType.Idle, ToolType.Resize].includes(workspace.tool.type)) {
@@ -51,18 +46,21 @@
   });
 
   let border: Border = $derived.by(() => {
-    if (isResizable) {
+    if (isResizable || isEditable) {
       return 'warning';
     } else if (isDraggable) {
       return 'focus';
     }
     return 'idle';
   });
+
+  let isCompact = $derived(workspacePixel * node.pixel < 8);
 </script>
 
 <div
   class="node"
   class:resizable={isResizable}
+  class:compact={isCompact}
   style:translate
   use:draggable={{
     isDraggable,
@@ -110,6 +108,11 @@
       }
     }
     &.resizable {
+      > .header {
+        display: none;
+      }
+    }
+    &.compact {
       > .header {
         display: none;
       }

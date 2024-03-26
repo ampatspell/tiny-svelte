@@ -10,10 +10,10 @@
     node: WorkspaceNodeModel;
   } = $props();
 
+  let workspace = getWorkspaceContext();
   let asset = $derived(node.asset as ProjectSpriteAssetModel);
-  let context = getWorkspaceContext();
 
-  let pixel = $derived(context.pixel * node.pixel);
+  let pixel = $derived(workspace.pixel * node.pixel);
   let size = $derived(asset.size);
   let pixels = $derived(asset.pixels);
 
@@ -21,7 +21,7 @@
     asset.onPixels(next);
   };
 
-  let isEditing = false;
+  let isEditing = $derived(workspace.isEditing(node));
 </script>
 
 <Stage {pixel} {size} {pixels} {isEditing} {onUpdate} />

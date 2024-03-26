@@ -24,7 +24,13 @@
   let pixel = $derived(context.pixel);
   let onResize = $derived(context.onResize);
   let onPosition = $derived(context.onPosition);
-  let onClick = () => context.selectNode(undefined);
+
+  let element = $state<HTMLDivElement>();
+  let onClick = (e: Event) => {
+    if (e.target === element) {
+      context.selectNode(undefined);
+    }
+  };
 
   let cancelDrag: OptionalVoidCallback;
   let onSpaceDown = () => {
@@ -50,6 +56,7 @@
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   class={classes('workspace', _class)}
+  bind:this={element}
   use:resize={{ onResize }}
   use:draggable={{
     isDraggable,
