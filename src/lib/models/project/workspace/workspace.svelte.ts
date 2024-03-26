@@ -90,7 +90,7 @@ export class WorkspaceModel extends Model<WorkspaceModelOptions> {
 
   serialized = $derived(serialized(this, ['id', 'identifier']));
 
-  dependencies = [this._doc, this.project, this.nodes, this.assets];
+  dependencies = [this.project, this._doc, this.nodes, this.assets];
 
   async load() {
     const doc = this._doc.promises.cached;

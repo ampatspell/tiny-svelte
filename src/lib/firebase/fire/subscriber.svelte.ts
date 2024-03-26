@@ -65,6 +65,9 @@ export const subscribe = (model: HasSubscriber) => {
   if ($effect.active()) {
     return _subscribe();
   } else {
-    $effect.pre(() => _subscribe());
+    $effect.pre(() => {
+      model;
+      return _subscribe();
+    });
   }
 };
