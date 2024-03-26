@@ -8,10 +8,12 @@
     pixel,
     size,
     pixels,
+    isEditing,
     onUpdate
   }: {
     pixel: number;
     size: Size;
+    isEditing: boolean;
     pixels: number[];
     onUpdate: (pixels: number[]) => void;
   } = $props();
@@ -26,6 +28,6 @@
 
 <Stage class="pixel-editor-stage" size={stage}>
   <Layer>
-    <Render {pixel} {size} {pixels} {onUpdate} />
+    <Render {pixel} {size} {pixels} {onUpdate} {isEditing} />
   </Layer>
 </Stage>

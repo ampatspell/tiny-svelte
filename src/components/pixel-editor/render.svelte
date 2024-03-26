@@ -10,12 +10,14 @@
     pixel,
     size,
     pixels,
+    isEditing,
     onUpdate
   }: {
     position?: Point;
     pixel: number;
     size: Size;
     pixels: number[];
+    isEditing: boolean;
     onUpdate: (data: number[]) => void;
   } = $props();
 
@@ -26,7 +28,17 @@
     pixels: number[];
   };
 
+  let render = $state<RenderContext>();
   let hover = $state<Point>();
+  let drawing = $state<{ color: number }>();
+
+  $effect(() => {
+    if (!isEditing) {
+      hover = undefined;
+      drawing = undefined;
+    }
+  });
+
   let model = $derived<Model>({ pixel, size, hover, pixels });
 
   let draw = (ctx: CanvasRenderingContext2D) => {
@@ -51,8 +63,6 @@
     }
   };
 
-  let render = $state<RenderContext>();
-
   let toPixel = (e: MouseEvent) => {
     let point = render!.eventToRenderPosition(e);
     let px = Math.floor(point.x / pixel);
@@ -62,8 +72,6 @@
     }
   };
 
-  let drawing = $state<{ color: number }>();
-
   let update = (pixel: Point) => {
     let index = toIndex(pixel, size);
     let next = [...pixels];
@@ -72,6 +80,9 @@
   };
 
   let onmousedown = (e: MouseEvent) => {
+    if (!isEditing) {
+      return;
+    }
     if (e.button !== 0) {
       return;
     }
@@ -84,6 +95,9 @@
   };
 
   let onmousemove = (e: MouseEvent) => {
+    if (!isEditing) {
+      return;
+    }
     let pixel = toPixel(e);
     hover = pixel;
     if (pixel && drawing) {

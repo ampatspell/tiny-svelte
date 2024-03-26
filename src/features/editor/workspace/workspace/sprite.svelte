@@ -20,6 +20,8 @@
   let onUpdate = (next: number[]) => {
     asset.onPixels(next);
   };
+
+  let isEditing = false;
 </script>
 
-<Stage {pixel} {size} {pixels} {onUpdate} />
+<Stage {pixel} {size} {pixels} {isEditing} {onUpdate} />
