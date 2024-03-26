@@ -1,4 +1,5 @@
 <script lang="ts">
+  import type { HasDescriptionAndSerialized } from '$lib/firebase/fire/model.svelte';
   import { stats } from '$lib/firebase/fire/stats.svelte';
   import type { HasSubscriber } from '$lib/firebase/fire/subscriber.svelte';
   import { setGlobal } from '$lib/utils/set-global';
@@ -8,8 +9,7 @@
   };
 
   let render = (model: HasSubscriber) => {
-    // TODO: fix any
-    const description = (model as any).description;
+    const description = (model as HasDescriptionAndSerialized).description;
     return description ?? model.toString();
   };
 </script>
