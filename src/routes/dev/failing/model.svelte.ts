@@ -2,9 +2,9 @@ export type ThingData = {
   name: string;
   position: {
     x: number;
-    y: number
+    y: number;
   };
-}
+};
 
 export class Thing {
   data = $state<ThingData>();
@@ -28,7 +28,6 @@ export class Thing {
   }
 
   position = $derived(this.data?.position);
-
 }
 
 export class Things {
@@ -39,7 +38,7 @@ export class Things {
       const thing = new Thing();
       this.content.push(thing);
       thing.subscribe();
-      this.content.map(e => e.position);
+      this.content.map((e) => e.position);
     }, 0);
   }
 }

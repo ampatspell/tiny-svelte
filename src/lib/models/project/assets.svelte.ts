@@ -1,9 +1,9 @@
 import { collection, doc, setDoc } from '@firebase/firestore';
 import type { ProjectModel } from './project.svelte';
-import type { AssetData, BoxAssetData } from '$lib/types/assets';
+import type { AssetData, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
-import { ProjectBoxAssetModel, type ProjectAssetModel } from './asset.svelte';
+import { ProjectBoxAssetModel, type ProjectAssetModel, ProjectSpriteAssetModel } from './asset.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import { MapModels } from '$lib/firebase/fire/models.svelte';
 import { QueryAll } from '$lib/firebase/fire/query.svelte';
@@ -33,7 +33,9 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
       const type = doc.data?.type;
       if (type) {
         if (type === 'box') {
-          return new ProjectBoxAssetModel({ assets: this, doc });
+          return new ProjectBoxAssetModel({ assets: this, doc: doc as Document<BoxAssetData> });
+        } else if (type === 'sprite') {
+          return new ProjectSpriteAssetModel({ assets: this, doc: doc as Document<SpriteAssetData> });
         }
         throw new Error(`unsupported asset type '${type}'`);
       }
