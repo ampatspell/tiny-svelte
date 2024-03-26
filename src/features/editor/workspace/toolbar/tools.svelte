@@ -10,18 +10,29 @@
     workspace: WorkspaceModel;
   } = $props();
 
-  let tool = (name: string, tool: ToolType) =>
+  let tool = (name: string, tool: ToolType, hasSelection?: () => boolean) =>
     options({
       value: name,
       isSelected: getter(() => workspace.tool.type === tool),
-      onSelect: () => workspace.selectTool(tool)
+      onSelect: () => workspace.selectTool(tool),
+      isDisabled: getter(() => {
+        if (hasSelection) {
+          return !hasSelection();
+        }
+        return false;
+      })
     });
 
-  let tools = [tool('Idle', ToolType.Idle), tool('Resize', ToolType.Resize), tool('Edit', ToolType.Edit)];
+  let hasSelection = () => !!workspace.selectedNode.node;
+  let tools = [
+    tool('Idle', ToolType.Idle),
+    tool('Resize', ToolType.Resize, hasSelection),
+    tool('Edit', ToolType.Edit, hasSelection)
+  ];
 </script>
 
 <Segmented width={55}>
   {#each tools as tool (tool)}
-    <Segment value={tool.value} isSelected={tool.isSelected} onClick={tool.onSelect} />
+    <Segment value={tool.value} isSelected={tool.isSelected} isDisabled={tool.isDisabled} onClick={tool.onSelect} />
   {/each}
 </Segmented>
