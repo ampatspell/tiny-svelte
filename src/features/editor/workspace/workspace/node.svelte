@@ -3,6 +3,7 @@
   import Box from './box.svelte';
   import Missing from './missing.svelte';
   import Node from './base/node.svelte';
+  import Sprite from './sprite.svelte';
 
   let { node }: { node: WorkspaceNodeModel } = $props();
 
@@ -14,6 +15,8 @@
   {#if type}
     {#if type === 'box'}
       <Box {node} />
+    {:else if type === 'sprite'}
+      <Sprite {node} />
     {/if}
   {:else}
     <Missing {node} />

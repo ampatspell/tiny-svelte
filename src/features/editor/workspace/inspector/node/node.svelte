@@ -9,6 +9,7 @@
   import Section from '$components/basic/inspector/section.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import Box from './box.svelte';
+  import Sprite from './sprite.svelte';
 
   let {
     node
@@ -27,6 +28,8 @@
     {#if asset}
       {#if asset.type === 'box'}
         <Box {node} />
+      {:else if asset.type === 'sprite'}
+        <Sprite {node} />
       {:else}
         <Item title="Asset">
           {asset}

@@ -8,15 +8,9 @@ import {
   setDoc
 } from '@firebase/firestore';
 import { firebase } from './firebase.svelte';
-import type { Point, Size } from '$lib/types/schema';
+import type { Point } from '$lib/types/schema';
 import Color from 'color';
-
-type Box = {
-  identifier: string;
-  position: Point;
-  size: Size;
-  color: string;
-};
+import type { AssetData } from '$lib/types/assets';
 
 const clearCollection = async (ref: CollectionReference) => {
   const snapshot = await getDocs(ref);
@@ -27,7 +21,7 @@ const clearCollection = async (ref: CollectionReference) => {
   );
 };
 
-const createWorkspace = async (workspacesRef: CollectionReference, identifier: string, boxes: Box[]) => {
+const createWorkspace = async (workspacesRef: CollectionReference, identifier: string, assets: AssetWithPosition[]) => {
   const workspaceRef = doc(workspacesRef, identifier);
   const workspaceNodesRef = collection(workspaceRef, 'nodes');
   await clearCollection(workspaceNodesRef);
@@ -38,11 +32,11 @@ const createWorkspace = async (workspacesRef: CollectionReference, identifier: s
   });
 
   await Promise.all([
-    ...boxes.map(async (box) => {
+    ...assets.map(async ({ position, asset }) => {
       const nodeRef = doc(workspaceNodesRef);
       await setDoc(nodeRef, {
-        asset: box.identifier,
-        position: box.position,
+        asset: asset.identifier,
+        position: position,
         pixel: 4
       });
     }),
@@ -50,19 +44,16 @@ const createWorkspace = async (workspacesRef: CollectionReference, identifier: s
   ]);
 };
 
-const createAssets = async (assetsRef: CollectionReference, boxes: Box[]) => {
+const createAssets = async (assetsRef: CollectionReference, assets: AssetWithPosition[]) => {
   await Promise.all(
-    boxes.map(async (box) => {
+    assets.map(async ({ asset }) => {
       const assetRef = doc(assetsRef);
-      await setDoc(assetRef, {
-        type: 'box',
-        identifier: box.identifier,
-        size: box.size,
-        color: box.color
-      });
+      await setDoc(assetRef, asset);
     })
   );
 };
+
+type AssetWithPosition = { position: Point; asset: AssetData };
 
 const createProject = async (projectRef: DocumentReference) => {
   await setDoc(projectRef, {
@@ -77,15 +68,25 @@ const createProject = async (projectRef: DocumentReference) => {
 
   const color = (name: string) => new Color(name).lighten(0.1).rgb().string();
 
-  const boxes = [
-    { identifier: 'red', position: { x: 3, y: 5 }, size: { width: 8, height: 8 }, color: color('#ffafcc') },
-    { identifier: 'blue', position: { x: 3, y: 45 }, size: { width: 8, height: 8 }, color: color('#a2d2ff') }
+  const assets: AssetWithPosition[] = [
+    {
+      position: { x: 3, y: 5 },
+      asset: { type: 'box', identifier: 'red', size: { width: 8, height: 8 }, color: color('#ffafcc') }
+    },
+    {
+      position: { x: 3, y: 45 },
+      asset: { type: 'box', identifier: 'blue', size: { width: 8, height: 8 }, color: color('#a2d2ff') }
+    },
+    {
+      position: { x: 3, y: 85 },
+      asset: { type: 'sprite', identifier: 'heart', size: { width: 8, height: 8 }, pixels: Array(8 * 8).fill(0) }
+    }
   ];
 
   await Promise.all([
-    createWorkspace(workspacesRef, 'default', boxes),
-    createWorkspace(workspacesRef, 'another', boxes),
-    createAssets(assetsRef, boxes)
+    createWorkspace(workspacesRef, 'default', assets),
+    createWorkspace(workspacesRef, 'another', assets),
+    createAssets(assetsRef, assets)
   ]);
 };
 

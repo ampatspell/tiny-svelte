@@ -60,11 +60,11 @@ export type DocumentOptions<T> = {
 } & FirebaseModelOptions;
 
 export const toData = (input: DocumentData): DocumentData => {
-  if(Array.isArray(input)) {
-    return input.map(entry => toData(entry));
-  } else if(typeof input === 'object') {
+  if (Array.isArray(input)) {
+    return input.map((entry) => toData(entry));
+  } else if (typeof input === 'object') {
     const out: Record<string, unknown> = {};
-    for(const key in input) {
+    for (const key in input) {
       const value = (input as DocumentData)[key] as DocumentData;
       out[key] = toData(value);
     }
@@ -72,7 +72,7 @@ export const toData = (input: DocumentData): DocumentData => {
   } else {
     return input;
   }
-}
+};
 
 export class Document<T extends DocumentData = DocumentData> extends FirebaseModel<DocumentOptions<T>> {
   token: string | null;

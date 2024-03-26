@@ -1,5 +1,5 @@
 import type { ProjectAssetsModel } from './assets.svelte';
-import type { AssetData, BoxAssetData } from '$lib/types/assets';
+import type { AssetData, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
 import { serialized } from '$lib/utils/object';
 import type { Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
@@ -64,18 +64,16 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   }
 }
 
-export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> implements ProjectResizableAssetModel {
+export abstract class ProjectResizableAssetModelImpl<D extends AssetData = AssetData>
+  extends ProjectAssetModel<D>
+  implements ProjectResizableAssetModel
+{
   [ProjectResizableAssetToken] = true;
 
-  humanType = 'Box';
+  abstract isResizable: boolean;
+  abstract step: number;
 
   size = $derived(this._data.size);
-  color = $derived(this._data.color);
-
-  humanShortDescription = $derived(this.color ?? 'No color');
-
-  isResizable = true;
-  step = 1;
 
   @action
   onSize(size: Size) {
@@ -84,16 +82,38 @@ export class ProjectBoxAssetModel extends ProjectAssetModel<BoxAssetData> implem
   }
 
   @action
+  onResize(event: ResizeEvent) {
+    this._data.size = event.size;
+    this._doc.scheduleSave();
+  }
+}
+
+export class ProjectBoxAssetModel extends ProjectResizableAssetModelImpl<BoxAssetData> {
+  color = $derived(this._data.color);
+
+  humanType = 'Box';
+  humanShortDescription = $derived(this.color ?? 'No color');
+
+  isResizable = true;
+  step = 1;
+
+  @action
   onColor(color: string) {
     this._data.color = color;
     this._doc.scheduleSave();
   }
 
-  @action
-  onResize(event: ResizeEvent) {
-    this._data.size = event.size;
-    this._doc.scheduleSave();
-  }
+  serialized = $derived(serialized(this, ['id', 'identifier', 'type', 'color']));
+}
 
-  serialized = $derived(serialized(this, ['id', 'identifier', 'type', 'size', 'color']));
+export class ProjectSpriteAssetModel extends ProjectResizableAssetModelImpl<SpriteAssetData> {
+  pixels = $derived(this._data.pixels);
+
+  humanType = 'Sprite';
+  humanShortDescription = $derived(`${this.size.width}x${this.size.height}`);
+
+  isResizable = true;
+  step = 1;
+
+  serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
 }

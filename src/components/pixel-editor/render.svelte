@@ -95,4 +95,4 @@
 
 <svelte:window on:mousemove={onmousemove} on:mousedown={onmousedown} on:mouseup={onmouseup} />
 
-<Render name="sprite-editor" onCreated={(ctx) => (render = ctx)} {position} {model} {draw} />
+<Render name="render" onCreated={(ctx) => (render = ctx)} {position} {model} {draw} />
