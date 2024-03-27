@@ -8,7 +8,6 @@
   let { nodes }: { nodes: WorkspaceNodesModel } = $props();
   let selected = $derived(nodes.workspace.selectedNode.node);
   let onSelect = (node?: WorkspaceNodeModel) => {
-    console.log('select', node);
     nodes.workspace.selectNode(node);
   };
 </script>
