@@ -25,13 +25,16 @@ export class ProjectModel extends Model<ProjectModelOptions> implements HasMutab
     }),
   );
 
-  _data = $derived(this._doc.data!);
+  // TODO: make it !
+  _data = $derived(this._doc.data);
 
-  identifier = $derived(this._data.identifier);
+  identifier = $derived(this._data?.identifier ?? '');
 
   onIdentifier(next: string) {
-    this._data.identifier = next;
-    this._doc.scheduleSave();
+    if(this._data) {
+      this._data.identifier = next;
+      this._doc.scheduleSave();
+    }
   }
 
   workspaces = new WorkspacesModel({
