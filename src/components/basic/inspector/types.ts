@@ -23,3 +23,7 @@ export type HasMutableSize = {
 export type HasDelete = {
   delete(): Promise<void>;
 };
+
+export type HasId = {
+  id: string;
+};

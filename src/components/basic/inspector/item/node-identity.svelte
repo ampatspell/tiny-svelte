@@ -8,4 +8,4 @@
   let title = $derived(`Node → ${humanType ?? 'Missing'}`);
 </script>
 
-<Identity {title} />
+<Identity {title} {model} />

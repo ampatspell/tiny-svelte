@@ -8,12 +8,13 @@ import { collection, doc } from '@firebase/firestore';
 
 import { ProjectAssetsModel } from './assets.svelte';
 import { WorkspacesModel } from './workspaces/workspaces.svelte';
+import type { HasMutableIdentifier } from '$components/basic/inspector/types';
 
 export type ProjectModelOptions = {
   id: string;
 };
 
-export class ProjectModel extends Model<ProjectModelOptions> {
+export class ProjectModel extends Model<ProjectModelOptions> implements HasMutableIdentifier {
   id = $derived(this.options.id);
   ref = $derived(doc(collection(firebase.firestore, 'projects'), this.id));
   path = $derived(this.ref.path);
@@ -24,7 +25,14 @@ export class ProjectModel extends Model<ProjectModelOptions> {
     }),
   );
 
-  identifier = $derived(this._doc.data?.identifier);
+  _data = $derived(this._doc.data!);
+
+  identifier = $derived(this._data.identifier);
+
+  onIdentifier(next: string) {
+    this._data.identifier = next;
+    this._doc.scheduleSave();
+  }
 
   workspaces = new WorkspacesModel({
     project: this,

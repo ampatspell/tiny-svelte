@@ -15,7 +15,7 @@
 
 <Inspector>
   <Section>
-    <Identity title="Workspace" />
+    <Identity title="Workspace" model={workspace} />
     <Identifier model={workspace} />
     <CreateNode model={workspace} />
   </Section>

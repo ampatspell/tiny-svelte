@@ -1,6 +1,6 @@
 <script lang="ts">
   import Inspector from '$components/basic/inspector/inspector.svelte';
-  import Item from '$components/basic/inspector/item.svelte';
+  import Identifier from '$components/basic/inspector/item/identifier.svelte';
   import Identity from '$components/basic/inspector/item/identity.svelte';
   import Section from '$components/basic/inspector/section.svelte';
   import type { ProjectModel } from '$lib/models/project/project.svelte';
@@ -14,12 +14,7 @@
 
 <Inspector>
   <Section>
-    <Identity title="Project" />
-    <Item title="ID">
-      {project.id}
-    </Item>
-    <Item title="Identifier">
-      {project.identifier}
-    </Item>
+    <Identity title="Project" model={project} />
+    <Identifier model={project} />
   </Section>
 </Inspector>

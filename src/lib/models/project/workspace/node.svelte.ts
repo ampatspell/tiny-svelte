@@ -1,3 +1,4 @@
+import type { HasId } from '$components/basic/inspector/types';
 import type { Document } from '$lib/firebase/fire/document.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import type { Point } from '$lib/types/schema';
@@ -15,12 +16,12 @@ export type WorkspaceNodeModelOptions = {
   asset: AssetByIdentifier;
 };
 
-export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> {
+export class WorkspaceNodeModel extends Model<WorkspaceNodeModelOptions> implements HasId {
   _doc = $derived(this.options.doc);
   _data = $derived(this._doc.data!);
 
-  id = $derived(this._doc.id);
-  path = $derived(this._doc.path);
+  id = $derived(this._doc.id!);
+  path = $derived(this._doc.path!);
   exists = $derived(this._doc.exists);
   position = $derived(this._data.position);
   pixel = $derived(this._data.pixel);
