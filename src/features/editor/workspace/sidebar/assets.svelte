@@ -9,9 +9,18 @@
   import List from './-list/list.svelte';
 
   let { assets }: { assets: WorkspaceAssetsModel } = $props();
+
+  let workspace = $derived(assets.workspace);
   let all = $derived(assets.all);
-  let selected: WorkspaceAssetModel | undefined = undefined;
-  let onSelect = () => {};
+
+  let selectedNode = $derived(workspace.selectedNode.node);
+  let selected = $derived.by(() => {
+    return selectedNode && all.find((asset) => asset.node === selectedNode);
+  });
+  let onSelect = (asset?: WorkspaceAssetModel) => {
+    let node = asset?.node;
+    workspace.selectNode(node);
+  };
 </script>
 
 <List {all} {selected} {onSelect}>

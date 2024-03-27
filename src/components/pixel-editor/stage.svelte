@@ -3,6 +3,7 @@
   import Layer from '$components/canvas/layer.svelte';
   import type { Size } from '$lib/types/schema';
   import Render from './render.svelte';
+  import { multiplySize } from '$lib/utils/math';
 
   let {
     pixel,
@@ -18,12 +19,7 @@
     onUpdate: (pixels: number[]) => void;
   } = $props();
 
-  let stage = $derived.by(() => {
-    return {
-      width: size.width * pixel - 1,
-      height: size.height * pixel - 1,
-    };
-  });
+  let stage = $derived(multiplySize(size, pixel));
 </script>
 
 <Stage class="pixel-editor-stage" size={stage}>

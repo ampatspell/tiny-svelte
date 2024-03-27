@@ -13,21 +13,21 @@ export const nest = <T>(ctx: CanvasRenderingContext2D, fn: () => T): T => {
   return res;
 };
 
+const o = 0;
+
 export const drawGrid = ({ ctx, pixel, size: { width, height } }: DrawGridOptions) => {
   nest(ctx, () => {
-    ctx.fillStyle = 'rgba(0,0,0,0.01)';
-    ctx.fillRect(0, 0, pixel * width + 1, pixel * height + 1);
-
-    ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+    ctx.strokeStyle = 'rgba(0,0,0,0.075)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let x = 0; x <= width; x++) {
-      ctx.moveTo(x * pixel - 0.5, 0);
-      ctx.lineTo(x * pixel - 0.5, height * pixel - 0.5);
+
+    for (let x = 1; x < width; x++) {
+      ctx.moveTo(x * pixel + o, o);
+      ctx.lineTo(x * pixel + o, height * pixel + o);
     }
-    for (let y = 0; y <= height; y++) {
-      ctx.moveTo(0, y * pixel - 0.5);
-      ctx.lineTo(width * pixel - 0.5, y * pixel - 0.5);
+    for (let y = 1; y < height; y++) {
+      ctx.moveTo(0, y * pixel + o);
+      ctx.lineTo(width * pixel + o, y * pixel + o);
     }
     ctx.stroke();
   });
