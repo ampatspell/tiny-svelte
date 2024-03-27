@@ -15,13 +15,17 @@
 <style lang="scss">
   .item {
     $s: 40px;
-    padding: 10px;
     width: $s;
     height: $s;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    :global(> svg) {
+      $s: 20px;
+      width: $s;
+      height: $s;
+    }
     &:hover {
       background: fade-out(#000, 0.97);
     }

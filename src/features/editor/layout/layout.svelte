@@ -1,10 +1,10 @@
 <script lang="ts">
   import { createVerticalMenuItems } from '$features/editor/layout/menu/model';
   import type { Snippet } from 'svelte';
-  import Home from '$icons/mingcute-left-fill.svelte';
-  import Editor from '$icons/mingcute-game-2-line.svelte';
-  import Mushroom from '$icons/mingcute-mushroom-line.svelte';
-  import CodeLine from '$icons/mingcute-code-line.svelte';
+  import Home from '$icons/lucide-chevron-left.svelte';
+  import Editor from '$icons/lucide-gamepad.svelte';
+  import Projects from '$icons/lucide-book-heart.svelte';
+  import Code from '$icons/lucide-code-xml.svelte';
   import Activated from '$components/basic/activated.svelte';
   import Menu from './menu/menu.svelte';
 
@@ -13,7 +13,7 @@
   let top = createVerticalMenuItems([
     { icon: Home, route: '/' },
     { icon: Editor, route: '/editor' },
-    { icon: Mushroom, route: '/editor/projects' }
+    { icon: Projects, route: '/editor/projects' }
   ]);
 
   let activated = $state(false);
@@ -21,7 +21,7 @@
     activated = !activated;
   };
 
-  let bottom = createVerticalMenuItems([{ icon: CodeLine, onClick: onActivated }]);
+  let bottom = createVerticalMenuItems([{ icon: Code, onClick: onActivated }]);
 </script>
 
 <div class="layout">

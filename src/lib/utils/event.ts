@@ -12,9 +12,24 @@ export const stopPropagation =
     return fn(e);
   };
 
-export const blurActiveElement = () => {
+export const getActiveHTMLElement = () => {
   const el = document.activeElement;
   if (el instanceof HTMLElement) {
-    el.blur();
+    return el;
+  }
+};
+
+export const blurActiveElement = () => {
+  const el = getActiveHTMLElement();
+  el?.blur();
+};
+
+export const activeInputElement = () => {
+  const el = getActiveHTMLElement();
+  if (el instanceof HTMLInputElement) {
+    return el;
+  }
+  if (el instanceof HTMLTextAreaElement) {
+    return el;
   }
 };

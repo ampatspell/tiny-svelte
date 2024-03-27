@@ -1,5 +1,5 @@
 <script>
-  import Editor from '$icons/mingcute-game-2-line.svelte';
+  import Editor from '$icons/lucide-gamepad.svelte';
 </script>
 
 <div class="page">
@@ -15,5 +15,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    > .editor {
+      display: flex;
+      :global(> svg) {
+        $s: 20px;
+        width: $s;
+        height: $s;
+      }
+    }
   }
 </style>

@@ -21,6 +21,7 @@
 
 <style lang="scss">
   .list {
+    flex: 1;
     display: flex;
     flex-direction: column;
     text-decoration: none;

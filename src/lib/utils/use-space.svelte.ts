@@ -1,5 +1,5 @@
 import type { VoidCallback } from '$lib/types/types';
-import { blurActiveElement } from './event';
+import { blurActiveElement, activeInputElement } from './event';
 
 export type SpaceProperties = {
   onSpaceDown: VoidCallback;
@@ -10,7 +10,7 @@ export const space = (node: HTMLElement, properties: SpaceProperties) => {
   let isSpace = false;
 
   const keyDown = (e: KeyboardEvent) => {
-    if (e.code === 'Space' && !isSpace) {
+    if (e.code === 'Space' && !isSpace && !activeInputElement()) {
       blurActiveElement();
       isSpace = true;
       properties.onSpaceDown();

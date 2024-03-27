@@ -6,10 +6,18 @@
     isSelected,
     route,
     children,
-    onClick
+    onClick: _onClick
   }: {
     children?: Snippet;
   } & ItemProps = $props();
+
+  let onClick = (e: Event) => {
+    if (!_onClick) {
+      return;
+    }
+    e.stopPropagation();
+    _onClick();
+  };
 </script>
 
 <a class="item" class:selected={isSelected} href={route} onclick={onClick}>
@@ -31,6 +39,9 @@
     }
     &.selected {
       background: fade-out(#000, 0.96);
+      &:hover {
+        background: fade-out(#000, 0.96);
+      }
     }
   }
 </style>
