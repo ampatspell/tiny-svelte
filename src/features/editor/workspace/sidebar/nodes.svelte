@@ -1,87 +1,36 @@
 <script lang="ts">
-  import Item from '$components/basic/list/item.svelte';
-  import List from '$components/basic/list/list.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import type { WorkspaceNodesModel } from '$lib/models/project/workspace/nodes.svelte';
-  import Alert from '$icons/lucide-circle-alert.svelte';
+  import List from './-list/list.svelte';
+  import Content from './-list/content/content.svelte';
+  import Accessories from './-list/accessories/accessories.svelte';
+  import Missing from './-list/accessories/missing.svelte';
+  import Description from './-list/content/description.svelte';
+  import Identifier from './-list/content/identifier.svelte';
 
   let { nodes }: { nodes: WorkspaceNodesModel } = $props();
+
+  let all = $derived(nodes.all);
   let selected = $derived(nodes.workspace.selectedNode.node);
   let onSelect = (node?: WorkspaceNodeModel) => {
     nodes.workspace.selectNode(node);
   };
 </script>
 
-<div class="content">
-  <List onClick={() => onSelect()}>
-    {#each nodes.all as node (node)}
-      <Item isSelected={selected === node} onClick={() => onSelect(node)}>
-        <div class="item">
-          <div class="node">
-            <div class="identifier">{node.identifier}</div>
-            {#if node.asset}
-              <div class="asset">
-                <div class="type">{node.asset.type}</div>
-                <div class="description">{node.asset.humanShortDescription}</div>
-              </div>
-            {:else}
-              <div class="missing">asset missing</div>
-            {/if}
-          </div>
-          <div class="accessories">
-            {#if !node.asset}
-              <div class="icon missing"><Alert /></div>
-            {/if}
-          </div>
-        </div>
-      </Item>
-    {/each}
-  </List>
-</div>
-
-<style lang="scss">
-  .content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .item {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    > .node {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-      > .identifier {
-        font-weight: 600;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-      }
-      > .asset {
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-        > .description {
-          color: fade-out(#000, 0.5);
-        }
-      }
-    }
-    > .accessories {
-      > .icon {
-        :global(> svg) {
-          width: 16px;
-        }
-        &.missing {
-          color: #e63946;
-        }
-      }
-    }
-  }
-</style>
+<List {all} {selected} {onSelect}>
+  {#snippet children(node)}
+    <Content>
+      <Identifier value={node.identifier} />
+      {#if node.asset}
+        <Description type={node.asset.type} description={node.asset.humanShortDescription} />
+      {:else}
+        <Description type="Asset missing" />
+      {/if}
+    </Content>
+    {#if !node.asset}
+      <Accessories>
+        <Missing />
+      </Accessories>
+    {/if}
+  {/snippet}
+</List>

@@ -15,8 +15,8 @@ export class WorkspacesWorkspaceModel extends Model<WorkspacesWorkspaceModelOpti
   _doc = $derived(this.options.doc);
   _data = $derived(this._doc.data!);
 
-  id = $derived(this._doc.id);
-  path = $derived(this._doc.path);
+  id = $derived(this._doc.id!);
+  path = $derived(this._doc.path!);
   identifier = $derived(this._data.identifier);
 
   serialized = $derived(serialized(this, ['id']));
