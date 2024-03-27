@@ -52,14 +52,18 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
     > .node {
       flex: 1;
       display: flex;
       flex-direction: column;
       gap: 2px;
+      min-width: 0;
       > .identifier {
         font-weight: 600;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
       > .asset {
         display: flex;

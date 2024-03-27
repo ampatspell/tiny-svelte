@@ -30,6 +30,7 @@
     border-right: 1px solid fade-out(#000, 0.95);
     display: flex;
     flex-direction: column;
+    user-select: none;
     > .items {
       &.top {
         flex: 1;
