@@ -6,7 +6,7 @@
     isSelected,
     route,
     children,
-    onClick: _onClick
+    onClick: _onClick,
   }: {
     children?: Snippet;
   } & ItemProps = $props();

@@ -4,14 +4,14 @@
   import IntegerInput from './blocks/integer-input.svelte';
 
   let {
-    model
+    model,
   }: {
     model: HasMutablePosition;
   } = $props();
 
   let onChange = (key: 'x' | 'y', value: number) => {
     const {
-      position: { x, y }
+      position: { x, y },
     } = model;
     model.onPosition(Object.assign({ x, y }, { [key]: value }));
   };

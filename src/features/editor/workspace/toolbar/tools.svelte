@@ -5,7 +5,7 @@
   import { getter, options } from '$lib/utils/args';
 
   let {
-    workspace
+    workspace,
   }: {
     workspace: WorkspaceModel;
   } = $props();
@@ -20,14 +20,14 @@
           return !hasSelection();
         }
         return false;
-      })
+      }),
     });
 
   let hasSelection = () => !!workspace.selectedNode.node;
   let tools = [
     tool('Idle', ToolType.Idle),
     tool('Resize', ToolType.Resize, hasSelection),
-    tool('Edit', ToolType.Edit, hasSelection)
+    tool('Edit', ToolType.Edit, hasSelection),
   ];
 </script>
 

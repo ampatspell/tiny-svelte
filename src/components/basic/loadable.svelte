@@ -4,7 +4,7 @@
 
   let {
     model,
-    children
+    children,
   }: {
     model: HasLoad<unknown>;
     children?: Snippet;

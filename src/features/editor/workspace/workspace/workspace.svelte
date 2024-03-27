@@ -5,7 +5,7 @@
   import Base from './base/base.svelte';
 
   let {
-    workspace
+    workspace,
   }: {
     workspace: WorkspaceModel;
   } = $props();

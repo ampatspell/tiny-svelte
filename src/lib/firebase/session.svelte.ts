@@ -66,7 +66,7 @@ export class Session {
     const { isLoaded, user } = this;
     return {
       isLoaded,
-      user: user?.serialized
+      user: user?.serialized,
     };
   });
 }

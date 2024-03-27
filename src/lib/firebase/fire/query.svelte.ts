@@ -1,22 +1,23 @@
-import {
-  onSnapshot,
-  type DocumentData,
-  type Query,
-  QuerySnapshot,
-  QueryDocumentSnapshot,
-  query,
-  limit,
-  getDocs,
-  getDocsFromCache,
-  getDocsFromServer
-} from '@firebase/firestore';
-import { FirebaseModel, type FirebaseModelOptions } from './firebase.svelte';
 import type { VoidCallback } from '$lib/types/types';
-import { Document, type DocumentLoadSource } from './document.svelte';
-import { untrack } from 'svelte';
-import { stats } from './stats.svelte';
 import { insertObjectAt, removeObjectAt } from '$lib/utils/array';
 import { serialized } from '$lib/utils/object';
+import {
+  type DocumentData,
+  type Query,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+  getDocs,
+  getDocsFromCache,
+  getDocsFromServer,
+  limit,
+  onSnapshot,
+  query,
+} from '@firebase/firestore';
+import { untrack } from 'svelte';
+
+import { Document, type DocumentLoadSource } from './document.svelte';
+import { FirebaseModel, type FirebaseModelOptions } from './firebase.svelte';
+import { stats } from './stats.svelte';
 
 export type DocumentsLoadOptions = {
   source?: DocumentLoadSource;
@@ -39,7 +40,7 @@ export type QueryBaseOptions = {
 
 export class QueryBase<
   T extends DocumentData = DocumentData,
-  O extends QueryBaseOptions = QueryBaseOptions
+  O extends QueryBaseOptions = QueryBaseOptions,
 > extends FirebaseModel<O> {
   ref = $derived(this.options.ref);
 
@@ -90,7 +91,7 @@ export class QueryBase<
             },
             (error) => {
               this._onError(error);
-            }
+            },
           );
           const listening = stats._registerListening(this);
           cancel = () => {
@@ -171,7 +172,7 @@ export class QueryAll<T extends DocumentData = DocumentData> extends QueryBase<T
   size = $derived(this.content.length);
 
   serialized = $derived.by(() =>
-    serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'isSubscribed', 'size'])
+    serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'isSubscribed', 'size']),
   );
 }
 
@@ -191,6 +192,6 @@ export class QueryFirst<T extends DocumentData = DocumentData> extends QueryBase
   }
 
   serialized = $derived.by(() =>
-    serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'isSubscribed', 'exists'])
+    serialized(this, ['path', 'isLoading', 'isLoaded', 'isError', 'error', 'isSubscribed', 'exists']),
   );
 }

@@ -6,7 +6,7 @@
 
   let {
     workspaces,
-    selected
+    selected,
   }: {
     workspaces: WorkspacesModel;
     selected: WorkspaceModel;

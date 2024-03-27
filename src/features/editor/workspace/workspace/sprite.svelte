@@ -5,7 +5,7 @@
   import { getWorkspaceContext } from './base/model.svelte';
 
   let {
-    node
+    node,
   }: {
     node: WorkspaceNodeModel;
   } = $props();

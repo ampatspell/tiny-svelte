@@ -18,7 +18,7 @@
     isResizable,
     onResize,
     onStart: _onStart,
-    onEnd: _onEnd
+    onEnd: _onEnd,
   }: {
     class?: Classes;
     pin: number;
@@ -44,7 +44,7 @@
 
     let {
       position: { x, y },
-      size: { width, height }
+      size: { width, height },
     } = resizing!;
 
     if (horizontal == Horizontal.Right) {
@@ -81,7 +81,7 @@
   const onStart = () => {
     resizing = {
       position: { x: position.x, y: position.y },
-      size: { width: size.width, height: size.height }
+      size: { width: size.width, height: size.height },
     };
     _onStart();
   };
@@ -99,7 +99,7 @@
     `vertical-${vertical}`,
     resizing && 'resizing',
     !isResizable && 'hidden',
-    _class
+    _class,
   )}
   style:--size="{pin}px"
   use:draggable={{
@@ -108,7 +108,7 @@
     onPosition,
     onStart,
     onEnd,
-    axis
+    axis,
   }}
 ></div>
 

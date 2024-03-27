@@ -7,7 +7,7 @@ export const sizeToStyleObject = (size: Size): StyleObject => {
   const { width, height } = size;
   return {
     width: `${width}px`,
-    height: `${height}px`
+    height: `${height}px`,
   };
 };
 
@@ -15,7 +15,7 @@ export const positionToStyleObject = (position: Point): StyleObject => {
   const { x, y } = position;
   return {
     top: `${y}px`,
-    left: `${x}px`
+    left: `${x}px`,
   };
 };
 

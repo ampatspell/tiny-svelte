@@ -11,7 +11,7 @@
   let {
     class: _class,
     context,
-    children
+    children,
   }: {
     class?: Classes;
     context: WorkspaceContext;
@@ -62,7 +62,7 @@
     isDraggable,
     position,
     pixel,
-    onPosition
+    onPosition,
   }}
   use:space={{ onSpaceDown, onSpaceUp }}
   onmousedown={onClick}

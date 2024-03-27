@@ -1,14 +1,15 @@
-import { collection } from '@firebase/firestore';
+import type { Document } from '$lib/firebase/fire/document.svelte';
+import { load } from '$lib/firebase/fire/firebase.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
+import { MapModels } from '$lib/firebase/fire/models.svelte';
+import { QueryAll } from '$lib/firebase/fire/query.svelte';
 import type { WorkspaceData } from '$lib/types/workspace';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
+import { collection } from '@firebase/firestore';
+
 import type { ProjectModel } from '../project.svelte';
 import { WorkspacesWorkspaceModel } from './workspace.svelte';
-import { Model } from '$lib/firebase/fire/model.svelte';
-import { QueryAll } from '$lib/firebase/fire/query.svelte';
-import { MapModels } from '$lib/firebase/fire/models.svelte';
-import type { Document } from '$lib/firebase/fire/document.svelte';
-import { load } from '$lib/firebase/fire/firebase.svelte';
 
 export type WorkspacesModelOptions = {
   project: ProjectModel;
@@ -21,13 +22,13 @@ export class WorkspacesModel extends Model<WorkspacesModelOptions> {
 
   _query = new QueryAll<WorkspaceData>(
     options({
-      ref: getter(() => this.ref)
-    })
+      ref: getter(() => this.ref),
+    }),
   );
 
   _all = new MapModels({
     source: getter(() => this._query.content),
-    target: (doc: Document<WorkspaceData>) => new WorkspacesWorkspaceModel({ workspaces: this, doc })
+    target: (doc: Document<WorkspaceData>) => new WorkspacesWorkspaceModel({ workspaces: this, doc }),
   });
 
   all = $derived(this._all.content);

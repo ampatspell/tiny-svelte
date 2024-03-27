@@ -5,7 +5,7 @@
 
   let {
     value,
-    onChange
+    onChange,
   }: {
     value: number;
     onChange: (value: number) => void;
@@ -13,8 +13,8 @@
 
   let converter = new IntegerConverter(
     options({
-      model: getter(() => value)
-    })
+      model: getter(() => value),
+    }),
   );
 
   let onBlur = () => false;

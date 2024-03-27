@@ -1,6 +1,7 @@
-import { getContext, setContext } from 'svelte';
-import { RenderContext, type RenderContextOptions } from './render.svelte';
 import type { Point } from '$lib/types/schema';
+import { getContext, setContext } from 'svelte';
+
+import { RenderContext, type RenderContextOptions } from './render.svelte';
 
 const LAYER = 'canvas:layer';
 
@@ -13,7 +14,7 @@ export class LayerContext extends RenderContext<void> {
     $effect(() => {
       const {
         stage: { size },
-        canvas
+        canvas,
       } = this;
       if (size && canvas) {
         if (canvas.width !== size.width || canvas.height !== size.height) {

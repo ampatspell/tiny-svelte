@@ -1,19 +1,20 @@
+import { Document } from '$lib/firebase/fire/document.svelte';
+import { Model } from '$lib/firebase/fire/model.svelte';
+import type { WorkspaceData } from '$lib/types/workspace';
+import { getter } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
-import { WorkspaceNodeSelector, WorkspaceNodesModel } from './nodes.svelte';
+
 import type { ProjectModel } from '../project.svelte';
 import { WorkspaceAssetsModel } from './assets.svelte';
-import { getter } from '$lib/utils/args';
-import type { WorkspaceData } from '$lib/types/workspace';
 import type { WorkspaceNodeModel } from './node.svelte';
-import { Model } from '$lib/firebase/fire/model.svelte';
-import { Document } from '$lib/firebase/fire/document.svelte';
+import { WorkspaceNodeSelector, WorkspaceNodesModel } from './nodes.svelte';
 
 export enum ToolType {
   WorkspaceDrag = 'workspace-drag',
   Idle = 'idle',
   Resize = 'resize',
-  Edit = 'edit'
+  Edit = 'edit',
 }
 
 export class Tool {
@@ -37,7 +38,7 @@ export class WorkspaceModel extends Model<WorkspaceModelOptions> {
   path = $derived(this.ref.path);
 
   _doc = new Document<WorkspaceData>({
-    ref: getter(() => this.ref)
+    ref: getter(() => this.ref),
   });
 
   _data = $derived(this._doc.data!);
@@ -71,7 +72,7 @@ export class WorkspaceModel extends Model<WorkspaceModelOptions> {
   selectedNode = new WorkspaceNodeSelector({
     nodes: this.nodes,
     value: getter(() => this.selectedNodeId),
-    select: (model: WorkspaceNodeModel, value: string) => model.id === value
+    select: (model: WorkspaceNodeModel, value: string) => model.id === value,
   });
 
   selectNode(node?: WorkspaceNodeModel) {

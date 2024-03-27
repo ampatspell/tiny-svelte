@@ -4,7 +4,7 @@
 
   let {
     top,
-    bottom
+    bottom,
   }: {
     top: Items;
     bottom: Items;

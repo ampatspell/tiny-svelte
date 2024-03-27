@@ -1,7 +1,8 @@
+import type { Point } from '$lib/types/schema';
 import type { Nullable } from '$lib/types/types';
 import { getContext, setContext } from 'svelte';
+
 import type { StageContext } from './stage.svelte';
-import type { Point } from '$lib/types/schema';
 
 const RENDER = 'canvas:render';
 
@@ -101,7 +102,7 @@ export class RenderContext<T = any> {
     if (position) {
       client = {
         x: client.x - position.x,
-        y: client.y - position.y
+        y: client.y - position.y,
       };
     }
     if (parent) {

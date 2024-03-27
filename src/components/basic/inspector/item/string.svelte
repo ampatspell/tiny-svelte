@@ -5,7 +5,7 @@
   let {
     title,
     value,
-    onValue
+    onValue,
   }: {
     title: string;
     value: string;

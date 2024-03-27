@@ -13,7 +13,7 @@
   let top = createVerticalMenuItems([
     { icon: Home, route: '/' },
     { icon: Editor, route: '/editor' },
-    { icon: Projects, route: '/editor/projects' }
+    { icon: Projects, route: '/editor/projects' },
   ]);
 
   let activated = $state(false);

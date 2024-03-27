@@ -13,10 +13,10 @@ const config = {
     alias: {
       '$icons/*': 'src/icons/*',
       '$components/*': 'src/components/*',
-      '$features/*': 'src/features/*'
+      '$features/*': 'src/features/*',
     },
-    adapter: adapter()
-  }
+    adapter: adapter(),
+  },
 };
 
 export default config;

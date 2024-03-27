@@ -4,7 +4,7 @@
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
 
   let {
-    node
+    node,
   }: {
     node: WorkspaceNodeModel;
   } = $props();

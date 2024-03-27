@@ -1,4 +1,5 @@
 import { isTruthy } from '$lib/utils/array';
+
 import { Model } from './model.svelte';
 
 const ITERATIONS = 10;
@@ -44,7 +45,7 @@ export class BaseMap<Source extends object, Target, O extends BaseMapOptions<Sou
     if (target) {
       cache.set(source, {
         target,
-        iteration
+        iteration,
       });
     }
     return target;

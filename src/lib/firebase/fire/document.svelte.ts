@@ -1,22 +1,24 @@
+import { browser } from '$app/environment';
+import type { VoidCallback } from '$lib/types/types';
+import type { OptionsInput } from '$lib/utils/args';
+import { serialized } from '$lib/utils/object';
 import {
-  getDocFromCache,
-  type DocumentReference,
-  getDocFromServer,
-  getDoc,
   type DocumentData,
-  onSnapshot,
+  type DocumentReference,
   DocumentSnapshot,
   deleteDoc,
-  setDoc
+  getDoc,
+  getDocFromCache,
+  getDocFromServer,
+  onSnapshot,
+  setDoc,
 } from '@firebase/firestore';
-import { FirebaseModel, type FirebaseModelOptions } from './firebase.svelte';
-import type { OptionsInput } from '$lib/utils/args';
-import type { VoidCallback } from '$lib/types/types';
 import { untrack } from 'svelte';
-import { stats } from './stats.svelte';
+
 import { Debounce } from './debounce.svelte';
-import { serialized } from '$lib/utils/object';
-import { browser } from '$app/environment';
+import { FirebaseModel, type FirebaseModelOptions } from './firebase.svelte';
+import { stats } from './stats.svelte';
+
 const createToken = () => {
   if (browser) {
     return window.crypto.randomUUID().replaceAll('-', '');
@@ -79,7 +81,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
 
   _debounce = new Debounce({
     delay: 300,
-    commit: () => this.save()
+    commit: () => this.save(),
   });
 
   constructor(options: OptionsInput<DocumentOptions<T>>) {
@@ -118,7 +120,7 @@ export class Document<T extends DocumentData = DocumentData> extends FirebaseMod
             },
             (error) => {
               this._onError(error);
-            }
+            },
           );
           const listening = stats._registerListening(this);
           cancel = () => {

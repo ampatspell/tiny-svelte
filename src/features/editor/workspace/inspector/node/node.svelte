@@ -12,7 +12,7 @@
   import Sprite from './sprite.svelte';
 
   let {
-    node
+    node,
   }: {
     node: WorkspaceNodeModel;
   } = $props();

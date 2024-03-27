@@ -3,7 +3,7 @@
   import String from './string.svelte';
 
   let {
-    model
+    model,
   }: {
     model: HasMutableIdentifier;
   } = $props();

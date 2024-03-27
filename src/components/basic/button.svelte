@@ -6,7 +6,7 @@
     value,
     isDisabled,
     onClick,
-    route
+    route,
   }: {
     children?: Snippet;
     value?: string;

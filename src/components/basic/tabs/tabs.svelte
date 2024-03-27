@@ -6,7 +6,7 @@
   let {
     selected,
     onSelect,
-    children
+    children,
   }: {
     selected: string;
     onSelect: (id: string) => void;
@@ -15,8 +15,8 @@
 
   let context = new TabsContext(
     options({
-      selected: getter(() => selected)
-    })
+      selected: getter(() => selected),
+    }),
   );
 
   setTabsContext(context);

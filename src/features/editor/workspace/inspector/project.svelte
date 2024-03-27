@@ -6,7 +6,7 @@
   import type { ProjectModel } from '$lib/models/project/project.svelte';
 
   let {
-    project
+    project,
   }: {
     project: ProjectModel;
   } = $props();

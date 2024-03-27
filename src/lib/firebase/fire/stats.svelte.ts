@@ -1,7 +1,8 @@
+import { removeObject } from '$lib/utils/array';
 import { untrack } from 'svelte';
+
 import type { FirebaseModel, FirebaseModelOptions } from './firebase.svelte';
 import type { HasSubscriber } from './subscriber.svelte';
-import { removeObject } from '$lib/utils/array';
 
 export class Stats {
   subscribed = $state<HasSubscriber[]>([]);

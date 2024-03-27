@@ -3,14 +3,14 @@ import type { Point, Size } from '$lib/types/schema';
 export const calcPoint = (a: Point, fn: (value: number) => number): Point => {
   return {
     x: fn(a.x),
-    y: fn(a.y)
+    y: fn(a.y),
   };
 };
 
 export const calcPoints = (a: Point, b: Point, fn: (a: number, b: number) => number): Point => {
   return {
     x: fn(a.x, b.x),
-    y: fn(a.y, b.y)
+    y: fn(a.y, b.y),
   };
 };
 
@@ -28,14 +28,14 @@ export const pointEquals = (a: Point, b: Point) => a.x === b.x && a.y === b.y;
 export const calcSizes = (a: Size, b: Size, fn: (a: number, b: number) => number): Size => {
   return {
     width: fn(a.width, b.width),
-    height: fn(a.height, b.height)
+    height: fn(a.height, b.height),
   };
 };
 
 export const calcSize = (a: Size, fn: (value: number) => number): Size => {
   return {
     width: fn(a.width),
-    height: fn(a.height)
+    height: fn(a.height),
   };
 };
 

@@ -1,6 +1,7 @@
-import { options, type OptionsInput } from '$lib/utils/args';
+import { type OptionsInput, options } from '$lib/utils/args';
 import { description } from '$lib/utils/object';
-import { Subscriber, type HasSubscriber } from './subscriber.svelte';
+
+import { type HasSubscriber, Subscriber } from './subscriber.svelte';
 
 export type HasDescriptionAndSerialized = {
   description?: string;

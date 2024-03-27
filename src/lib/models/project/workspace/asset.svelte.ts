@@ -1,5 +1,6 @@
 import { Model } from '$lib/firebase/fire/model.svelte';
 import { serialized } from '$lib/utils/object';
+
 import type { ProjectAssetModel } from '../asset.svelte';
 import type { WorkspaceAssetsModel } from './assets.svelte';
 

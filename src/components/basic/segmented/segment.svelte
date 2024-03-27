@@ -5,7 +5,7 @@
     value,
     isSelected,
     isDisabled,
-    onClick: _onClick
+    onClick: _onClick,
   }: {
     value: string;
     isSelected: boolean;

@@ -8,13 +8,13 @@ export type OptionalVoidCallback = (() => void) | undefined;
 export enum Horizontal {
   Left = 'left',
   Center = 'center',
-  Right = 'right'
+  Right = 'right',
 }
 
 export enum Vertical {
   Top = 'top',
   Center = 'center',
-  Bottom = 'bottom'
+  Bottom = 'bottom',
 }
 
 export type ResizeEvent = {

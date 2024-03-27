@@ -12,7 +12,7 @@
   let boxes = $state<(Point & { fill: string; enabled: boolean })[]>([
     { x: 0, y: 0, fill: 'red', enabled: true },
     { x: 10, y: 10, fill: 'green', enabled: true },
-    { x: 20, y: 20, fill: 'blue', enabled: true }
+    { x: 20, y: 20, fill: 'blue', enabled: true },
   ]);
 
   let reverse = () => {

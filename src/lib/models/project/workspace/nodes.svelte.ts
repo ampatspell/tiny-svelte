@@ -1,16 +1,17 @@
-import { collection, doc } from '@firebase/firestore';
-import type { WorkspaceModel } from './workspace.svelte';
-import type { WorkspaceNodeData } from '$lib/types/workspace';
-import { getter, options, type OptionsInput } from '$lib/utils/args';
-import { serialized } from '$lib/utils/object';
-import { WorkspaceNodeModel } from './node.svelte';
-import type { ProjectAssetModel } from '../asset.svelte';
-import type { AssetType } from '$lib/types/assets';
-import { ExistingSelector } from '$lib/models/selector.svelte';
-import { QueryAll } from '$lib/firebase/fire/query.svelte';
-import { MapModels } from '$lib/firebase/fire/models.svelte';
 import { Document } from '$lib/firebase/fire/document.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
+import { MapModels } from '$lib/firebase/fire/models.svelte';
+import { QueryAll } from '$lib/firebase/fire/query.svelte';
+import { ExistingSelector } from '$lib/models/selector.svelte';
+import type { AssetType } from '$lib/types/assets';
+import type { WorkspaceNodeData } from '$lib/types/workspace';
+import { type OptionsInput, getter, options } from '$lib/utils/args';
+import { serialized } from '$lib/utils/object';
+import { collection, doc } from '@firebase/firestore';
+
+import type { ProjectAssetModel } from '../asset.svelte';
+import { WorkspaceNodeModel } from './node.svelte';
+import type { WorkspaceModel } from './workspace.svelte';
 
 export type WorkspaceNodeSelectorOptions<I> = {
   nodes: WorkspaceNodesModel;
@@ -26,7 +27,7 @@ export class WorkspaceNodeSelector<I> extends Model<WorkspaceNodeSelectorOptions
     this.selector = new ExistingSelector({
       models: getter(() => this.options.nodes.all),
       value: getter(() => this.options.value),
-      select: getter(() => this.options.select)
+      select: getter(() => this.options.select),
     });
   }
 
@@ -50,8 +51,8 @@ export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
 
   _query = new QueryAll<WorkspaceNodeData>(
     options({
-      ref: getter(() => this.ref)
-    })
+      ref: getter(() => this.ref),
+    }),
   );
 
   _all = new MapModels(
@@ -61,10 +62,10 @@ export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
         return new WorkspaceNodeModel({
           nodes: this,
           doc,
-          asset: (identifier) => this.assets.assetByIdentifier(identifier)
+          asset: (identifier) => this.assets.assetByIdentifier(identifier),
         });
-      }
-    })
+      },
+    }),
   );
 
   all = $derived(this._all.content);
@@ -84,8 +85,8 @@ export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
       data: {
         pixel: 2,
         position: { x: 10, y: 10 },
-        asset: asset?.identifier ?? ''
-      }
+        asset: asset?.identifier ?? '',
+      },
     });
 
     await document.save();

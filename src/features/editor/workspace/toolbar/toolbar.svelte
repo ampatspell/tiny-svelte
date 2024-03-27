@@ -3,7 +3,7 @@
   import Tools from './tools.svelte';
 
   let {
-    workspace
+    workspace,
   }: {
     workspace: WorkspaceModel;
   } = $props();

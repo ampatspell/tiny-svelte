@@ -10,7 +10,7 @@
 
   let {
     node,
-    children
+    children,
   }: {
     node: WorkspaceNodeModel;
     children: Snippet;
@@ -69,7 +69,7 @@
     position,
     onPosition,
     onStart,
-    onEnd
+    onEnd,
   }}
 >
   <div class="header">

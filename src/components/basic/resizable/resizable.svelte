@@ -17,7 +17,7 @@
     onResize,
     onStart,
     onEnd,
-    children
+    children,
   }: {
     border: Border;
     externalPixel: number;

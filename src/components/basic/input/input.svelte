@@ -5,7 +5,7 @@
     value,
     onBlur,
     onEnter,
-    onCreated
+    onCreated,
   }: {
     value: string;
     onCreated?: (state: InputState) => void;
@@ -23,7 +23,7 @@
 
   $effect(() => {
     onCreated?.({
-      rollback: () => rollback()
+      rollback: () => rollback(),
     });
   });
 

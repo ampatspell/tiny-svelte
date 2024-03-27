@@ -1,12 +1,13 @@
 import type { Point } from '$lib/types/schema';
 import type { VoidCallback } from '$lib/types/types';
+
 import { mouseClientPositionToPoint } from './event';
 import { dividePoint, roundPoint, subtractPoints } from './math';
 
 export enum DraggableAxis {
   Horizontal = 'horizontal',
   Vertical = 'vertical',
-  Both = 'both'
+  Both = 'both',
 }
 
 export type DraggableParameters = {
@@ -51,7 +52,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
     dragging = {
       position: parameters.position ?? { x: 0, y: 0 },
       window: mouseClientPositionToPoint(e),
-      pixel: parameters.pixel
+      pixel: parameters.pixel,
     };
 
     parameters.onStart?.();
@@ -86,7 +87,7 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
 
     let point = {
       x: dragging.position.x,
-      y: dragging.position.y
+      y: dragging.position.y,
     };
 
     if (axis === DraggableAxis.Horizontal || axis === DraggableAxis.Both) {
@@ -131,6 +132,6 @@ export const draggable = (node: HTMLElement, parameters: DraggableParameters) =>
       window.removeEventListener('mouseup', mouseUp);
       window.removeEventListener('mousemove', mouseMove);
       window.removeEventListener('blur', blur);
-    }
+    },
   };
 };

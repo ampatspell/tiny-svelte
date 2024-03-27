@@ -16,8 +16,8 @@ export class Thing {
       name: `Name #${index}`,
       position: {
         x: index * 5,
-        y: index * 5
-      }
+        y: index * 5,
+      },
     };
   }
 

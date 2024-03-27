@@ -5,7 +5,7 @@
 
   let {
     width,
-    model
+    model,
   }: {
     width?: number;
     model: OrderBy<T>;

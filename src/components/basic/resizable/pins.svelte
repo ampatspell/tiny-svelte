@@ -12,7 +12,7 @@
     isResizable,
     onResize,
     onStart,
-    onEnd
+    onEnd,
   }: {
     externalPixel: number;
     internalPixel: number;
@@ -33,9 +33,9 @@
         horizontal,
         vertical,
         position,
-        size
+        size,
       });
-    }
+    },
   });
 
   let pins = [
@@ -47,7 +47,7 @@
     }),
     ...[Horizontal.Left, Horizontal.Center, Horizontal.Right].map((horizontal) => {
       return pin(horizontal, Vertical.Bottom);
-    })
+    }),
   ];
 
   let pinSize = $state(7);

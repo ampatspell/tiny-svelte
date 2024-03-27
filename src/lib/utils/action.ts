@@ -2,7 +2,7 @@
 export const action = <T extends Function>(
   target: object,
   key: string,
-  descriptor: TypedPropertyDescriptor<T>
+  descriptor: TypedPropertyDescriptor<T>,
 ): TypedPropertyDescriptor<T> => {
   return {
     configurable: true,
@@ -11,9 +11,9 @@ export const action = <T extends Function>(
       Object.defineProperty(this, key, {
         value: bound,
         configurable: true,
-        writable: true
+        writable: true,
       });
       return bound;
-    }
+    },
   };
 };

@@ -6,7 +6,7 @@
     asResizableAssetModel,
     isResizableAssetModel,
     type ProjectAssetModel,
-    type WithResizableAssetModelCallback
+    type WithResizableAssetModelCallback,
   } from '$lib/models/project/asset.svelte';
   import { zeroSize } from '$lib/utils/math';
   import Resizable from '$components/basic/resizable/resizable.svelte';
@@ -17,7 +17,7 @@
     node,
     border,
     isResizable,
-    children
+    children,
   }: {
     node: WorkspaceNodeModel;
     border: Border;

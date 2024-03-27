@@ -4,14 +4,14 @@
   import IntegerInput from './blocks/integer-input.svelte';
 
   let {
-    model
+    model,
   }: {
     model: HasMutableSize;
   } = $props();
 
   let onChange = (key: 'width' | 'height', value: number) => {
     const {
-      size: { width, height }
+      size: { width, height },
     } = model;
     model.onSize(Object.assign({ width, height }, { [key]: value }));
   };

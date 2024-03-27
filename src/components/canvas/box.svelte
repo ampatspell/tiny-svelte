@@ -5,7 +5,7 @@
   let {
     position,
     size,
-    fill
+    fill,
   }: {
     position?: Point;
     size: Size;

@@ -2,7 +2,7 @@ import type { Point } from '$lib/types/schema';
 
 export const mouseClientPositionToPoint = (e: MouseEvent): Point => ({
   x: e.clientX,
-  y: e.clientY
+  y: e.clientY,
 });
 
 export const stopPropagation =

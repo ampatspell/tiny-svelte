@@ -3,7 +3,7 @@
 
   let {
     width,
-    children
+    children,
   }: {
     width?: number;
     children?: Snippet;

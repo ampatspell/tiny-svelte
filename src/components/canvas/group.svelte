@@ -5,7 +5,7 @@
 
   let {
     position,
-    children
+    children,
   }: {
     position?: Point;
     children?: Snippet;

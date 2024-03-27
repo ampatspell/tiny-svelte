@@ -1,9 +1,10 @@
 import { z } from 'zod';
+
 import { IdentifierSchema, PixelSchema, PointSchema } from './schema';
 
 export const WorkspaceDataSchema = z.object({
   identifier: IdentifierSchema,
-  pixel: PixelSchema
+  pixel: PixelSchema,
 });
 
 export type WorkspaceData = z.infer<typeof WorkspaceDataSchema>;
@@ -13,7 +14,7 @@ export type WorkspaceData = z.infer<typeof WorkspaceDataSchema>;
 export const WorkspaceNodeDataSchema = z.object({
   position: PointSchema,
   pixel: PixelSchema,
-  asset: IdentifierSchema
+  asset: IdentifierSchema,
 });
 
 export type WorkspaceNodeData = z.infer<typeof WorkspaceNodeDataSchema>;

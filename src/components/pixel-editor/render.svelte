@@ -11,7 +11,7 @@
     size,
     pixels,
     isEditing,
-    onUpdate
+    onUpdate,
   }: {
     position?: Point;
     pixel: number;

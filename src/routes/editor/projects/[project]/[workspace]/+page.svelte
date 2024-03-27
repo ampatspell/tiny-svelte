@@ -11,9 +11,9 @@
 
   let workspace = new WorkspaceModel({
     project: new ProjectModel({
-      id: getter(() => data.project.id)
+      id: getter(() => data.project.id),
     }),
-    id: getter(() => data.workspace.id)
+    id: getter(() => data.workspace.id),
   });
 
   subscribe(workspace);

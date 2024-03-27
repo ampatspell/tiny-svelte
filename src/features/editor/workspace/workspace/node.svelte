@@ -19,6 +19,6 @@
       <Sprite {node} />
     {/if}
   {:else}
-    <Missing {node} />
+    <Missing />
   {/if}
 </Node>

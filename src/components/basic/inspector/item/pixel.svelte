@@ -6,7 +6,7 @@
 
   let {
     omitTitle,
-    model
+    model,
   }: {
     omitTitle?: boolean;
     model: HasMutablePixel;

@@ -5,7 +5,7 @@
   let {
     route,
     children,
-    onClick
+    onClick,
   }: {
     children?: Snippet;
     route?: string;

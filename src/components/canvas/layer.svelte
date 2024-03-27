@@ -5,7 +5,7 @@
   import { setRenderContext } from './contexts/render.svelte';
 
   let {
-    children
+    children,
   }: {
     name?: string;
     children?: Snippet;
@@ -15,7 +15,7 @@
   let layer = new LayerContext({
     stage,
     model: () => null,
-    draw: () => () => {}
+    draw: () => () => {},
   });
   setLayerContext(layer);
   setRenderContext(layer);

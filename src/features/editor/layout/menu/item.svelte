@@ -2,7 +2,7 @@
   import type { Item } from './model';
 
   let {
-    item
+    item,
   }: {
     item: Item;
   } = $props();

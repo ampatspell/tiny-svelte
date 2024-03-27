@@ -6,7 +6,7 @@
     getRenderContext,
     RenderContext,
     setRenderContext,
-    type RenderContextDrawFunction
+    type RenderContextDrawFunction,
   } from './contexts/render.svelte';
   import type { Snippet } from 'svelte';
 
@@ -16,7 +16,7 @@
     model,
     draw,
     children,
-    onCreated
+    onCreated,
   }: {
     name: string;
     position?: Point;
@@ -33,7 +33,7 @@
     parent,
     position: () => position,
     model: () => model,
-    draw: () => draw
+    draw: () => draw,
   });
   setRenderContext(context);
   onCreated?.(context);

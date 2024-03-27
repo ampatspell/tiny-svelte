@@ -1,16 +1,17 @@
 import { PUBLIC_FIREBASE } from '$env/static/public';
-import { getApps, initializeApp, type FirebaseOptions } from 'firebase/app';
+import { setGlobal } from '$lib/utils/set-global';
+import { type FirebaseOptions, getApps, initializeApp } from 'firebase/app';
+import { type Auth, browserLocalPersistence, initializeAuth } from 'firebase/auth';
 import {
   type DocumentReference,
   type Firestore,
   initializeFirestore,
   persistentLocalCache,
-  persistentMultipleTabManager
+  persistentMultipleTabManager,
 } from 'firebase/firestore';
-import { initializeAuth, type Auth, browserLocalPersistence } from 'firebase/auth';
-import { setGlobal } from '$lib/utils/set-global';
-import { Session } from './session.svelte';
+
 import { reset } from './reset.svelte';
+import { Session } from './session.svelte';
 
 const options = JSON.parse(PUBLIC_FIREBASE) as FirebaseOptions;
 
@@ -37,7 +38,7 @@ export class Firebase {
   get firestore() {
     if (!this._firestore) {
       this._firestore = initializeFirestore(this.app, {
-        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
       });
     }
     return this._firestore;
@@ -70,11 +71,11 @@ export class Firebase {
   serialized = $derived.by(() => {
     const {
       options: { projectId },
-      session
+      session,
     } = this;
     return {
       projectId,
-      session: session.serialized
+      session: session.serialized,
     };
   });
 }

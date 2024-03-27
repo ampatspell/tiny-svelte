@@ -9,7 +9,7 @@
     class: className,
     size,
     onCreated,
-    children
+    children,
   }: {
     class?: Classes;
     size?: Size;

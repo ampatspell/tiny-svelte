@@ -6,7 +6,7 @@
   let {
     id,
     name,
-    children
+    children,
   }: {
     id: string;
     name: string;
@@ -19,8 +19,8 @@
     return context.registerTab(
       options({
         id: getter(() => id),
-        name: getter(() => name)
-      })
+        name: getter(() => name),
+      }),
     );
   });
 

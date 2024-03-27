@@ -3,7 +3,7 @@
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
 
   let {
-    workspace
+    workspace,
   }: {
     workspace: WorkspaceModel;
   } = $props();

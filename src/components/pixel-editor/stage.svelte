@@ -9,7 +9,7 @@
     size,
     pixels,
     isEditing,
-    onUpdate
+    onUpdate,
   }: {
     pixel: number;
     size: Size;
@@ -21,7 +21,7 @@
   let stage = $derived.by(() => {
     return {
       width: size.width * pixel - 1,
-      height: size.height * pixel - 1
+      height: size.height * pixel - 1,
     };
   });
 </script>

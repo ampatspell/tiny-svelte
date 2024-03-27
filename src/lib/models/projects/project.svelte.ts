@@ -2,6 +2,7 @@ import type { Document } from '$lib/firebase/fire/document.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import type { ProjectData } from '$lib/types/project';
 import { serialized } from '$lib/utils/object';
+
 import type { ProjectsModel } from './projects.svelte';
 
 export type ProjectsProjectModelOptions = {

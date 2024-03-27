@@ -1,14 +1,15 @@
-import { collection, doc } from '@firebase/firestore';
-import type { ProjectModel } from './project.svelte';
-import type { AssetData, AssetType, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
-import { getter, options } from '$lib/utils/args';
-import { serialized } from '$lib/utils/object';
-import { ProjectBoxAssetModel, type ProjectAssetModel, ProjectSpriteAssetModel } from './asset.svelte';
+import { Document } from '$lib/firebase/fire/document.svelte';
+import { load } from '$lib/firebase/fire/firebase.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import { MapModels } from '$lib/firebase/fire/models.svelte';
 import { QueryAll } from '$lib/firebase/fire/query.svelte';
-import { Document } from '$lib/firebase/fire/document.svelte';
-import { load } from '$lib/firebase/fire/firebase.svelte';
+import type { AssetData, AssetType, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
+import { getter, options } from '$lib/utils/args';
+import { serialized } from '$lib/utils/object';
+import { collection, doc } from '@firebase/firestore';
+
+import { type ProjectAssetModel, ProjectBoxAssetModel, ProjectSpriteAssetModel } from './asset.svelte';
+import type { ProjectModel } from './project.svelte';
 
 export type ProjectAssetsModelOptions = {
   project: ProjectModel;
@@ -23,8 +24,8 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
 
   _query = new QueryAll<AssetData>(
     options({
-      ref: getter(() => this.ref)
-    })
+      ref: getter(() => this.ref),
+    }),
   );
 
   _all = new MapModels<Document<AssetData>, ProjectAssetModel<AssetData>>({
@@ -39,7 +40,7 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
         }
         throw new Error(`unsupported asset type '${type}'`);
       }
-    }
+    },
   });
 
   all = $derived(this._all.content);
@@ -59,8 +60,8 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
           type: 'box',
           identifier: 'new',
           size: { width: 8, height: 8 },
-          color: 'white'
-        }
+          color: 'white',
+        },
       });
     } else if (type === 'sprite') {
       document = new Document<SpriteAssetData>({
@@ -69,8 +70,8 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
           type: 'sprite',
           identifier: 'new',
           size: { width: 8, height: 8 },
-          pixels: Array(8 * 8).fill(0)
-        }
+          pixels: Array(8 * 8).fill(0),
+        },
       });
     } else {
       throw new Error(`unsupported asset type ${type}`);

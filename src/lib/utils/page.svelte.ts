@@ -11,6 +11,6 @@ export const useCurrentRoute = () => {
   return {
     get value() {
       return value;
-    }
+    },
   };
 };

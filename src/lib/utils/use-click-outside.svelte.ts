@@ -14,6 +14,6 @@ export const clickOutside = (node: HTMLElement, parameters: ClickOutsideParamete
   return {
     destroy: () => {
       window.removeEventListener('click', onClick, { capture: true });
-    }
+    },
   };
 };

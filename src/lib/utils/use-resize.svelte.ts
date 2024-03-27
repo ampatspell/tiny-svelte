@@ -14,6 +14,6 @@ export const resize = (node: HTMLElement, parameters: ResizeParameters) => {
   return {
     destroy: () => {
       observer.unobserve(node);
-    }
+    },
   };
 };
