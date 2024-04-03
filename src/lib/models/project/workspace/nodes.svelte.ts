@@ -70,8 +70,8 @@ export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
 
   all = $derived(this._all.content);
 
-  nodeForAsset(asset: ProjectAssetModel) {
-    return this.all.find((node) => node.asset === asset);
+  nodesForAsset(asset: ProjectAssetModel) {
+    return this.all.filter((node) => node.asset === asset);
   }
 
   async createNewAsset(type?: AssetType) {

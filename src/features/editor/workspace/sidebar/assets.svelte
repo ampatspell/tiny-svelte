@@ -14,12 +14,17 @@
   let all = $derived(assets.all);
 
   let selectedNode = $derived(workspace.selectedNode.node);
+
   let selected = $derived.by(() => {
-    return selectedNode && all.find((asset) => asset.node === selectedNode);
+    if(selectedNode) {
+      const node = selectedNode;
+      return all.find((asset) => asset.nodes.includes(node));
+    }
   });
+
   let onSelect = (asset?: WorkspaceAssetModel) => {
-    let node = asset?.node;
-    workspace.selectNode(node);
+    // let node = asset?.node;
+    // workspace.selectNode(node);
   };
 </script>
 
@@ -30,7 +35,7 @@
       <Description type={asset.asset.type} description={asset.asset.humanShortDescription} />
     </Content>
     <Accessories>
-      {#if asset.node}
+      {#if asset.nodes.length}
         <Check />
       {/if}
     </Accessories>

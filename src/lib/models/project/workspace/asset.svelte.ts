@@ -10,11 +10,8 @@ export type WorkspaceAssetModelOptions = {
 };
 
 export class WorkspaceAssetModel extends Model<WorkspaceAssetModelOptions> {
-  assets = $derived(this.options.assets);
   asset = $derived(this.options.asset);
+  nodes = $derived(this.options.assets.nodesForAsset(this.asset));
 
-  node = $derived(this.assets.nodeForAsset(this.asset));
-  isVisible = $derived(!!this.node);
-
-  serialized = $derived(serialized(this, ['isVisible', 'asset', 'node']));
+  serialized = $derived(serialized(this, []));
 }

@@ -24,8 +24,8 @@ export class WorkspaceAssetsModel extends Model<WorkspaceAssetsModelOptions> {
 
   all = $derived(this._all.content);
 
-  nodeForAsset(asset: ProjectAssetModel) {
-    return this.workspace.nodes.nodeForAsset(asset);
+  nodesForAsset(asset: ProjectAssetModel) {
+    return this.workspace.nodes.nodesForAsset(asset);
   }
 
   dependencies = [];
