@@ -16,18 +16,18 @@
   let project = $derived(workspace.project);
   let workspaces = $derived(project.workspaces);
 
-  let selected = $state('nodes');
+  let selected = $state('assets');
   let onSelect = (next: string) => (selected = next);
 </script>
 
 <div class="sidebar">
   <Sidebar>
     <Tabs {selected} {onSelect}>
-      <Tab id="nodes" name="Nodes">
-        <Nodes nodes={workspace.nodes} />
-      </Tab>
       <Tab id="assets" name="Assets">
         <Assets assets={workspace.assets} />
+      </Tab>
+      <Tab id="nodes" name="Nodes">
+        <Nodes nodes={workspace.nodes} />
       </Tab>
       <Tab id="workspaces" name="Workspaces">
         <Workspaces {workspaces} selected={workspace} />
