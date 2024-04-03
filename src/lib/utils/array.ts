@@ -53,3 +53,7 @@ export const insertObjectAt = <T>(array: T[], index: number, object: T) => {
 export function isTruthy<T>(value?: T | undefined | null | false): value is T {
   return !!value;
 }
+
+export const filterByInstanceOf = <I, O>(array: I[], factory: { new(...args: never): O }): O[] => {
+  return array.filter(item => item instanceof factory) as unknown as O[];
+}

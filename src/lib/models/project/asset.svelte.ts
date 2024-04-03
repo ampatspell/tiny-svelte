@@ -49,6 +49,7 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
 
   id = $derived(this._doc.id);
   path = $derived(this._doc.path);
+  exists = $derived(this._doc.exists);
 
   type = $derived(this._data!.type);
   identifier = $derived(this._data!.identifier);

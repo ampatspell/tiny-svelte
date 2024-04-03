@@ -1,4 +1,6 @@
 <script lang="ts" generics="T">
+    import { isTruthy } from '$lib/utils/array';
+
   import type { Snippet } from 'svelte';
   import Item from '$components/basic/list/item.svelte';
   import List from '$components/basic/list/list.svelte';
@@ -10,16 +12,24 @@
     children,
   }: {
     all: T[];
-    selected?: T;
+    selected?: T | T[];
     onSelect: (model?: T) => void;
     children: Snippet<[model: T]>;
   } = $props();
+
+  let asArray = $derived.by(() => {
+    if(Array.isArray(selected)) {
+      return selected;
+    }
+    return [ selected ].filter(isTruthy);
+  });
+
 </script>
 
 <div class="content">
   <List onClick={() => onSelect()}>
     {#each all as model (model)}
-      <Item isSelected={selected === model} onClick={() => onSelect(model)}>
+      <Item isSelected={asArray.includes(model)} onClick={() => onSelect(model)}>
         <div class="item">
           {@render children(model)}
         </div>

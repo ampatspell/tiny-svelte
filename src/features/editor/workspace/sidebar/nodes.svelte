@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
+  import { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import type { WorkspaceNodesModel } from '$lib/models/project/workspace/nodes.svelte';
   import List from './-list/list.svelte';
   import Content from './-list/content/content.svelte';
@@ -11,7 +11,7 @@
   let { nodes }: { nodes: WorkspaceNodesModel } = $props();
 
   let all = $derived(nodes.all);
-  let selected = $derived(nodes.workspace.selectedNode.node);
+  let selected = $derived(nodes.workspace.selection.byType(WorkspaceNodeModel));
   let onSelect = (node?: WorkspaceNodeModel) => {
     nodes.workspace.selectNode(node);
   };

@@ -23,7 +23,8 @@
       }),
     });
 
-  let hasSelection = () => !!workspace.selectedNode.node;
+  // TODO: selection
+  let hasSelection = () => false; // !!workspace.selectedNode.node;
   let tools = [
     tool('Idle', ToolType.Idle),
     tool('Resize', ToolType.Resize, hasSelection),

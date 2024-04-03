@@ -13,5 +13,7 @@ export class WorkspaceAssetModel extends Model<WorkspaceAssetModelOptions> {
   asset = $derived(this.options.asset);
   nodes = $derived(this.options.assets.nodesForAsset(this.asset));
 
+  exists = $derived(this.asset.exists);
+
   serialized = $derived(serialized(this, []));
 }

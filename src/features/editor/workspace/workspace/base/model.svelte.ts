@@ -26,7 +26,7 @@ export class WorkspaceContext {
   workspace = $derived.by(() => this.options.workspace);
   pixel = $derived(this.workspace.pixel);
   tool = $derived(this.workspace.tool);
-  selected = $derived(this.workspace.selectedNode.node);
+  selection = $derived(this.workspace.selection);
 
   selectNode(node?: WorkspaceNodeModel) {
     this.workspace.selectNode(node);
@@ -45,13 +45,15 @@ export class WorkspaceContext {
   }
 
   isResizable(model: WorkspaceNodeModel) {
-    if (!this.isSelectedAndHasTools(model, [ToolType.Resize])) {
-      return false;
-    }
-    if (!asResizableAssetModel(model.asset, (asset) => asset.isResizable)) {
-      return false;
-    }
-    return true;
+    // TODO: selection
+    return false;
+    // if (!this.isSelectedAndHasTools(model, [ToolType.Resize])) {
+    //   return false;
+    // }
+    // if (!asResizableAssetModel(model.asset, (asset) => asset.isResizable)) {
+    //   return false;
+    // }
+    // return true;
   }
 
   @action

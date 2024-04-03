@@ -13,29 +13,30 @@ import type { ProjectAssetModel } from '../asset.svelte';
 import { WorkspaceNodeModel } from './node.svelte';
 import type { WorkspaceModel } from './workspace.svelte';
 
-export type WorkspaceNodeSelectorOptions<I> = {
-  nodes: WorkspaceNodesModel;
-  value: I | undefined;
-  select: (model: WorkspaceNodeModel, value: I) => boolean;
-};
+// TODO: selection
+// export type WorkspaceNodeSelectorOptions<I> = {
+//   nodes: WorkspaceNodesModel;
+//   value: I | undefined;
+//   select: (model: WorkspaceNodeModel, value: I) => boolean;
+// };
 
-export class WorkspaceNodeSelector<I> extends Model<WorkspaceNodeSelectorOptions<I>> {
-  selector: ExistingSelector<I, WorkspaceNodeModel>;
+// export class WorkspaceNodeSelector<I> extends Model<WorkspaceNodeSelectorOptions<I>> {
+//   selector: ExistingSelector<I, WorkspaceNodeModel>;
 
-  constructor(opts: OptionsInput<WorkspaceNodeSelectorOptions<I>>) {
-    super(opts);
-    this.selector = new ExistingSelector({
-      models: getter(() => this.options.nodes.all),
-      value: getter(() => this.options.value),
-      select: getter(() => this.options.select),
-    });
-  }
+//   constructor(opts: OptionsInput<WorkspaceNodeSelectorOptions<I>>) {
+//     super(opts);
+//     this.selector = new ExistingSelector({
+//       models: getter(() => this.options.nodes.all),
+//       value: getter(() => this.options.value),
+//       select: getter(() => this.options.select),
+//     });
+//   }
 
-  value = $derived.by(() => this.selector.value);
-  node = $derived.by(() => this.selector.model);
+//   value = $derived.by(() => this.selector.value);
+//   node = $derived.by(() => this.selector.model);
 
-  serialized = $derived(serialized(this, ['value', 'node']));
-}
+//   serialized = $derived(serialized(this, ['value', 'node']));
+// }
 
 export type WorkspaceNodesModelOptions = {
   workspace: WorkspaceModel;

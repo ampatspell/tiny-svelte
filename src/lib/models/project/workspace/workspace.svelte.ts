@@ -4,11 +4,37 @@ import type { WorkspaceData } from '$lib/types/workspace';
 import { getter } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
-
 import type { ProjectModel } from '../project.svelte';
 import { WorkspaceAssetsModel } from './assets.svelte';
+import { WorkspaceNodesModel } from './nodes.svelte';
 import type { WorkspaceNodeModel } from './node.svelte';
-import { WorkspaceNodeSelector, WorkspaceNodesModel } from './nodes.svelte';
+import { filterByInstanceOf, isTruthy } from '$lib/utils/array';
+import type { WorkspaceAssetModel } from './asset.svelte';
+
+export type WorkspaceSelectable = WorkspaceNodeModel | WorkspaceAssetModel;
+
+export type WorkspaceSelectableFactory<O extends WorkspaceSelectable> = {
+  new(...args: never): O;
+}
+
+export class WorkspaceSelection {
+
+  _all = $state<WorkspaceSelectable[]>([]);
+
+  select(models: WorkspaceSelectable[]) {
+    this._all = models;
+  }
+
+  all = $derived.by(() => {
+    const all = this._all;
+    return all.filter(model => model.exists);
+  });
+
+  byType<O extends WorkspaceSelectable>(factory: WorkspaceSelectableFactory<O>): O[] {
+    return filterByInstanceOf(this.all, factory);
+  }
+
+}
 
 export enum ToolType {
   WorkspaceDrag = 'workspace-drag',
@@ -68,23 +94,28 @@ export class WorkspaceModel extends Model<WorkspaceModelOptions> {
 
   //
 
-  selectedNodeId = $state<string>();
-  selectedNode = new WorkspaceNodeSelector({
-    nodes: this.nodes,
-    value: getter(() => this.selectedNodeId),
-    select: (model: WorkspaceNodeModel, value: string) => model.id === value,
-  });
+  selection = new WorkspaceSelection();
 
-  selectNode(node?: WorkspaceNodeModel) {
-    if (this.selectedNode.node === node) {
-      return;
-    }
+  // selectedNodeId = $state<string>();
+  // selectedNode = new WorkspaceNodeSelector({
+  //   nodes: this.nodes,
+  //   value: getter(() => this.selectedNodeId),
+  //   select: (model: WorkspaceNodeModel, value: string) => model.id === value,
+  // });
+
+  selectNode(model?: WorkspaceNodeModel) {
+    // TODO: selection
+    this.selection.select([ model ].filter(isTruthy));
+    // if (this.selectedNode.node === node) {
+    //   return;
+    // }
     this.tool.set(ToolType.Idle);
-    this.selectedNodeId = node?.id;
+    // this.selectedNodeId = node?.id;
   }
 
   isNodeSelectedAndHasTools(model: WorkspaceNodeModel, types: ToolType[]) {
-    return this.selectedNode.node === model && types.includes(this.tool.type);
+    // TODO: selection
+    // return this.selectedNode.node === model && types.includes(this.tool.type);
   }
 
   //
