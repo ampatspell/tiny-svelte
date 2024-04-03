@@ -2,9 +2,11 @@
   import Sidebar from '$components/basic/sidebar/sidebar.svelte';
   import Tab from '$components/basic/tabs/tab.svelte';
   import Tabs from '$components/basic/tabs/tabs.svelte';
-  import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
+  import { WorkspaceAssetModel } from '$lib/models/project/workspace/asset.svelte';
+  import { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
   import { setGlobal } from '$lib/utils/set-global';
+  import Asset from './asset/asset.svelte';
   import Footer from './footer.svelte';
   import Node from './node/node.svelte';
   import Project from './project.svelte';
@@ -20,8 +22,7 @@
   let onSelect = (next: string) => (selected = next);
 
   let project = $derived(workspace.project);
-  // TODO: selection
-  let node: WorkspaceNodeModel | undefined = undefined; // $derived(workspace.selectedNode.node);
+  let selection = $derived(workspace.selection.selected);
 
   setGlobal({ workspace });
 </script>
@@ -31,8 +32,12 @@
     <Sidebar>
       <Tabs {selected} {onSelect}>
         <Tab id="selected" name="Selected">
-          {#if node}
-            <Node {node} />
+          {#if selection}
+            {#if selection instanceof WorkspaceNodeModel}
+              <Node node={selection} />
+            {:else if selection instanceof WorkspaceAssetModel}
+              <Asset asset={selection} />
+            {/if}
           {:else}
             <Workspace {workspace} />
           {/if}

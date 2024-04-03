@@ -31,7 +31,7 @@ export class ProjectModel extends Model<ProjectModelOptions> implements HasMutab
   identifier = $derived(this._data?.identifier ?? '');
 
   onIdentifier(next: string) {
-    if(this._data) {
+    if (this._data) {
       this._data.identifier = next;
       this._doc.scheduleSave();
     }

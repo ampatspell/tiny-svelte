@@ -1,5 +1,5 @@
 <script lang="ts" generics="T">
-    import { isTruthy } from '$lib/utils/array';
+  import { isTruthy } from '$lib/utils/array';
 
   import type { Snippet } from 'svelte';
   import Item from '$components/basic/list/item.svelte';
@@ -18,12 +18,11 @@
   } = $props();
 
   let asArray = $derived.by(() => {
-    if(Array.isArray(selected)) {
+    if (Array.isArray(selected)) {
       return selected;
     }
-    return [ selected ].filter(isTruthy);
+    return [selected].filter(isTruthy);
   });
-
 </script>
 
 <div class="content">

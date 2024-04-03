@@ -10,6 +10,7 @@ import { collection, doc } from '@firebase/firestore';
 
 import { type ProjectAssetModel, ProjectBoxAssetModel, ProjectSpriteAssetModel } from './asset.svelte';
 import type { ProjectModel } from './project.svelte';
+import { randomString } from '$lib/utils/string';
 
 export type ProjectAssetsModelOptions = {
   project: ProjectModel;
@@ -52,13 +53,13 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
   async create(type: AssetType) {
     const ref = doc(this.ref);
     let document: Document<AssetData>;
-
+    const identifier = randomString();
     if (type === 'box') {
       document = new Document<BoxAssetData>({
         ref,
         data: {
           type: 'box',
-          identifier: 'new',
+          identifier,
           size: { width: 8, height: 8 },
           color: 'white',
         },
@@ -68,9 +69,12 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
         ref,
         data: {
           type: 'sprite',
-          identifier: 'new',
-          size: { width: 8, height: 8 },
-          pixels: Array(8 * 8).fill(0),
+          identifier,
+          size: { width: 9, height: 8 },
+          pixels: [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0,
+            0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+          ],
         },
       });
     } else {

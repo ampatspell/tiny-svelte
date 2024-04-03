@@ -1,6 +1,10 @@
 import { asResizableAssetModel } from '$lib/models/project/asset.svelte';
 import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
-import { ToolType, type WorkspaceModel, type WorkspaceSelectable } from '$lib/models/project/workspace/workspace.svelte';
+import {
+  ToolType,
+  type WorkspaceModel,
+  type WorkspaceSelectable,
+} from '$lib/models/project/workspace/workspace.svelte';
 import type { Point, Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
 import { getContext, setContext } from 'svelte';

@@ -15,5 +15,5 @@ export class WorkspaceAssetModel extends Model<WorkspaceAssetModelOptions> {
 
   exists = $derived(this.asset.exists);
 
-  serialized = $derived(serialized(this, []));
+  serialized = $derived(serialized(this, ['asset']));
 }

@@ -30,7 +30,7 @@ export class ExistingSelector<I, M extends HasExists> extends Model<ExistingSele
 }
 
 export const exists = <T extends HasExists>(model?: T) => {
-  if(model && model.exists) {
+  if (model && model.exists) {
     return model;
   }
-}
+};

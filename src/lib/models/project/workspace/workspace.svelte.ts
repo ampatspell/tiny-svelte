@@ -14,11 +14,10 @@ import { exists } from '$lib/models/selector.svelte';
 export type WorkspaceSelectable = WorkspaceNodeModel | WorkspaceAssetModel;
 
 export type WorkspaceSelectableFactory<O extends WorkspaceSelectable> = {
-  new(...args: never): O;
-}
+  new (...args: never): O;
+};
 
 export class WorkspaceSelection {
-
   _selected = $state<WorkspaceSelectable>();
 
   selected = $derived(exists(this._selected));
@@ -29,11 +28,10 @@ export class WorkspaceSelection {
 
   byType<O extends WorkspaceSelectable>(factory: WorkspaceSelectableFactory<O>): O | undefined {
     const model = this._selected;
-    if(model instanceof factory) {
+    if (model instanceof factory) {
       return model;
     }
   }
-
 }
 
 export enum ToolType {
@@ -97,7 +95,7 @@ export class WorkspaceModel extends Model<WorkspaceModelOptions> {
   selection = new WorkspaceSelection();
 
   select(model?: WorkspaceSelectable) {
-    if(this.selection.selected === model) {
+    if (this.selection.selected === model) {
       return;
     }
     this.selection.select(model);

@@ -3,7 +3,7 @@
   import Item from '../item.svelte';
   import type { HasDelete } from '../types';
 
-  let { model }: { model: HasDelete } = $props();
+  let { model, label }: { model: HasDelete; label: string } = $props();
 
   let isDeleting = $state(false);
 
@@ -18,5 +18,5 @@
 </script>
 
 <Item>
-  <Button value="Delete" isDisabled={isDeleting} onClick={onDelete} />
+  <Button value={label} isDisabled={isDeleting} onClick={onDelete} />
 </Item>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import Segment from '$components/basic/segmented/segment.svelte';
   import Segmented from '$components/basic/segmented/segmented.svelte';
+  import { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
   import { ToolType, type WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
   import { getter, options } from '$lib/utils/args';
 
@@ -23,8 +24,7 @@
       }),
     });
 
-  // TODO: selection
-  let hasSelection = () => false; // !!workspace.selectedNode.node;
+  let hasSelection = () => !!workspace.selection.byType(WorkspaceNodeModel);
   let tools = [
     tool('Idle', ToolType.Idle),
     tool('Resize', ToolType.Resize, hasSelection),

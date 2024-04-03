@@ -1,6 +1,5 @@
 <script lang="ts">
   import Inspector from '$components/basic/inspector/inspector.svelte';
-  import Item from '$components/basic/inspector/item.svelte';
   import Delete from '$components/basic/inspector/item/delete.svelte';
   import Identifier from '$components/basic/inspector/item/identifier.svelte';
   import NodeIdentity from '$components/basic/inspector/item/node-identity.svelte';
@@ -8,8 +7,7 @@
   import Position from '$components/basic/inspector/item/position.svelte';
   import Section from '$components/basic/inspector/section.svelte';
   import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
-  import Box from './box.svelte';
-  import Sprite from './sprite.svelte';
+  import Project from '../project/project.svelte';
 
   let {
     node,
@@ -21,22 +19,14 @@
 </script>
 
 <Inspector>
+  {#if asset}
+    <Project model={asset} />
+  {/if}
   <Section>
     <NodeIdentity model={node} />
     <Identifier model={node} />
     <Position model={node} />
-    {#if asset}
-      {#if asset.type === 'box'}
-        <Box {node} />
-      {:else if asset.type === 'sprite'}
-        <Sprite {node} />
-      {:else}
-        <Item title="Asset">
-          {asset}
-        </Item>
-      {/if}
-    {/if}
     <Pixel model={node} />
-    <Delete model={node} />
+    <Delete model={node} label="Remove from workspace" />
   </Section>
 </Inspector>

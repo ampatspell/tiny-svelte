@@ -1,16 +1,15 @@
 <script lang="ts">
   import Size from '$components/basic/inspector/item/size.svelte';
   import String from '$components/basic/inspector/item/string.svelte';
-  import type { ProjectBoxAssetModel } from '$lib/models/project/asset.svelte';
-  import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
+  import type { ProjectAssetModel, ProjectBoxAssetModel } from '$lib/models/project/asset.svelte';
 
   let {
-    node,
+    model,
   }: {
-    node: WorkspaceNodeModel;
+    model: ProjectAssetModel;
   } = $props();
 
-  let asset = $derived(node.asset as ProjectBoxAssetModel);
+  let asset = $derived(model as ProjectBoxAssetModel);
 </script>
 
 <Size model={asset} />

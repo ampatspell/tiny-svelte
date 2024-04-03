@@ -6,6 +6,7 @@ import { action } from '$lib/utils/action';
 import type { ResizeEvent } from '$lib/types/types';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import type { Document } from '$lib/firebase/fire/document.svelte';
+import type { HasDelete } from '$components/basic/inspector/types';
 
 export type ProjectAssetModelOptions<D extends AssetData> = {
   assets: ProjectAssetsModel;
@@ -43,12 +44,15 @@ export const asResizableAssetModel = <T extends ProjectAssetModel, R>(
   return undefined;
 };
 
-export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends Model<ProjectAssetModelOptions<D>> {
+export abstract class ProjectAssetModel<D extends AssetData = AssetData>
+  extends Model<ProjectAssetModelOptions<D>>
+  implements HasDelete
+{
   _doc = $derived(this.options.doc);
   _data = $derived(this._doc.data!);
 
-  id = $derived(this._doc.id);
-  path = $derived(this._doc.path);
+  id = $derived(this._doc.id!);
+  path = $derived(this._doc.path!);
   exists = $derived(this._doc.exists);
 
   type = $derived(this._data!.type);
@@ -62,6 +66,10 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData> extends
   onIdentifier(identifier: string) {
     this._data.identifier = identifier;
     this._doc.scheduleSave();
+  }
+
+  async delete() {
+    await this._doc.delete();
   }
 }
 
