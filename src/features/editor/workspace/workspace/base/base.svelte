@@ -28,7 +28,7 @@
   let element = $state<HTMLDivElement>();
   let onClick = (e: Event) => {
     if (e.target === element) {
-      context.selectNode(undefined);
+      context.select(undefined);
     }
   };
 

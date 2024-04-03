@@ -2,41 +2,14 @@ import { Document } from '$lib/firebase/fire/document.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import { MapModels } from '$lib/firebase/fire/models.svelte';
 import { QueryAll } from '$lib/firebase/fire/query.svelte';
-import { ExistingSelector } from '$lib/models/selector.svelte';
 import type { AssetType } from '$lib/types/assets';
 import type { WorkspaceNodeData } from '$lib/types/workspace';
-import { type OptionsInput, getter, options } from '$lib/utils/args';
+import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
-
 import type { ProjectAssetModel } from '../asset.svelte';
 import { WorkspaceNodeModel } from './node.svelte';
 import type { WorkspaceModel } from './workspace.svelte';
-
-// TODO: selection
-// export type WorkspaceNodeSelectorOptions<I> = {
-//   nodes: WorkspaceNodesModel;
-//   value: I | undefined;
-//   select: (model: WorkspaceNodeModel, value: I) => boolean;
-// };
-
-// export class WorkspaceNodeSelector<I> extends Model<WorkspaceNodeSelectorOptions<I>> {
-//   selector: ExistingSelector<I, WorkspaceNodeModel>;
-
-//   constructor(opts: OptionsInput<WorkspaceNodeSelectorOptions<I>>) {
-//     super(opts);
-//     this.selector = new ExistingSelector({
-//       models: getter(() => this.options.nodes.all),
-//       value: getter(() => this.options.value),
-//       select: getter(() => this.options.select),
-//     });
-//   }
-
-//   value = $derived.by(() => this.selector.value);
-//   node = $derived.by(() => this.selector.model);
-
-//   serialized = $derived(serialized(this, ['value', 'node']));
-// }
 
 export type WorkspaceNodesModelOptions = {
   workspace: WorkspaceModel;

@@ -32,7 +32,7 @@
 
   let onShouldStart = () => {
     if ([ToolType.Idle, ToolType.Resize].includes(workspace.tool.type)) {
-      workspace.selectNode(node);
+      workspace.select(node);
     }
     return isDraggable;
   };

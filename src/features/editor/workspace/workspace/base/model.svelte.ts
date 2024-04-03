@@ -1,6 +1,6 @@
 import { asResizableAssetModel } from '$lib/models/project/asset.svelte';
 import type { WorkspaceNodeModel } from '$lib/models/project/workspace/node.svelte';
-import { ToolType, type WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
+import { ToolType, type WorkspaceModel, type WorkspaceSelectable } from '$lib/models/project/workspace/workspace.svelte';
 import type { Point, Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
 import { getContext, setContext } from 'svelte';
@@ -28,32 +28,30 @@ export class WorkspaceContext {
   tool = $derived(this.workspace.tool);
   selection = $derived(this.workspace.selection);
 
-  selectNode(node?: WorkspaceNodeModel) {
-    this.workspace.selectNode(node);
+  select(node?: WorkspaceSelectable) {
+    this.workspace.select(node);
   }
 
-  isSelectedAndHasTools(model: WorkspaceNodeModel, types: ToolType[]) {
+  isNodeSelectedAndHasTools(model: WorkspaceNodeModel, types: ToolType[]) {
     return this.workspace.isNodeSelectedAndHasTools(model, types);
   }
 
   isDraggable(model: WorkspaceNodeModel) {
-    return this.isSelectedAndHasTools(model, [ToolType.Idle, ToolType.Resize]);
+    return this.isNodeSelectedAndHasTools(model, [ToolType.Idle, ToolType.Resize]);
   }
 
   isEditing(model: WorkspaceNodeModel) {
-    return this.isSelectedAndHasTools(model, [ToolType.Edit]);
+    return this.isNodeSelectedAndHasTools(model, [ToolType.Edit]);
   }
 
   isResizable(model: WorkspaceNodeModel) {
-    // TODO: selection
-    return false;
-    // if (!this.isSelectedAndHasTools(model, [ToolType.Resize])) {
-    //   return false;
-    // }
-    // if (!asResizableAssetModel(model.asset, (asset) => asset.isResizable)) {
-    //   return false;
-    // }
-    // return true;
+    if (!this.isNodeSelectedAndHasTools(model, [ToolType.Resize])) {
+      return false;
+    }
+    if (!asResizableAssetModel(model.asset, (asset) => asset.isResizable)) {
+      return false;
+    }
+    return true;
   }
 
   @action

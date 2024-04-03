@@ -10,10 +10,11 @@
 
   let { nodes }: { nodes: WorkspaceNodesModel } = $props();
 
+  let workspace = $derived(nodes.workspace);
   let all = $derived(nodes.all);
   let selected = $derived(nodes.workspace.selection.byType(WorkspaceNodeModel));
   let onSelect = (node?: WorkspaceNodeModel) => {
-    nodes.workspace.selectNode(node);
+    workspace.select(node);
   };
 </script>
 

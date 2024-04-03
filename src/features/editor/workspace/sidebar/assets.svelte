@@ -15,9 +15,7 @@
   let selected = $derived(workspace.selection.byType(WorkspaceAssetModel));
 
   let onSelect = (asset?: WorkspaceAssetModel) => {
-    // TODO: selection
-    // let node = asset?.node;
-    // workspace.selectNode(node);
+    workspace.select(asset);
   };
 </script>
 

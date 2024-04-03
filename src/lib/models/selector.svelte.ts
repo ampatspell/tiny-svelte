@@ -24,12 +24,13 @@ export class ExistingSelector<I, M extends HasExists> extends Model<ExistingSele
     }
   });
 
-  model = $derived.by(() => {
-    const selected = this.selected;
-    if (selected?.exists) {
-      return selected;
-    }
-  });
+  model = $derived(exists(this.selected));
 
   serialized = $derived(serialized(this, ['value', 'model']));
+}
+
+export const exists = <T extends HasExists>(model?: T) => {
+  if(model && model.exists) {
+    return model;
+  }
 }
