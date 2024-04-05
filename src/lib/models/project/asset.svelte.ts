@@ -48,6 +48,8 @@ export abstract class ProjectAssetModel<D extends AssetData = AssetData>
   extends Model<ProjectAssetModelOptions<D>>
   implements HasDelete
 {
+  assets = $derived(this.options.assets);
+
   _doc = $derived(this.options.doc);
   _data = $derived(this._doc.data!);
 

@@ -48,12 +48,7 @@ export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
     return this.all.filter((node) => node.asset === asset);
   }
 
-  async createNewAsset(type?: AssetType) {
-    let asset: ProjectAssetModel | undefined;
-    if (type) {
-      asset = await this.project.assets.create(type);
-    }
-
+  async createNewNode(asset?: ProjectAssetModel) {
     const document = new Document<WorkspaceNodeData>({
       ref: doc(this.ref),
       data: {
@@ -65,6 +60,14 @@ export class WorkspaceNodesModel extends Model<WorkspaceNodesModelOptions> {
 
     await document.save();
     return await this._all.waitFor((model) => model.id === document.id);
+  }
+
+  async createNewAsset(type?: AssetType) {
+    let asset: ProjectAssetModel | undefined;
+    if (type) {
+      asset = await this.project.assets.create(type);
+    }
+    return await this.createNewNode(asset);
   }
 
   dependencies = [this._query];
