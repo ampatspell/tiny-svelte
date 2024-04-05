@@ -10,7 +10,6 @@ import { WorkspaceNodesModel } from './nodes.svelte';
 import { WorkspaceNodeModel } from './node.svelte';
 import type { WorkspaceAssetModel } from './asset.svelte';
 import { exists } from '$lib/models/selector.svelte';
-import type { ProjectAssetModel } from '../asset.svelte';
 
 export type WorkspaceSelectable = WorkspaceNodeModel | WorkspaceAssetModel;
 
