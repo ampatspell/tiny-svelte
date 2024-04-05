@@ -1,5 +1,5 @@
 import type { ProjectAssetsModel } from './assets.svelte';
-import type { AssetData, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
+import type { AssetData, BoxAssetData, SceneAssetData, SceneLayerAssetData, SpriteAssetData } from '$lib/types/assets';
 import { serialized } from '$lib/utils/object';
 import type { Size } from '$lib/types/schema';
 import { action } from '$lib/utils/action';
@@ -130,4 +130,20 @@ export class ProjectSpriteAssetModel extends ProjectResizableAssetModelImpl<Spri
   }
 
   serialized = $derived(serialized(this, ['id', 'identifier', 'type']));
+}
+
+export class ProjectSceneAssetModel extends ProjectResizableAssetModelImpl<SceneAssetData> {
+  humanType = 'Scene';
+  humanShortDescription = $derived(`${this.size.width}x${this.size.height}`);
+
+  isResizable = true;
+  step = 1;
+}
+
+export class ProjectSceneLayerAssetModel extends ProjectResizableAssetModelImpl<SceneLayerAssetData> {
+  humanType = 'Scene layer';
+  humanShortDescription = $derived(`${this.size.width}x${this.size.height}`);
+
+  isResizable = true;
+  step = 1;
 }

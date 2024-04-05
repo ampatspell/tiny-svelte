@@ -4,6 +4,8 @@
   import Missing from './missing.svelte';
   import Node from './base/node.svelte';
   import Sprite from './sprite.svelte';
+  import Scene from './scene.svelte';
+  import SceneLayer from './scene-layer.svelte';
 
   let { node }: { node: WorkspaceNodeModel } = $props();
 
@@ -17,6 +19,12 @@
       <Box {node} />
     {:else if type === 'sprite'}
       <Sprite {node} />
+    {:else if type === 'scene'}
+      <Scene {node} />
+    {:else if type === 'scene-layer'}
+      <SceneLayer {node} />
+    {:else}
+      <Missing />
     {/if}
   {:else}
     <Missing />

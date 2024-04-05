@@ -20,6 +20,8 @@
 
   let onBox = () => onCreate('box');
   let onSprite = () => onCreate('sprite');
+  let onScene = () => onCreate('scene');
+  let onSceneLayer = () => onCreate('scene-layer');
   let onBlank = () => onCreate();
 </script>
 
@@ -27,6 +29,8 @@
   <div class="content">
     <Button value="Box" isDisabled={isBusy} onClick={onBox} />
     <Button value="Sprite" isDisabled={isBusy} onClick={onSprite} />
+    <Button value="Scene" isDisabled={isBusy} onClick={onScene} />
+    <Button value="Sene layer" isDisabled={isBusy} onClick={onSceneLayer} />
     <Button value="Blank" isDisabled={isBusy} onClick={onBlank} />
   </div>
 </Item>
@@ -34,9 +38,8 @@
 <style lang="scss">
   .content {
     width: 100%;
-    display: grid;
-    grid-auto-columns: 1fr;
-    grid-auto-flow: column;
+    display: flex;
+    flex-direction: column;
     gap: 5px;
   }
 </style>

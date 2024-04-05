@@ -29,21 +29,43 @@ export type SpriteAssetData = z.infer<typeof SpriteAssetDataSchema>;
 
 //
 
-export const LoopAssetDataSchema = AssetDataBaseSchema.extend({
-  type: z.literal('loop'),
-  sprites: z.array(
-    z.object({
-      id: z.string(),
-    }),
-  ),
-});
+// export const LoopAssetDataSchema = AssetDataBaseSchema.extend({
+//   type: z.literal('loop'),
+//   sprites: z.array(
+//     z.object({
+//       id: z.string(),
+//     }),
+//   ),
+// });
 
-export type LoopAssetData = z.infer<typeof LoopAssetDataSchema>;
+// export type LoopAssetData = z.infer<typeof LoopAssetDataSchema>;
 
 //
 
-// export const AssetDataSchema = z.discriminatedUnion('type', [SpriteAssetDataSchema, LoopAssetDataSchema, BoxAssetDataSchema]);
-export const AssetDataSchema = z.discriminatedUnion('type', [BoxAssetDataSchema, SpriteAssetDataSchema]);
+export const SceneAssetDataSchema = AssetDataBaseSchema.extend({
+  type: z.literal('scene'),
+  size: SizeSchema,
+});
+
+export type SceneAssetData = z.infer<typeof SceneAssetDataSchema>;
+
+//
+
+export const SceneLayerAssetDataSchema = AssetDataBaseSchema.extend({
+  type: z.literal('scene-layer'),
+  size: SizeSchema,
+});
+
+export type SceneLayerAssetData = z.infer<typeof SceneLayerAssetDataSchema>;
+
+//
+
+export const AssetDataSchema = z.discriminatedUnion('type', [
+  BoxAssetDataSchema,
+  SpriteAssetDataSchema,
+  SceneAssetDataSchema,
+  SceneLayerAssetDataSchema,
+]);
 
 export type AssetData = z.infer<typeof AssetDataSchema>;
 export type AssetType = AssetData['type'];

@@ -3,12 +3,25 @@ import { load } from '$lib/firebase/fire/firebase.svelte';
 import { Model } from '$lib/firebase/fire/model.svelte';
 import { MapModels } from '$lib/firebase/fire/models.svelte';
 import { QueryAll } from '$lib/firebase/fire/query.svelte';
-import type { AssetData, AssetType, BoxAssetData, SpriteAssetData } from '$lib/types/assets';
+import {
+  type SceneAssetData,
+  type AssetData,
+  type AssetType,
+  type BoxAssetData,
+  type SceneLayerAssetData,
+  type SpriteAssetData,
+} from '$lib/types/assets';
 import { getter, options } from '$lib/utils/args';
 import { serialized } from '$lib/utils/object';
 import { collection, doc } from '@firebase/firestore';
 
-import { type ProjectAssetModel, ProjectBoxAssetModel, ProjectSpriteAssetModel } from './asset.svelte';
+import {
+  type ProjectAssetModel,
+  ProjectBoxAssetModel,
+  ProjectSpriteAssetModel,
+  ProjectSceneAssetModel,
+  ProjectSceneLayerAssetModel,
+} from './asset.svelte';
 import type { ProjectModel } from './project.svelte';
 import { randomString } from '$lib/utils/string';
 
@@ -38,6 +51,10 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
           return new ProjectBoxAssetModel({ assets: this, doc: doc as Document<BoxAssetData> });
         } else if (type === 'sprite') {
           return new ProjectSpriteAssetModel({ assets: this, doc: doc as Document<SpriteAssetData> });
+        } else if (type === 'scene') {
+          return new ProjectSceneAssetModel({ assets: this, doc: doc as Document<SceneAssetData> });
+        } else if (type === 'scene-layer') {
+          return new ProjectSceneLayerAssetModel({ assets: this, doc: doc as Document<SceneLayerAssetData> });
         }
         throw new Error(`unsupported asset type '${type}'`);
       }
@@ -75,6 +92,24 @@ export class ProjectAssetsModel extends Model<ProjectAssetsModelOptions> {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0,
             0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
           ],
+        },
+      });
+    } else if (type === 'scene') {
+      document = new Document<SceneAssetData>({
+        ref,
+        data: {
+          type: 'scene',
+          identifier,
+          size: { width: 128, height: 64 },
+        },
+      });
+    } else if (type === 'scene-layer') {
+      document = new Document<SceneLayerAssetData>({
+        ref,
+        data: {
+          type: 'scene-layer',
+          identifier,
+          size: { width: 128, height: 64 },
         },
       });
     } else {
