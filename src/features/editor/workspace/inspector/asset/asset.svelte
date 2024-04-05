@@ -27,6 +27,6 @@
 <Inspector>
   <Project {model} />
   <Item>
-    <Button value="Add to workspace" disabled={isAdding} onClick={onAdd} />
+    <Button value="Add to workspace" isDisabled={isAdding} onClick={onAdd} />
   </Item>
 </Inspector>
