@@ -23,7 +23,7 @@
     if (open) {
       open.close();
     } else {
-      open = popups.open(Popup, { name: 'hello' });
+      open = popups.open(Popup, { name: 'hello' }, element);
     }
   };
 </script>
