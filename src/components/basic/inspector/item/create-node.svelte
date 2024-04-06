@@ -1,38 +1,42 @@
 <script lang="ts">
-  import Button from '$components/basic/button.svelte';
+  import Dropdown from '$components/basic/dropdown/dropdown.svelte';
   import type { WorkspaceModel } from '$lib/models/project/workspace/workspace.svelte';
   import type { AssetType } from '$lib/types/assets';
+  import type { VoidCallback } from '$lib/types/types';
   import Item from '../item.svelte';
 
   let { model }: { model: WorkspaceModel } = $props();
 
-  // TODO: AsyncButton
-  let isBusy = $state(false);
-
   let onCreate = async (type?: AssetType) => {
-    try {
-      isBusy = true;
-      await model.nodes.createNewAsset(type);
-    } finally {
-      isBusy = false;
-    }
+    await model.nodes.createNewAsset(type);
   };
 
-  let onBox = () => onCreate('box');
-  let onSprite = () => onCreate('sprite');
-  let onScene = () => onCreate('scene');
-  let onSceneLayer = () => onCreate('scene-layer');
-  let onBlank = () => onCreate();
+  type Type = { name: string; onClick: VoidCallback };
+
+  let types = [
+    { name: 'Box', onClick: () => onCreate('box') },
+    { name: 'Sprite', onClick: () => onCreate('sprite') },
+    { name: 'Scene', onClick: () => onCreate('scene') },
+    { name: 'Scene layer', onClick: () => onCreate('scene-layer') },
+    { name: 'Blank', onClick: () => onCreate() },
+  ];
+
+  let onSelect = (type?: Type) => {
+    if (type) {
+      type.onClick();
+    }
+  };
 </script>
 
-<Item title="Add new">
-  <div class="content">
-    <Button value="Box" isDisabled={isBusy} onClick={onBox} />
-    <Button value="Sprite" isDisabled={isBusy} onClick={onSprite} />
-    <Button value="Scene" isDisabled={isBusy} onClick={onScene} />
-    <Button value="Sene layer" isDisabled={isBusy} onClick={onSceneLayer} />
-    <Button value="Blank" isDisabled={isBusy} onClick={onBlank} />
-  </div>
+<Item>
+  <Dropdown items={types} {onSelect}>
+    {#snippet placeholder()}
+      Add new asset
+    {/snippet}
+    {#snippet item(model)}
+      {model.name}
+    {/snippet}
+  </Dropdown>
 </Item>
 
 <style lang="scss">
