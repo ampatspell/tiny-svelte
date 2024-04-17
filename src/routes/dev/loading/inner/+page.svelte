@@ -1,11 +1,9 @@
 <script lang="ts">
   let { data } = $props();
-  let model = $derived(data.things);
-  $effect(() => model.subscribe());
 </script>
 
 <div class="page">
-  <div>name = {model.names}</div>
+  <a href="/dev/loading">loading</a> / <a href="/dev/loading/inner">inner ({data.inner})</a>
 </div>
 
 <style lang="scss">

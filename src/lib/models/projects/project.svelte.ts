@@ -11,8 +11,8 @@ export type ProjectsProjectModelOptions = {
 };
 
 export class ProjectsProjectModel extends Model<ProjectsProjectModelOptions> {
-  doc = $derived(this.options.doc);
-  id = $derived(this.doc.id);
-  identifier = $derived(this.doc.data!.identifier);
+  _doc = $derived(this.options.doc);
+  id = $derived(this._doc.id);
+  identifier = $derived(this._doc.data!.identifier);
   serialized = $derived(serialized(this, ['id', 'identifier']));
 }
