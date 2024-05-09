@@ -18,7 +18,8 @@
       <div class="title">{title}</div>
       <div class="id">{id}</div>
     </div>
-    <!-- svelte-ignore a11y-interactive-supports-focus a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y_interactive_supports_focus -->
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
     <div class="accessories" role="button" onclick={log}>
       <Icon icon={Terminal} size={12} />
     </div>

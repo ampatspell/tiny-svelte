@@ -25,7 +25,8 @@
 <div class="tabs">
   <div class="header">
     {#each context.tabs as tab (tab)}
-      <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
       <div class="tab" class:selected={context.selected === tab} onclick={() => onSelect(tab.id)}>{tab.name}</div>
     {/each}
   </div>

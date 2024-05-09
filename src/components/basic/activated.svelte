@@ -17,10 +17,9 @@
 {#snippet models(models: HasSubscriber[])}
   <div class="models">
     {#each models as model}
-      <!-- svelte-ignore a11y-no-static-element-interactions a11y-click-events-have-key-events -->
-      <div class="model" onclick={() => log(model)}>
+      <button class="model" onclick={() => log(model)}>
         {render(model)}
-      </div>
+      </button>
     {:else}
       <div class="placeholder">No models</div>
     {/each}

@@ -38,12 +38,3 @@
     {/snippet}
   </Dropdown>
 </Item>
-
-<style lang="scss">
-  .content {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-</style>

@@ -22,7 +22,7 @@
 </script>
 
 <div class="layer">
-  <canvas class="canvas" bind:this={layer.element} />
+  <canvas class="canvas" bind:this={layer.element}></canvas>
   <div class="children" bind:this={layer.children}>
     {#if children}
       {@render children()}

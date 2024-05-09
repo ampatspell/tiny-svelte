@@ -53,7 +53,7 @@
   let isDraggable = $derived(context.tool.type === ToolType.WorkspaceDrag);
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   class={classes('workspace', _class)}
   bind:this={element}

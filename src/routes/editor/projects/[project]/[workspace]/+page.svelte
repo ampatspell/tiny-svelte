@@ -6,17 +6,17 @@
   import { getter } from '$lib/utils/args.js';
 
   let { data } = $props();
-  // let workspace = $derived(data.workspace);
-  // $effect(() => subscribe(workspace));
+  let workspace = $derived(data.workspace);
+  $effect(() => subscribe(workspace));
 
-  let workspace = new WorkspaceModel({
-    project: new ProjectModel({
-      id: getter(() => data.project.id),
-    }),
-    id: getter(() => data.workspace.id),
-  });
+  // let workspace = new WorkspaceModel({
+  //   project: new ProjectModel({
+  //     id: getter(() => data.project.id),
+  //   }),
+  //   id: getter(() => data.workspace.id),
+  // });
 
-  subscribe(workspace);
+  // subscribe(workspace);
 </script>
 
 <Workspace {workspace} />
