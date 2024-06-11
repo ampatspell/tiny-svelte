@@ -41,6 +41,7 @@
   let onEnd = () => (workspace.dragging = undefined);
 
   let translate = $derived.by(() => {
+    console.log(position, node._doc.data!.position);
     let point = multiplyPoint(addPoints(workspace.position, position), workspacePixel);
     return `${point.x}px ${point.y}px`;
   });

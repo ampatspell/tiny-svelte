@@ -58,17 +58,5 @@ export class Subscriber {
 }
 
 export const subscribe = (model: HasSubscriber) => {
-  const _subscribe = () => {
-    return untrack(() => {
-      return model.subscriber.subscribe();
-    });
-  };
-  if ($effect.active()) {
-    return _subscribe();
-  } else {
-    $effect.pre(() => {
-      model;
-      return _subscribe();
-    });
-  }
+  return untrack(() => model.subscriber.subscribe());
 };
