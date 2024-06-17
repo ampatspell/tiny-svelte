@@ -13,31 +13,33 @@
     "deploy": "npm run build && firebase deploy"
   },
   "overrides": {
-    "svelte": "5.0.0-next.153"
+    "svelte": "5.0.0-next.157"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^3.2.1",
-    "@sveltejs/kit": "^2.5.10",
+    "@sveltejs/adapter-auto": "^3.2.2",
+    "@sveltejs/kit": "^2.5.16",
     "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "@types/eslint": "8.56.10",
     "@types/node": "^20.14.2",
-    "@typescript-eslint/eslint-plugin": "^7.13.0",
-    "@typescript-eslint/parser": "^7.13.0",
-    "eslint": "^8.56.9",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "eslint": "^9.0.0",
+    "typescript-eslint": "^8.0.0-alpha.20",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-svelte": "^2.39.3",
+    "eslint-plugin-svelte": "^2.40.0",
     "prettier": "^3.3.2",
     "prettier-plugin-svelte": "^3.2.4",
-    "sass": "^1.77.4",
-    "svelte": "5.0.0-next.153",
+    "sass": "^1.77.5",
+    "svelte": "5.0.0-next.157",
     "svelte-check": "^3.8.0",
     "tslib": "^2.6.3",
     "typescript": "^5.4.5",
-    "vite": "^5.2.13",
+    "vite": "^5.3.1",
     "firebase": "^10.12.2",
     "@firebase/firestore": "^4.6.3",
     "@firebase/auth": "^1.7.4",
-    "@types/color": "^3.0.6"
+    "@types/color": "^3.0.6",
+    "globals": "^15.0.0"
   },
   "dependencies": {
     "color": "^4.2.3",
